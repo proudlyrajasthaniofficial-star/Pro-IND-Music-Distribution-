@@ -6,11 +6,11 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
-import * as userCtrl from "./controllers/userController.ts";
-import * as songCtrl from "./controllers/songController.ts";
-import * as financeCtrl from "./controllers/financeController.ts";
-import * as reqCtrl from "./controllers/requestController.ts";
-import "./events/emailEvents.ts"; // Initialize listeners
+import * as userCtrl from "./controllers/userController.js";
+import * as songCtrl from "./controllers/songController.js";
+import * as financeCtrl from "./controllers/financeController.js";
+import * as reqCtrl from "./controllers/requestController.js";
+import "./events/emailEvents.js"; // Initialize listeners
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +31,7 @@ function setupCloudinary() {
     console.log("✅ Cloudinary Configured");
     return true;
   }
+  console.warn("⚠️ Cloudinary Config Missing Keys - Signing might fail");
   return false;
 }
 
@@ -43,6 +44,12 @@ async function startServer() {
   // JSON Body Parser
   app.use(express.json());
 
+  // Simple Request Logger
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
+
   // API Health Check
   app.get("/api/health", (req, res) => {
     res.json({ 
@@ -50,9 +57,6 @@ async function startServer() {
       timestamp: new Date().toISOString(),
       cloudinary: {
         configured: !!cloudinary.config().cloud_name,
-        hasKey: !!(process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY),
-        hasCloudName: !!(process.env.VITE_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME),
-        cloudName: (process.env.VITE_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME)
       }
     });
   });
@@ -132,6 +136,12 @@ async function startServer() {
     }
   });
 
+  // API Catch-all (Before static assets)
+  app.all("/api/*", (req, res) => {
+    console.warn(`[404] API Route Not Found: ${req.method} ${req.url}`);
+    res.status(404).json({ error: `API route ${req.method} ${req.url} not found` });
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -153,4 +163,7 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch(err => {
+  console.error("❌ [CRITICAL] Failed to start server:", err);
+  process.exit(1);
+});

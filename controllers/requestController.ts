@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import emailEmitter from '../events/emailEvents.ts';
+import emailEmitter from '../events/emailEvents.js';
 
 export const submitRequest = async (req: Request, res: Response) => {
   try {

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import emailEmitter from '../events/emailEvents.ts';
+import emailEmitter from '../events/emailEvents.js';
 
 /**
  * User Controller Logic

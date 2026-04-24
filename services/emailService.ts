@@ -1,5 +1,5 @@
-import mailjet from '../lib/mailjetClient.ts';
-import * as templates from '../templates/emailTemplates.ts';
+import mailjet from '../lib/mailjetClient.js';
+import * as templates from '../templates/emailTemplates.js';
 
 /**
  * IND Distribution - Transactional Email Service (Mailjet Edition)
