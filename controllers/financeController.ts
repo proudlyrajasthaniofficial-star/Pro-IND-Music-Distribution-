@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import emailEmitter from '../events/emailEvents';
+import type { Request, Response } from 'express';
+import emailEmitter from '../events/emailEvents.ts';
 
 export const addRoyalty = async (req: Request, res: Response) => {
   try {

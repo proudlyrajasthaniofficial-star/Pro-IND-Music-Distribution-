@@ -6,11 +6,11 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
-import * as userCtrl from "./controllers/userController";
-import * as songCtrl from "./controllers/songController";
-import * as financeCtrl from "./controllers/financeController";
-import * as reqCtrl from "./controllers/requestController";
-import "./events/emailEvents"; // Initialize listeners
+import * as userCtrl from "./controllers/userController.ts";
+import * as songCtrl from "./controllers/songController.ts";
+import * as financeCtrl from "./controllers/financeController.ts";
+import * as reqCtrl from "./controllers/requestController.ts";
+import "./events/emailEvents.ts"; // Initialize listeners
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

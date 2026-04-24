@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { EmailService } from '../services/emailService';
+import { EmailService } from '../services/emailService.ts';
 
 /**
  * IND Distribution - Global Event Bus for Notifications
