@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import { 
@@ -44,26 +44,24 @@ export default function Labels() {
     }
   };
 
-  const fetchData = async () => {
+  useEffect(() => {
     if (!user) return;
+
     setLoading(true);
     setError(null);
-    try {
-      const snap = await getDocs(query(collection(db, "labels"), where("userId", "==", user.uid)));
+    
+    const q = query(collection(db, "labels"), where("userId", "==", user.uid));
+    
+    const unsubscribe = onSnapshot(q, (snap) => {
       setLabels(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    } catch (err: any) {
-      console.error("Label fetch error:", err);
-      setError("Unable to sync corporate registry.");
-      if (err.message?.includes("index")) {
-        toast.error("Database query requires indexing.");
-      }
-    } finally {
       setLoading(false);
-    }
-  };
+    }, (err: any) => {
+      console.error("Label sync error:", err);
+      setError("Unable to sync corporate registry.");
+      setLoading(false);
+    });
 
-  useEffect(() => {
-    fetchData();
+    return () => unsubscribe();
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,7 +86,6 @@ export default function Labels() {
       setShowModal(false);
       setEditingLabel(null);
       setFormData({ name: "", logoUrl: "" });
-      fetchData();
     } catch (err: any) {
       console.error("Label save error:", err);
       toast.error("Security Rejection: " + (err.message || "Failed to establish entity"));
@@ -99,8 +96,11 @@ export default function Labels() {
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure?")) {
-      await deleteDoc(doc(db, "labels", id));
-      fetchData();
+      try {
+        await deleteDoc(doc(db, "labels", id));
+      } catch (err: any) {
+        toast.error("Deletion failed: " + (err.message || "Security constraint"));
+      }
     }
   };
 

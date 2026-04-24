@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import { 
@@ -46,26 +46,24 @@ export default function Artists() {
     }
   };
 
-  const fetchData = async () => {
+  useEffect(() => {
     if (!user) return;
+
     setLoading(true);
     setError(null);
-    try {
-      const snap = await getDocs(query(collection(db, "artists"), where("userId", "==", user.uid)));
+    
+    const q = query(collection(db, "artists"), where("userId", "==", user.uid));
+    
+    const unsubscribe = onSnapshot(q, (snap) => {
       setArtists(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    } catch (err: any) {
-      console.error("Artist fetch error:", err);
-      setError("Unable to sync artist database.");
-      if (err.message?.includes("index")) {
-        toast.error("Database Index Required. Please wait for deployment.");
-      }
-    } finally {
       setLoading(false);
-    }
-  };
+    }, (err: any) => {
+      console.error("Artist sync error:", err);
+      setError("Unable to sync artist database.");
+      setLoading(false);
+    });
 
-  useEffect(() => {
-    fetchData();
+    return () => unsubscribe();
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +88,6 @@ export default function Artists() {
       setShowModal(false);
       setEditingArtist(null);
       setFormData({ name: "", instagramId: "", bio: "", imageUrl: "" });
-      fetchData();
     } catch (err: any) {
       console.error("Artist save error:", err);
       toast.error("Security Rejection: " + (err.message || "Failed to transmit manifest"));
@@ -101,8 +98,11 @@ export default function Artists() {
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure? This will remove the artist profile from your catalog.")) {
-      await deleteDoc(doc(db, "artists", id));
-      fetchData();
+      try {
+        await deleteDoc(doc(db, "artists", id));
+      } catch (err: any) {
+        toast.error("Deletion failed: " + (err.message || "Security constraint"));
+      }
     }
   };
 

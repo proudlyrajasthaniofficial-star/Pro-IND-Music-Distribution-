@@ -46,7 +46,11 @@ async function startServer() {
 
   // Simple Request Logger
   app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${res.statusCode} - ${duration}ms`);
+    });
     next();
   });
 
@@ -85,54 +89,36 @@ async function startServer() {
 
   // Cloudinary Signing Endpoint
   app.post("/api/cloudinary-sign", (req, res) => {
-    console.log("📥 Signature Request Hit:", req.body);
     try {
       const apiKey = (process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY)?.trim();
       const apiSecret = (process.env.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_SECRET)?.trim();
       const cloudName = (process.env.VITE_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME)?.trim();
-      const uploadPreset = (process.env.VITE_CLOUDINARY_UPLOAD_PRESET || process.env.CLOUDINARY_UPLOAD_PRESET)?.trim();
+      const uploadPreset = (process.env.VITE_CLOUDINARY_UPLOAD_PRESET || process.env.CLOUDINARY_UPLOAD_PRESET || "ind-distribution")?.trim();
       
       if (!apiKey || !apiSecret || !cloudName) {
-        console.error("❌ Cloudinary Config Missing:", { 
-          hasKey: !!apiKey, 
-          hasSecret: !!apiSecret, 
-          cloudName: cloudName 
-        });
-        return res.status(500).json({ 
-          error: "Cloudinary is not fully configured on the server. Please check your environment variables." 
-        });
+        return res.status(500).json({ error: "Cloudinary configuration incomplete." });
       }
 
       const timestamp = Math.round(new Date().getTime() / 1000);
-      const params = {
+      const paramsToSign = {
+        timestamp,
         folder: "ind-distribution",
-        timestamp: timestamp,
         ...(uploadPreset ? { upload_preset: uploadPreset } : {}),
-        ...req.body.params
+        ...(req.body.params || {})
       };
 
-      console.log("📝 Generating Signature for params:", { ...params, api_key: apiKey });
-
-      const signature = cloudinary.utils.api_sign_request(
-        params,
-        apiSecret
-      );
-
-      console.log("✅ Signature generated:", signature.substring(0, 8) + "...");
+      const signature = cloudinary.utils.api_sign_request(paramsToSign, apiSecret);
 
       res.json({
         signature,
         timestamp,
-        apiKey: apiKey,
-        cloudName: cloudName,
-        uploadPreset: uploadPreset
+        apiKey,
+        cloudName,
+        uploadPreset
       });
     } catch (error: any) {
       console.error("Cloudinary signing error:", error);
-      res.status(500).json({ 
-        error: "Internal server error during signature generation",
-        message: error?.message || "Check server logs"
-      });
+      res.status(500).json({ error: "Signature generation failed." });
     }
   });
 
