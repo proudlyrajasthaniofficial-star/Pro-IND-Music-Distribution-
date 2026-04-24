@@ -356,29 +356,29 @@ export default function Upload() {
       const required = ["songName", "singerName", "lyricist", "composer", "producer", "copyrightYear", "copyrightHolder", "publisherYear", "publisherHolder"];
       for (const field of required) {
         if (!watchAll[field as keyof typeof watchAll]) {
-          alert(`Please fill the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+          toast.error(`Required: ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
           return;
         }
       }
     }
     if (step === 2 && !watchAll.releaseDate) {
-      alert("Please select a release date.");
+      toast.error("Launch window coordinates required.");
       return;
     }
     if (step === 3 && !watchAll.labelName) {
-      alert("Please select a label.");
+      toast.error("Corporate entity assignment required.");
       return;
     }
     if (step === 4 && !audioFile && !existingAudioUrl) {
-      alert("Please upload your master audio file.");
+      toast.error("Master audio asset deployment required.");
       return;
     }
     if (step === 5 && !coverFile && !existingCoverUrl) {
-      alert("Please upload your artwork.");
+      toast.error("Visual anchor asset deployment required.");
       return;
     }
     if (step === 6 && selectedPlatforms.length === 0) {
-      alert("Please select at least one distribution platform.");
+      toast.error("Select at least one orbital distribution platform.");
       return;
     }
     setStep(s => s + 1);

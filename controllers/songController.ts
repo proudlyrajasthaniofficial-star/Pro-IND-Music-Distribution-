@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import emailEmitter from '../events/emailEvents.js';
+import emailEmitter from '../events/emailEvents.ts';
 
 /**
  * Song Controller Logic

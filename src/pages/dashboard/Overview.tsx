@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, limit, orderBy } from "firebase/firestore";
+import { collection, query, where, limit, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import SEO from "../../components/SEO";
@@ -32,81 +32,76 @@ export default function Overview() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSystemNotifications = async () => {
-      try {
-        const q = query(collection(db, "system_notifications"), orderBy("createdAt", "desc"), limit(3));
-        const snap = await getDocs(q);
-        setSystemNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      } catch (err) {
-        console.error("Notifications fetch error:", err);
-      }
+    const qNews = query(collection(db, "system_notifications"), orderBy("createdAt", "desc"), limit(3));
+    const unsubNews = onSnapshot(qNews, (snap) => {
+      setSystemNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+
+    if (!user) return;
+    setError(null);
+
+    // Fetch Recent Releases (Real-time)
+    const qRecent = query(
+      collection(db, "releases"), 
+      where("userId", "==", user.uid),
+      orderBy("createdAt", "desc"),
+      limit(4)
+    );
+    const unsubRecent = onSnapshot(qRecent, (snap) => {
+      setRecentReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+
+    // Fetch All Releases for stats (Real-time)
+    const qAll = query(collection(db, "releases"), where("userId", "==", user.uid));
+    const unsubAll = onSnapshot(qAll, (snap) => {
+      const allData = snap.docs.map(d => d.data());
+      setStats({
+        total: allData.length,
+        live: allData.filter((r: any) => r.status === 'live').length,
+        pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved').length,
+        rejected: allData.filter((r: any) => r.status === 'rejected').length
+      });
+    });
+
+    // Fetch Earnings for Chart
+    const qEarnings = query(
+      collection(db, "transactions"),
+      where("userId", "==", user.uid),
+      where("type", "==", "earning"),
+      orderBy("createdAt", "asc")
+    );
+    const unsubEarnings = onSnapshot(qEarnings, (snap) => {
+      const earningsByDay: Record<string, number> = {};
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        return d.toLocaleDateString('en-US', { weekday: 'short' });
+      }).reverse();
+
+      last7Days.forEach(day => earningsByDay[day] = 0);
+
+      snap.docs.forEach(doc => {
+        const data = doc.data();
+        const date = new Date(data.createdAt).toLocaleDateString('en-US', { weekday: 'short' });
+        if (earningsByDay[date] !== undefined) {
+          earningsByDay[date] += data.amount;
+        }
+      });
+
+      const formattedChart = last7Days.map(day => ({
+        name: day,
+        revenue: earningsByDay[day]
+      }));
+
+      setChartData(formattedChart);
+    });
+
+    return () => {
+      unsubNews();
+      unsubRecent();
+      unsubAll();
+      unsubEarnings();
     };
-    fetchSystemNotifications();
-
-    const fetchData = async () => {
-      if (!user) return;
-      setError(null);
-      
-      try {
-        // Fetch Recent Releases
-        const q = query(
-          collection(db, "releases"), 
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc"),
-          limit(4)
-        );
-        
-        const snap = await getDocs(q);
-        setRecentReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-
-        // Fetch Stats
-        const allSnap = await getDocs(query(collection(db, "releases"), where("userId", "==", user.uid)));
-        const allData = allSnap.docs.map(d => d.data());
-        
-        setStats({
-          total: allData.length,
-          live: allData.filter((r: any) => r.status === 'live').length,
-          pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved').length,
-          rejected: allData.filter((r: any) => r.status === 'rejected').length
-        });
-
-        // Fetch Earnings for Chart
-        const tSnap = await getDocs(query(
-          collection(db, "transactions"),
-          where("userId", "==", user.uid),
-          where("type", "==", "earning"),
-          orderBy("createdAt", "asc")
-        ));
-
-        const earningsByDay: Record<string, number> = {};
-        const last7Days = Array.from({ length: 7 }, (_, i) => {
-          const d = new Date();
-          d.setDate(d.getDate() - i);
-          return d.toLocaleDateString('en-US', { weekday: 'short' });
-        }).reverse();
-
-        last7Days.forEach(day => earningsByDay[day] = 0);
-
-        tSnap.docs.forEach(doc => {
-          const data = doc.data();
-          const date = new Date(data.createdAt).toLocaleDateString('en-US', { weekday: 'short' });
-          if (earningsByDay[date] !== undefined) {
-            earningsByDay[date] += data.amount;
-          }
-        });
-
-        const formattedChart = last7Days.map(day => ({
-          name: day,
-          revenue: earningsByDay[day]
-        }));
-
-        setChartData(formattedChart);
-      } catch (err: any) {
-        console.error("Dashboard fetch error:", err);
-        setError("Network Congestion Detected. Some data streams are currently unavailable.");
-      }
-    };
-    fetchData();
   }, [user]);
 
   return (

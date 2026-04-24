@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, orderBy, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, orderBy, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 import { 
@@ -54,24 +54,25 @@ export default function MyReleases() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const fetchMyReleases = async () => {
-      if (!user) return;
-      try {
-        const q = query(
-          collection(db, "releases"), 
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc")
-        );
-        const snap = await getDocs(q);
-        setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      } catch (err: any) {
-        console.error("Failed to fetch releases:", err);
-        toast.error("Failed to load catalog. Please check your connection.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMyReleases();
+    if (!user) return;
+
+    setLoading(true);
+    const q = query(
+      collection(db, "releases"), 
+      where("userId", "==", user.uid),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setLoading(false);
+    }, (err) => {
+      console.error("Failed to fetch releases:", err);
+      toast.error("Real-time sync failing. Please refresh.");
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, [user]);
 
   const filteredReleases = releases.filter(r => {
