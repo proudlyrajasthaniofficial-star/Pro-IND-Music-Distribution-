@@ -28,7 +28,7 @@ const iconMap: Record<string, any> = {
 
 export default function IndianFeatures() {
   return (
-    <section className="py-32 px-6 relative overflow-hidden bg-[#020617]">
+    <section className="py-32 px-6 relative overflow-hidden bg-linear-to-b from-[#0D1B2A] to-[#1A1A1A]">
       {/* Background Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-electric-blue/5 blur-[150px] rounded-full pointer-events-none"></div>
       

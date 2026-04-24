@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@firebase/eslint-plugin-security-rules": "^0.0.1",
+    "@getbrevo/brevo": "^5.0.4",
     "@google/genai": "^1.29.0",
     "@hookform/resolvers": "^5.2.2",
     "@react-three/drei": "^10.7.7",

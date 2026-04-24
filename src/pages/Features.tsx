@@ -22,12 +22,10 @@ import {
   ChevronRight
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import GalaxyBackground from "../components/GalaxyBackground";
 
 export default function Features() {
   return (
-    <div className="min-h-screen bg-[#020617] text-white font-sans selection:bg-electric-blue/30 overflow-x-hidden">
-      <GalaxyBackground />
+    <div className="min-h-screen bg-[#0D1B2A] text-white font-sans selection:bg-electric-blue/30 overflow-x-hidden">
       {/* Floating WhatsApp Button */}
       <a 
         href="https://wa.me/917742789827" 
@@ -39,15 +37,15 @@ export default function Features() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between glass mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between glass-dark mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full border-white/5">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center rotate-12 shadow-lg">
             <Music className="text-white w-6 h-6 -rotate-12" />
           </div>
-          <span className="font-display text-2xl font-bold tracking-tighter text-white">IND<span className="text-electric-blue">.</span></span>
+          <span className="font-display text-2xl font-bold tracking-tighter">IND<span className="text-electric-blue">.</span></span>
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-white/40">
+        <div className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
           <Link to="/" className="hover:text-electric-blue transition-colors">Home</Link>
           <a href="#distribution" className="hover:text-electric-blue transition-colors">Distribution</a>
           <Link to="/terms" className="hover:text-electric-blue transition-colors">Legal</Link>
@@ -55,13 +53,13 @@ export default function Features() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to="/auth?mode=login" className="text-sm font-medium text-white/60 hover:text-electric-blue">Login</Link>
+          <Link to="/auth?mode=login" className="text-sm font-medium hover:text-electric-blue">Login</Link>
           <Link to="/auth?mode=signup" className="px-6 py-2.5 bg-electric-blue text-[#0D1B2A] rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] transition-all">Start Now</Link>
         </div>
       </nav>
 
       {/* SECTION 1: HERO HEADER */}
-      <section className="relative pt-48 pb-32 px-6 overflow-hidden bg-transparent">
+      <section className="relative pt-48 pb-32 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none opacity-20">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-brand-blue/30 blur-[150px] rounded-full"></div>
             <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-neon-purple/20 blur-[120px] rounded-full"></div>
@@ -179,7 +177,7 @@ export default function Features() {
       </section>
 
       {/* SECTION 3: ROYALTY COLLECTION */}
-      <section id="royalties" className="py-32 px-6 relative bg-white/5 backdrop-blur-sm">
+      <section id="royalties" className="py-32 px-6 relative bg-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 mb-20">
              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase underline decoration-electric-blue underline-offset-8">Transparent Royalty Collection</h2>
@@ -322,7 +320,7 @@ export default function Features() {
       </section>
 
       {/* SECTION 6: USER DASHBOARD MOCK */}
-      <section className="py-32 px-6 bg-white/5 backdrop-blur-sm">
+      <section className="py-32 px-6 bg-white/5">
         <div className="max-w-7xl mx-auto text-center space-y-20">
            <div className="space-y-6">
               <h2 className="text-4xl md:text-7xl font-black font-display tracking-tight uppercase">Smart Artist <span className="text-electric-blue">Dashboard</span></h2>

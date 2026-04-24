@@ -12,85 +12,128 @@ export default function GalaxyBackground() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let stars: Star[] = [];
+    const numStars = 200;
+
+    class Star {
+      x: number;
+      y: number;
+      size: number;
+      speed: number;
+      opacity: number;
+      blinkSpeed: number;
+
+      constructor(width: number, height: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 1.5;
+        this.speed = Math.random() * 0.05;
+        this.opacity = Math.random();
+        this.blinkSpeed = 0.005 + Math.random() * 0.01;
+      }
+
+      update(width: number, height: number) {
+        this.y += this.speed;
+        if (this.y > height) {
+          this.y = 0;
+          this.x = Math.random() * width;
+        }
+        this.opacity += this.blinkSpeed;
+        if (this.opacity > 1 || this.opacity < 0.2) {
+          this.blinkSpeed = -this.blinkSpeed;
+        }
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(this.opacity)})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    class ShootingStar {
+      x: number;
+      y: number;
+      length: number;
+      speed: number;
+      opacity: number;
+      active: boolean;
+
+      constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.length = 0;
+        this.speed = 0;
+        this.opacity = 0;
+        this.active = false;
+      }
+
+      reset(width: number, height: number) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * (height / 2);
+        this.length = 50 + Math.random() * 150;
+        this.speed = 10 + Math.random() * 20;
+        this.opacity = 1;
+        this.active = true;
+      }
+
+      update(width: number, height: number) {
+        if (!this.active) {
+          if (Math.random() < 0.005) this.reset(width, height);
+          return;
+        }
+
+        this.x += this.speed;
+        this.y += this.speed / 2;
+        this.opacity -= 0.01;
+
+        if (this.opacity <= 0 || this.x > width || this.y > height) {
+          this.active = false;
+        }
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        if (!this.active) return;
+        const gradient = ctx.createLinearGradient(
+          this.x, this.y, 
+          this.x - this.length, this.y - this.length / 2
+        );
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x - this.length, this.y - this.length / 2);
+        ctx.stroke();
+      }
+    }
+
+    let shootingStars: ShootingStar[] = Array.from({ length: 3 }, () => new ShootingStar());
 
     const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = Array.from({ length: numStars }, () => new Star(canvas.width, canvas.height));
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        star.update(canvas.width, canvas.height);
+        star.draw(ctx);
+      });
+      shootingStars.forEach(ss => {
+        ss.update(canvas.width, canvas.height);
+        ss.draw(ctx);
+      });
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     window.addEventListener('resize', resize);
     resize();
-
-    class Particle {
-      x: number;
-      y: number;
-      size: number;
-      vx: number;
-      vy: number;
-      color: string;
-      alpha: number;
-      alphaDelta: number;
-
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        
-        const hue = Math.random() < 0.7 ? 220 + Math.random() * 40 : Math.random() * 360;
-        this.color = `hsla(${hue}, 80%, 70%, `;
-        this.alpha = Math.random();
-        this.alphaDelta = 0.005 + Math.random() * 0.01;
-      }
-
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.alpha += this.alphaDelta;
-
-        if (this.alpha > 1 || this.alpha < 0) {
-          this.alphaDelta *= -1;
-        }
-
-        if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
-        if (this.y < 0) this.y = height;
-        if (this.y > height) this.y = 0;
-      }
-
-      draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = this.color + this.alpha + ')';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        if (this.size > 1.5) {
-          ctx.shadowBlur = 15;
-          ctx.shadowColor = 'white';
-        } else {
-          ctx.shadowBlur = 0;
-        }
-      }
-    }
-
-    const particles = Array.from({ length: 150 }, () => new Particle());
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      
-      particles.forEach(p => {
-        p.update();
-        p.draw(ctx);
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
     animate();
 
     return () => {
@@ -100,34 +143,62 @@ export default function GalaxyBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#020617]">
-      {/* Animated Nebulae */}
+    <div className="absolute inset-0 z-0 overflow-hidden bg-[#020617]">
+      {/* Deep Space Gradients (Nebulae) */}
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
+          opacity: [0.4, 0.6, 0.4],
+          rotate: [0, 10, 0],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-[-20%] left-[-10%] w-full h-full bg-indigo-600/30 blur-[120px] rounded-full"
+        className="absolute -top-[20%] -left-[10%] w-[100%] h-[100%] bg-indigo-900/40 blur-[150px] rounded-full"
       />
       <motion.div
         animate={{
           scale: [1.2, 1, 1.2],
-          opacity: [0.4, 0.7, 0.4],
+          opacity: [0.3, 0.5, 0.3],
+          rotate: [0, -15, 0],
         }}
         transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-[-20%] right-[-10%] w-[120%] h-[120%] bg-fuchsia-600/30 blur-[150px] rounded-full"
+        className="absolute -bottom-[20%] -right-[10%] w-[120%] h-[120%] bg-purple-900/50 blur-[180px] rounded-full"
       />
       <motion.div
         animate={{
-          opacity: [0.2, 0.5, 0.2],
-          rotate: [0, 180, 360],
+          x: [-100, 100, -100],
+          y: [-50, 50, -50],
+          opacity: [0.3, 0.5, 0.3],
         }}
-        transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-        className="absolute top-1/4 left-1/4 w-[80%] h-[80%] bg-cyan-400/20 blur-[180px] rounded-full"
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-1/4 left-1/4 w-[80%] h-[80%] bg-blue-600/30 blur-[200px] rounded-full"
       />
       
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
+      {/* High Colour Accents */}
+      <motion.div
+        animate={{
+          opacity: [0.2, 0.4, 0.2],
+          scale: [0.8, 1.2, 0.8],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-[10%] right-[10%] w-[40%] h-[40%] bg-pink-500/15 blur-[120px] rounded-full"
+      />
+      <motion.div
+        animate={{
+          opacity: [0.1, 0.3, 0.1],
+          scale: [1.2, 0.8, 1.2],
+        }}
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-[10%] left-[20%] w-[30%] h-[30%] bg-amber-400/10 blur-[100px] rounded-full"
+      />
+
+      {/* Star Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none opacity-80"
+      />
+      
+      {/* Overlay for grid/texture */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
     </div>
   );
 }

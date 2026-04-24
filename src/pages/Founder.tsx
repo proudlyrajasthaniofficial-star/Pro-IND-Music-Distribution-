@@ -12,12 +12,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
-import GalaxyBackground from "../components/GalaxyBackground";
 
 const Founder = () => {
   return (
-    <div className="min-h-screen bg-[#020617] text-white overflow-hidden relative">
-      <GalaxyBackground />
+    <div className="min-h-screen bg-white text-brand-dark overflow-hidden relative">
       <SEO 
         title="Founder & Developer | IND Music Distribution"
         description="Meet SK Ji, the visionary founder and developer behind India's most advanced music distribution platform."
@@ -102,7 +100,7 @@ const Founder = () => {
                 className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-brand-blue/10 blur-3xl -z-10"
               />
             </h1>
-            <p className="text-lg md:text-xl text-white/60 font-medium max-w-2xl mx-auto tracking-tight">
+            <p className="text-lg md:text-xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight">
               Building the future of music distribution in India with cutting-edge technology and artistic vision.
             </p>
           </motion.div>
@@ -143,29 +141,29 @@ const Founder = () => {
               
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <p className="text-xs font-black text-electric-blue uppercase tracking-[0.3em]">The Architect</p>
-                  <h2 className="text-6xl md:text-7xl font-display font-black tracking-tighter animate-text-shift whitespace-nowrap">
+                  <p className="text-xs font-black text-brand-blue uppercase tracking-[0.3em]">The Architect</p>
+                  <h2 className="text-6xl md:text-7xl font-display font-black tracking-tighter animate-text-shift">
                     SK Ji
                   </h2>
                 </div>
                 
-                <h3 className="text-xl font-bold tracking-tight text-white flex items-center gap-3">
-                  <div className="w-8 h-[2px] bg-electric-blue" />
+                <h3 className="text-xl font-bold tracking-tight text-slate-800 flex items-center gap-3">
+                  <div className="w-8 h-[2px] bg-brand-blue" />
                   Founder & Developer
                 </h3>
                 
-                <p className="text-lg text-white/60 leading-relaxed font-medium">
+                <p className="text-lg text-slate-500 leading-relaxed font-medium">
                   SK Ji is the visionary founder behind IND Music Distribution, focused on empowering independent artists and labels across India with a powerful, scalable, and transparent music distribution ecosystem.
                 </p>
 
                 <div className="pt-8 grid grid-cols-2 gap-8">
                   <div className="space-y-1">
-                    <p className="text-3xl font-black font-display text-electric-blue tracking-tighter">10k+</p>
-                    <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Artists Empowered</p>
+                    <p className="text-3xl font-black font-display text-brand-blue tracking-tighter">10k+</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Artists Empowered</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-3xl font-black font-display text-brand-purple tracking-tighter">1M+</p>
-                    <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Streams Managed</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Streams Managed</p>
                   </div>
                 </div>
               </div>
@@ -173,8 +171,8 @@ const Founder = () => {
 
             {/* Contact Card */}
             <div className="space-y-6">
-               <h3 className="text-xs font-black text-white/40 uppercase tracking-[0.3em] flex items-center gap-4">
-                  Connection Protocols <div className="flex-1 h-[1px] bg-white/10" />
+               <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-4">
+                  Connection Protocols <div className="flex-1 h-[1px] bg-slate-100" />
                </h3>
                
                <div className="flex flex-col sm:flex-row gap-6">
@@ -196,11 +194,11 @@ const Founder = () => {
                    {[
                      { icon: Instagram, color: "hover:text-pink-500" },
                      { icon: Youtube, color: "hover:text-red-500" },
-                     { icon: Globe, color: "hover:text-electric-blue" }
+                     { icon: Globe, color: "hover:text-brand-blue" }
                    ].map((social, i) => (
                      <button 
                        key={i} 
-                       className={`w-20 h-20 glass-dark rounded-3xl flex items-center justify-center ${social.color} transition-all hover:-translate-y-2 hover:shadow-2xl border border-white/5`}
+                       className={`w-20 h-20 glass rounded-3xl flex items-center justify-center ${social.color} transition-all hover:-translate-y-2 hover:shadow-2xl`}
                      >
                        <social.icon className="w-6 h-6" />
                      </button>
@@ -227,7 +225,7 @@ const Founder = () => {
           </h2>
           <div className="flex justify-center flex-wrap gap-8 pt-8">
             {['Strategic Vision', 'Full-Stack Excellence', 'Security First', 'User Centric'].map((tag, i) => (
-              <span key={i} className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 border border-white/10 px-6 py-2 rounded-full">
+              <span key={i} className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border border-slate-100 px-6 py-2 rounded-full">
                 {tag}
               </span>
             ))}
@@ -236,14 +234,14 @@ const Founder = () => {
       </main>
 
       {/* Modern Footer Branding */}
-      <footer className="relative z-10 border-t border-white/5 py-12 px-8">
+      <footer className="relative z-10 border-t border-slate-50 py-12 px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-6">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">© 2026 IND Distribution</span>
-            <div className="w-[1px] h-4 bg-white/10" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 italic">Engineered by SK Ji</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">© 2026 IND Distribution</span>
+            <div className="w-[1px] h-4 bg-slate-100" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">Engineered by SK Ji</span>
           </div>
-          <Link to="/dashboard" className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-electric-blue group">
+          <Link to="/dashboard" className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-brand-blue group">
             Access Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
           </Link>
         </div>

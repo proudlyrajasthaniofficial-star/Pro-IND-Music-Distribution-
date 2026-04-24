@@ -59,7 +59,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden selection:bg-electric-blue/30">
-      <GalaxyBackground />
       <SEO 
         title="IND Distribution | Elite Global Music Distribution"
         description="Join 50k+ global artists. Distribute your music to 250+ stores like Spotify, Apple Music, and Instagram with IND Distribution. Get 24hr releases and 100% transparent royalty management."
@@ -75,15 +74,15 @@ export default function Home() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between glass-dark mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full border border-white/5">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between glass-dark mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full border-white/5">
         <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2">
           <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center rotate-12 shadow-lg">
             <Music className="text-white w-6 h-6 -rotate-12" />
           </div>
-          <span className="font-display text-2xl font-bold tracking-tighter text-white">IND<span className="text-electric-blue">.</span></span>
+          <span className="font-display text-2xl font-bold tracking-tighter">IND<span className="text-electric-blue">.</span></span>
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-white/40">
+        <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-white/60">
           <a href="#features" className="hover:text-electric-blue transition-colors">Features</a>
           <a href="#pricing" className="hover:text-electric-blue transition-colors">Pricing</a>
           <Link to="/terms" className="hover:text-electric-blue transition-colors">Legal</Link>
@@ -94,13 +93,13 @@ export default function Home() {
         <div className="flex items-center gap-4">
           <Link 
             to={user ? "/dashboard" : "/auth?mode=login"} 
-            className="text-sm font-medium text-white/60 hover:text-electric-blue transition-colors"
+            className="text-sm font-medium hover:text-electric-blue transition-colors"
           >
             {user ? "Dashboard" : "Login"}
           </Link>
           <Link 
             to={user ? "/dashboard/upload" : "/auth?mode=signup"} 
-            className="px-6 py-2.5 bg-brand-blue text-white rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(42,92,231,0.4)] transition-all"
+            className="px-6 py-2.5 bg-electric-blue text-[#0D1B2A] rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] transition-all"
           >
             {user ? "Primary Release" : "Start Now"}
           </Link>
@@ -110,15 +109,16 @@ export default function Home() {
       {/* Hero Section - Professional & Minimalist */}
       <section 
         className="relative w-full min-h-[95vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden"
-        id="hero-section"
       >
+        <GalaxyBackground />
+
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/10 border border-white/20 mb-10 shadow-2xl backdrop-blur-md">
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 mb-10 shadow-2xl backdrop-blur-md">
               <div className="w-2 h-2 bg-electric-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(0,212,255,1)]"></div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Premium Global Infrastructure // 2026 Edition</span>
             </div>
@@ -137,14 +137,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
               <Link 
                 to={user ? "/dashboard" : "/auth?mode=signup"} 
-                className="group relative w-full sm:w-auto px-16 py-7 bg-white text-[#0D1B2A] rounded-full font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95"
+                className="group relative w-full sm:w-auto px-16 py-7 bg-white text-[#020617] rounded-full font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95"
               >
                 <span className="relative z-10">{user ? "Enter Dashboard" : "Access Platform"}</span>
                 <div className="absolute inset-0 bg-electric-blue translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </Link>
               <a 
                 href="#features" 
-                className="w-full sm:w-auto px-16 py-7 glass border border-white/20 rounded-full font-black text-xs uppercase tracking-[0.3em] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-16 py-7 glass-dark border border-white/10 rounded-full font-black text-xs uppercase tracking-[0.3em] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
               >
                 View Features
                 <ChevronRight className="w-4 h-4" />
