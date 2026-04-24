@@ -60,9 +60,47 @@ async function startServer() {
       status: "ok", 
       timestamp: new Date().toISOString(),
       cloudinary: {
-        configured: !!cloudinary.config().cloud_name,
+        configured: !!(process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME),
       }
     });
+  });
+
+  // Cloudinary Signing Endpoint (High Priority)
+  app.post("/api/cloudinary-sign", (req, res) => {
+    try {
+      const apiKey = (process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY)?.trim();
+      const apiSecret = (process.env.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_SECRET)?.trim();
+      const cloudName = (process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME)?.trim();
+      const uploadPreset = (process.env.CLOUDINARY_UPLOAD_PRESET || process.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ind-distribution")?.trim();
+      
+      if (!apiKey || !apiSecret || !cloudName) {
+        console.error("❌ Cloudinary Config Missing:", { hasKey: !!apiKey, hasSecret: !!apiSecret, cloudName });
+        return res.status(500).json({ 
+          error: "Cloudinary is not configured on the server. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in settings." 
+        });
+      }
+
+      const timestamp = Math.round(new Date().getTime() / 1000);
+      const paramsToSign = {
+        timestamp,
+        folder: "ind-distribution",
+        ...(uploadPreset ? { upload_preset: uploadPreset } : {}),
+        ...(req.body.params || {})
+      };
+
+      const signature = cloudinary.utils.api_sign_request(paramsToSign, apiSecret);
+
+      res.json({
+        signature,
+        timestamp,
+        apiKey,
+        cloudName,
+        uploadPreset
+      });
+    } catch (error: any) {
+      console.error("Cloudinary signing error:", error);
+      res.status(500).json({ error: "Failed to generate upload signature." });
+    }
   });
 
   // Example API route for generating ISRC (Mock logic for premium feel)
@@ -87,45 +125,10 @@ async function startServer() {
   app.post("/api/requests/submit", reqCtrl.submitRequest);
   app.post("/api/requests/status-update", reqCtrl.updateRequestStatus);
 
-  // Cloudinary Signing Endpoint
-  app.post("/api/cloudinary-sign", (req, res) => {
-    try {
-      const apiKey = (process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY)?.trim();
-      const apiSecret = (process.env.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_SECRET)?.trim();
-      const cloudName = (process.env.VITE_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME)?.trim();
-      const uploadPreset = (process.env.VITE_CLOUDINARY_UPLOAD_PRESET || process.env.CLOUDINARY_UPLOAD_PRESET || "ind-distribution")?.trim();
-      
-      if (!apiKey || !apiSecret || !cloudName) {
-        return res.status(500).json({ error: "Cloudinary configuration incomplete." });
-      }
-
-      const timestamp = Math.round(new Date().getTime() / 1000);
-      const paramsToSign = {
-        timestamp,
-        folder: "ind-distribution",
-        ...(uploadPreset ? { upload_preset: uploadPreset } : {}),
-        ...(req.body.params || {})
-      };
-
-      const signature = cloudinary.utils.api_sign_request(paramsToSign, apiSecret);
-
-      res.json({
-        signature,
-        timestamp,
-        apiKey,
-        cloudName,
-        uploadPreset
-      });
-    } catch (error: any) {
-      console.error("Cloudinary signing error:", error);
-      res.status(500).json({ error: "Signature generation failed." });
-    }
-  });
-
-  // API Catch-all (Before static assets)
+  // API Catch-all (Before static assets) - EXPLICIT 404
   app.all("/api/*", (req, res) => {
-    console.warn(`[404] API Route Not Found: ${req.method} ${req.url}`);
-    res.status(404).json({ error: `API route ${req.method} ${req.url} not found` });
+    console.warn(`[404] No Route Matched: ${req.method} ${req.url}`);
+    res.status(404).json({ error: `IND Distribution API: Endpoint ${req.method} ${req.url} does not exist.` });
   });
 
   // Vite middleware for development

@@ -25,8 +25,16 @@ export async function uploadToCloudinary(
   const signData = await signResponse.json().catch(() => null);
 
   if (!signResponse.ok || !signData) {
-    const errorMsg = signData?.error || signData?.message || signResponse.statusText || `Request failed with status ${signResponse.status}`;
-    console.error(`❌ Signature Error (${signResponse.status}):`, errorMsg, signData);
+    const isJson = signResponse.headers.get("content-type")?.includes("application/json");
+    let errorMsg = `Signature request failed with status ${signResponse.status}`;
+    
+    if (isJson && signData?.error) {
+      errorMsg = signData.error;
+    } else if (signResponse.status === 404) {
+      errorMsg = "API Signature endpoint not found (404). Please ensure the server is running correctly.";
+    }
+    
+    console.error(`❌ Signature Error (${signResponse.status}):`, errorMsg);
     throw new Error(errorMsg);
   }
 
