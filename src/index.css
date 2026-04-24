@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  --color-brand-blue: #0066FF;
+  --color-brand-purple: #9500FF;
+  --color-brand-dark: #111111;
+  --color-brand-light: #FAFAFA;
+  
+  --color-electric-blue: #00D4FF;
+  --color-neon-purple: #7B61FF;
+  --color-soft-orange: #FF8C42;
+  --color-whatsapp-green: #25D366;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-light text-brand-dark font-sans antialiased;
+  }
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+}
+
+.glass-dark {
+  @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl text-white;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-linear-to-r from-brand-blue to-brand-purple;
+}
+
+.btn-premium {
+  @apply px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg;
+}
+
+.btn-glow {
+  @apply bg-brand-blue text-white shadow-[0_0_20px_rgba(0,102,255,0.4)] hover:shadow-[0_0_30px_rgba(0,102,255,0.6)];
+}
+
+@utility animate-gradient {
+  background-size: 300% auto;
+  animation: gradientMove 6s infinite linear;
+}
+
+@utility animate-text-shift {
+  background: linear-gradient(to right, #0066FF, #9500FF, #FF0077, #FF8C42);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: textShift 8s linear infinite;
+}
+
+@utility glow-pulse {
+  animation: glowPulse 4s infinite ease-in-out;
+}
+
+@utility floating {
+  animation: floating 6s infinite ease-in-out;
+}
+
+@utility animate-pulse-subtle {
+  animation: pulseSubtle 4s infinite ease-in-out;
+}
+
+@utility neon-glow {
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+@utility animate-mesh {
+  animation: meshMove 15s ease infinite;
+}
+
+@keyframes meshMove {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+@utility color-shift-hero {
+  background: linear-gradient(-45deg, #0D1B2A, #1B263B, #415A77, #778DA9, #00D4FF, #7B61FF);
+  background-size: 400% 400%;
+  animation: meshMove 20s ease infinite;
+}
+
+@keyframes textShift {
+  0% { background-position: 0% 50% }
+  100% { background-position: 100% 50% }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 102, 255, 0.4)); }
+  50% { filter: drop-shadow(0 0 30px rgba(149, 0, 255, 0.6)); }
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 15px currentColor); }
+  50% { opacity: 0.4; filter: brightness(0.8) drop-shadow(0 0 5px currentColor); }
+}
+
