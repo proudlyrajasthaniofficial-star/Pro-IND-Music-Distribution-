@@ -179,8 +179,8 @@ export default function Upload() {
       publisherYear: new Date().getFullYear().toString(),
       publisherHolder: "",
       language: "Hindi",
-      primaryGenre: "Pop",
-      secondaryGenre: "HipHop",
+      primaryGenre: "Romantic",
+      secondaryGenre: "Desi Pop",
       isrc: "",
       upc: "",
       releaseDate: "",
@@ -596,23 +596,19 @@ export default function Upload() {
                             <button type="button" className="text-[9px] font-black uppercase text-brand-purple flex items-center gap-1.5 hover:scale-105 transition-transform"><Zap className="w-3 h-3 fill-brand-purple" /> Auto Suggest (AI)</button>
                          </div>
                          <select {...register("primaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
-                            <optgroup label="Primary Genres">
-                               {INDIAN_GENRES.primary.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
-                            <optgroup label="Regional Genres">
-                               {INDIAN_GENRES.regional.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
+                            {Object.keys(INDIAN_GENRES).map(category => (
+                               <option key={category} value={category}>{category}</option>
+                            ))}
                          </select>
                       </div>
                       <div className="space-y-4">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-4">Secondary Genre</label>
                          <select {...register("secondaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
-                            <optgroup label="Primary Genres">
-                               {INDIAN_GENRES.primary.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
-                            <optgroup label="Regional Genres">
-                               {INDIAN_GENRES.regional.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
+                            {Object.entries(INDIAN_GENRES).map(([category, subgenres]) => (
+                               <optgroup key={category} label={category}>
+                                  {subgenres.map(g => <option key={g} value={g}>{g}</option>)}
+                               </optgroup>
+                            ))}
                          </select>
                       </div>
                       <div className="space-y-2 md:space-y-3">
