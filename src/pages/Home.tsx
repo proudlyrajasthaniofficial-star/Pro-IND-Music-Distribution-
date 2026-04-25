@@ -85,7 +85,8 @@ export default function Home() {
         <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-white/60">
           <a href="#features" className="hover:text-electric-blue transition-colors">Features</a>
           <a href="#pricing" className="hover:text-electric-blue transition-colors">Pricing</a>
-          <Link to="/terms" className="hover:text-electric-blue transition-colors">Legal</Link>
+          <Link to="/founder-developer" className="hover:text-electric-blue transition-colors">Founder</Link>
+          <Link to="/blog" className="hover:text-electric-blue transition-colors">Blog</Link>
           <Link to="/contact" className="hover:text-electric-blue transition-colors">Contact</Link>
           <Link to="/features" className="hover:text-electric-blue transition-colors uppercase">Support</Link>
         </div>
@@ -162,15 +163,15 @@ export default function Home() {
             <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12">Integrated with key global platforms</p>
             <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-10 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
               {[
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_kIbRxSl97-mhR2ECvUEqSByUnzTrFQciF1Ax836EBAZiehVnNis_Wqq9-MDRY6DF7l4Sw7YSf4xm9A8FK5FUH20M5c0xt-tynh2-8jbFWIKdfewohVdQ46_5CPa8cCnRCkvhdQxDrHvWHh_MlldxLv59SJsP-dgAGCSD52_llRKMOFw55KLFmRVSm7M/s1600/1000611952.png",
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png",
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgukPF5D6DVe7qztGz8oLq_CO6iVA05Lv-Vg8qizenOpJ8kVtCJ7mlTEOFeA_kxMHmXuJL-VLwi_-iApmePw6hTRLwUHcGTx_Ae2_NRjjqKBlUGOdrIObtN42TugzRu6lAUK3lALt_0hE2m7GJijHqZJhBxPnRRDjYkAYJtXIlJsIq2AR-xoqkPC1q3nSk/s1600/1000611956.png",
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png"
-              ].map((url, idx) => (
+                { name: "Spotify India", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_kIbRxSl97-mhR2ECvUEqSByUnzTrFQciF1Ax836EBAZiehVnNis_Wqq9-MDRY6DF7l4Sw7YSf4xm9A8FK5FUH20M5c0xt-tynh2-8jbFWIKdfewohVdQ46_5CPa8cCnRCkvhdQxDrHvWHh_MlldxLv59SJsP-dgAGCSD52_llRKMOFw55KLFmRVSm7M/s1600/1000611952.png" },
+                { name: "JioSaavn Distribution", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png" },
+                { name: "Gaana Music Platform", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgukPF5D6DVe7qztGz8oLq_CO6iVA05Lv-Vg8qizenOpJ8kVtCJ7mlTEOFeA_kxMHmXuJL-VLwi_-iApmePw6hTRLwUHcGTx_Ae2_NRjjqKBlUGOdrIObtN42TugzRu6lAUK3lALt_0hE2m7GJijHqZJhBxPnRRDjYkAYJtXIlJsIq2AR-xoqkPC1q3nSk/s1600/1000611956.png" },
+                { name: "Wynk Artist Services", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png" }
+              ].map((platform, idx) => (
                 <img 
                   key={idx} 
-                  src={url} 
-                  alt={`Platform ${idx + 1}`} 
+                  src={platform.url} 
+                  alt={`${platform.name} - music distribution platform India`} 
                   className="h-10 md:h-14 object-contain brightness-0 invert opacity-40 hover:opacity-100 transition-opacity" 
                   referrerPolicy="no-referrer"
                 />

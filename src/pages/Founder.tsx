@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
+import PublicNavbar from "../components/PublicNavbar";
 
 const Founder = () => {
   return (
@@ -69,17 +70,7 @@ const Founder = () => {
         </div>
       </div>
 
-      <nav className="relative z-50 p-8 flex justify-between items-center max-w-7xl mx-auto">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-            <Music className="text-white w-5 h-5" />
-          </div>
-          <span className="font-display font-bold tracking-tighter text-xl">IND<span className="text-brand-blue">.</span></span>
-        </Link>
-        <Link to="/contact" className="text-xs font-black uppercase tracking-widest hover:text-brand-blue transition-colors">
-          Get in Touch
-        </Link>
-      </nav>
+      <PublicNavbar />
 
       <main className="relative z-10 max-w-7xl mx-auto px-6 pt-12 pb-32">
         {/* Hero Section */}

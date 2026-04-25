@@ -9,6 +9,9 @@ const Home = lazy(() => import('./pages/Home'));
 const Features = lazy(() => import('./pages/Features'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Founder = lazy(() => import('./pages/Founder'));
+const SEOLandingPage = lazy(() => import('./pages/SEOLanding'));
+const BlogList = lazy(() => import('./pages/BlogList'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 // Dashboard Components
 const DashboardLayout = lazy(() => import('./components/DashboardLayout'));
@@ -76,7 +79,19 @@ function AppContent() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/features" element={<Features />} />
-          <Route path="/founder" element={<Founder />} />
+          <Route path="/founder-developer" element={<Founder />} />
+          <Route path="/founder" element={<Navigate to="/founder-developer" replace />} />
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          
+          {/* SEO Landing Pages */}
+          <Route path="/music-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/upload-song-on-spotify-india" element={<SEOLandingPage />} />
+          <Route path="/distribute-music-jiosaavn" element={<SEOLandingPage />} />
+          <Route path="/indian-music-distribution-platform" element={<SEOLandingPage />} />
+          <Route path="/caller-tune-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/instagram-reels-music-distribution" element={<SEOLandingPage />} />
+          
           <Route path="/terms" element={<Terms />} />
           <Route path="/refunds" element={<Refunds />} />
           <Route path="/contact" element={<Contact />} />

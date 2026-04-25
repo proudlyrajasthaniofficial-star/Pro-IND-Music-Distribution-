@@ -39,7 +39,7 @@ export class EmailService {
     }
 
     // Inject APP_URL into templates if they contain placeholders
-    const finalHtml = htmlContent.replace(/{{APP_URL}}/g, process.env.APP_URL || 'http://localhost:3000');
+    const finalHtml = htmlContent.replace(/{{APP_URL}}/g, process.env.APP_URL || 'https://musicdistributionindia.online');
 
     try {
       const response = await mailjet.post("send", { version: 'v3.1' }).request({

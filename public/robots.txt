@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
 
-# Sitemap location
-Sitemap: https://ind-distribution.example.com/sitemap.xml
+Sitemap: https://musicdistributionindia.online/sitemap.xml
