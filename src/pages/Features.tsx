@@ -157,13 +157,12 @@ export default function Features() {
             className="relative"
           >
             <div className="relative aspect-video glass-dark rounded-[3rem] overflow-hidden border border-white/5 flex items-center justify-center group shadow-2xl">
-               <div className="absolute inset-0 bg-linear-to-br from-electric-blue/5 to-transparent"></div>
-               <Music className="w-32 h-32 text-electric-blue opacity-10 blur-xl absolute" />
-               <div className="grid grid-cols-4 gap-4 p-8">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-full aspect-square rounded-2xl bg-white/5 border border-white/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }}></div>
-                  ))}
-               </div>
+               <img 
+                 src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCy-TGalb1OrdPykN3YNpD4WN4wiOtOwgdJ-VeVQYAIgCIbmrNio33s5_jEzfu0lbpcaclijJueG1tZ2-3tgO3uKNNT-sUwe3pvL6HQhjMN5U819uPN8-i3LhWSRu4tsXVI_qHfIUpEejdCsMEz5Kf_x_AGu6jaI6fc51GEqIHJtMUr-eMf24i98xipds/s4096/1000616710.jpg" 
+                 alt="Music stores overview"
+                 className="w-full h-full object-cover"
+                 referrerPolicy="no-referrer"
+               />
             </div>
             {/* Floating badges */}
             <div className="absolute -top-10 -right-10 px-6 py-4 bg-brand-blue rounded-3xl shadow-2xl font-bold text-xs uppercase tracking-widest">
