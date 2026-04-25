@@ -175,26 +175,29 @@ export default function Home() {
 
               <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-12 md:gap-x-16">
                 {[
-                  { name: "Platform 1", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiT4AraHOBV5Z8hsEFIqSk-x4MH9Bq6HCvLcVy0BdUZfa05thWfnrXvS27CHv14oSQ9WCyahaXNoBChRgJ3B8GzDPOqUBKegOqo6bSIgxEHPq8-pDoIMidDxRzhN1Dbcp9AYtrpLOiOvvOlxVaTwmOKUWYfhLt0kKe0MSVwbsxM4W9tIH6Q_QXebieY-FQ/s225/1000625038.png" },
-                  { name: "Platform 2", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQEP7K3_JFRWDwHOwB8zvSzwDvb2FHws9aZTtxDlOecHoh4acgXA58jJcJ0SuuJhc0Ins6RGcvL6fM-rXYv7Wzp1t-cYfu6Y35xqKmLDgasn-vadrwvlaMxvP4s-7udpvsgbIUu02xGVfgV8rgPHIsj3UvKRIYgXS9oXKFhLDBZvVlFQbkU6Z49rSEfw8/s390/1000625039.png" },
-                  { name: "Platform 3", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCBvvdrkwgOYchq85w_ntr8jgL_VnWuHbXE8D5xktwlb1RkHQKPEKu25m3pPXULu9r5ZkqUbmjZGh5hjBm-9e8SXeazxM-0_5gyItH6czSh3ZvtFewhHB-pRDvVoJv8lw11Z3qMmVj9TnCA6-hUkLF9yGJR2QdRUe-B9e0r4FHTRgV2sr_UHr6VfekCHM/s900/1000625040.jpg" },
-                  { name: "Platform 4", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEVQjuWWqit8Sb75qVR7lk36_4Lp5rbYYskV1-p07lnQWiUk1KG2biUAN_Bp-36oaOQk33_x7AuGhL416wD5eFjgk0DHapjlHQooqqJzgYZervYA6_ckhFqJNnNeYrhsQLBbXcTH8eqdw5enYkNO_xLZn2My_uYVTtStDAzjWmuCUOwzy02QVlB0THYHw/s225/1000625041.png" },
-                  { name: "Platform 5", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzohmzK39V2QK71HU443ccu-WGjXmGGStVl0E_uUG2xGCaKtjWWHE0r0yvetl7SxWNPUYYc7tHb_bTqL7gRgeQhIG7_e0M4mJdeh1tXR7LVKMfDSrKJdjH9fBk2GEuVsxOJ9VfEv_OsW-TNSuzsOIi-dRVd_g5WlL1Fmc1l-CEko4pcRT8lxUR72ipzJM/s554/1000625034.jpg" },
-                  { name: "Platform 6", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_8gQQpLDy3RYSgfgDsIglEijRKzfxWtmFrElw25N-b6nRFyM512Na6GN8kFJ_HGDzQy04Uob9hg0OZW_csKFekqMq2w89cSrrE9mdxvH4CWqsK3YNC6_ZQwoULGocxy37eDAh8droYGb7d6eolS6aZ2MAdmLXQAzESaJIHOApjTDVXQfbVsmG8qhb1tc/s259/1000625035.png" },
-                  { name: "Platform 7", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnmd1cJShVfhlnQhlwgkW5oBjz_wNUc-j0SgdDJ9Rm8rnPDZNL7gY1sww99LLCOTZ4BBEXVe7Qs_eJEk3s0uRl5k7IQutxtQbx3kWIZCT7N-p5HajRaCcbXDoj_SXaixa5GFhktXabHzy9UONMF3F80n4DDVFE0mZMGif6kULL8LigW1TTRUgCvHiBXec/s210/1000625036.png" },
-                  { name: "Platform 8", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhE0GzAMMtOcf7clhoWZr5xY9cY1EYjqYtZMYl-ndVMiBbr64GCJGX46ShXVTWfky_FNQSnyfMkGXgsgiVrqT67qi2N0uWerrZZt1A3rdaMuEVAx46XgQNiERKWNKkDK1H4bSj9AmZdYluYwpnD-c1AX4IFrnmhEDZMIfy93NFX92fH0RngdU0D9tBR83Y/s225/1000625037.jpg" },
-                  { name: "Platform 9", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidEVJ6vlUjuTbfUY6oSdwxTadADIm1bzHDcD4L1xAnknuUiO6dTbu6mKc0pyBq-QOFDtnh9sJe1QEMyKBu_eWUH8kLoy2x_vnsp3cQ8pH297d6kMTvig8TgBDpo55BhwbZds0DLuGn4XwNylIeXn3EwubOnw-k-nFIzpiuTPBEbhj7ZsLSCRMOrrylpQQ/s225/1000625032.png" },
-                  { name: "Platform 10", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhk0sfcoYPosDFUis2uzahyD1tQD1T2GC_V9ywhvgxtJvVHORzjzhOM83PAT1GhHF9GiXPUwoxAUEXhvGmCE0ofUJz_FGvRNAegRWecVjsF0eXdq-y_7-W90H9NXe4fJTVG6N6Bb71PeZPx6dQZOFjzJyHFGj-UsrhyPNSFLYX6En0NzYDoSlthT1G6224/s160/1000625033.png" }
+                  { name: "IND Global Partner 1", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnuZFPw6hZKwAIIzYyL2T2TTR4zHw24qGkQ4J4vL2Rnyc3AMa5Q0MRDYY8v26-W7Sm4awu1M4o7D4BnvXtkYCMGxlo3XiN29rxtqhKZn78Nj68eEY7bLxSCfCg6MhnYCOuJq2epCreaqb9-hjNqRWwj3K6GnKsFAAkSz8TNfrbKsXdh5Ef2XIK2pAlufE/s356/1000611951.jpg" },
+                  { name: "IND Global Partner 2", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGg7HDA3UCAB67u2grqaWWluz3MZKqXX5BZRXvJ5FCwB_1hyoi9vYHe8SY71ePPQU98pBzn8LH5DoaONm5brVDGdQmUxjZe5pKqstqlnAVdTdq_fIHuVpULVqy4glQrrz1GE5IZVsFMsh8dgx9L26doGx9_p5rUy2xkinwl8X7luecHoZuz3jxBoU3eyE/s275/1000611949.png" },
+                  { name: "IND Global Partner 3", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png" },
+                  { name: "IND Global Partner 4", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjkyZTgedhZ15-1h-kFf2Oh4qXdYJ1illCgeOySZXydnqp-MdKv7JxHrNGLgBjfHpS_-BCkhIsr1-szpxDjpd1e9s3mf2jP5fPLWO3L9B86NHuqlJOV0IIEszdAszBwbiLewKaeB8-XVsdgc7objCjWVojMt8yhi68OBWs6P4Ow9TfP-q4HO7lVuLA3B94/s1512/1000611955.jpg" },
+                  { name: "IND Global Partner 5", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png" },
+                  { name: "Strategic Partner 6", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiJk9ZXrkmXqyudZTFNatip2SQ2E9EElDTboKCB22D0V3ADLTHNnto4aIULiGCdvpYTnRhjpazmd8Em94t6dyo7yd6CYGnWKtIrQ4dO6EHZ99Jhvhj57VrXllzr2Do8_6bZsR5gQQca9dhdZ0x2P8pHsJy9td_j1yciGUqtUhKXp3zPpGQ3fNuYU8v5CM/s500/1000625201.png" },
+                  { name: "Strategic Partner 7", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj6m9lMg8ywh63Bo4SDanOYWCyFuC7uiv87x__oDEn27ijt_zFjkGC477NW7HzooI3hTuc6ma5jAOH0wfmY6c6nqeGjTT4Gg8la22SspPHt2_cI_LzBaXWVLomq-2F_G-m8Ojp8PVD2M4MnHZmeqeW2j_gMbu_BG9GvbBSwoOieVZ7IKnXHTKCBBIBZXYg/s2100/1000625202.png" },
+                  { name: "Strategic Partner 8", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiSmzlvBVmN5lb9ZTHgVMHmEZQ3N4VFyJkQ2tBiAAjTlF5eWm0Tk6Gxt9PhZfVNMR2u3XhYslpUh4RVNuTRM14oCfU3U1aMPn3Uflzq0ijJKaAvaPnCtawKlOLJPk1612vYEwDaqfmoPJxB6CuuNMdH_t8sZ-WbOKYuofWgGhi9su0GToJkIujUttlCeUs/s259/1000625203.png" },
+                  { name: "Strategic Partner 9", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirXzq9uFRfZuZyg6REEld30IqOl-ZwvmrcjNi-HpoJdWKsM1Cw4WrAN-jofnwH9ZFScPpKJBHTQQzrYfQG2Qf1VCKBXp5mwYpEhZzGoNx0lzIFJAEg85CSJfiJthFFUJ1pREAmxNPjmGb4K2WBJZCacsMQiYVYziKc70-_oY6YXFsFcJCt5hlcJNyJvuo/s1174/1000625204.png" },
+                  { name: "Strategic Partner 10", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhgjscqbCCZcf5zSirXlh1mQyLkJvdDA1HN3VHiBl73SVp0iL82fFMKIbRbbvNgNUO9PWMLE_9Ws_PoB0raedk5m01891NVsX7g42Ulwc_b0XR0E9GvEV_Vr6aUAU7xYO9DpoZz1PIDCuTmcfAsP4RUZ0SY9icvsoNGhB4rCFHSgKkeMtfqbx0dRBtgNmo/s410/1000625205.png" },
+                  { name: "Strategic Partner 11", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhTYNbCbXqLTXLri2OTQVEdgk7aZ3-KG4NgQROz7VazPDffdA4vavCFvVR1MwJqnNFfVYPluxs2HEOn1FeqF6YBfarEJEWmSg6AkfpNT3rtUPxK9LXErERSGq_OaI8zH8GAerIjlE8bgWKEmDmT4AaNp1D1abUyWxroEIIWxDuuaot-So3fLNCiQbEQ-0k/s275/1000625236.png" },
+                  { name: "Strategic Partner 12", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLcWB-HFsu20dk8gf_0RIY27Ils7now3ILkM5s7NgDdeNdopdjzagQzLEERSwlUicLPmTGtcByCd5Gmvf3wPQCEpnZH3A7arzyhpc6AEIf-av4YyF0gDLXJr0_9dNw8KLcoCtusJLiayMpHHlHsxc2IarR75unTyhRmlxt78nJNqkvpwFWdXGSfvLvIbc/s390/1000625226.png" },
+                  { name: "Strategic Partner 13", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhancUG3ZDe-usJ0JrWxt_erpCXnj00fH_qv4uv_UW-7LT77nkYYu4uMmeiTO5Vit_F2ugF74S0b6Dx5iRd-DcPd_sIaOmHHxY7hOvDXtU8vRrRtas5e4iUx9b-g3mhdsJ7zoQ1ZURRjsM-1DtiMFA80RJ0nMt7Mfm0hqbVJsn6ZHPOxfsURUi0aiBzv0k/s439/1000625200.png" }
                 ].map((platform, idx) => (
                   <motion.div
                     key={idx}
-                    whileHover={{ scale: 1.15, y: -8 }}
+                    whileHover={{ scale: 1.1, y: -5 }}
                     className="relative group/logo"
                   >
                     <img 
                       src={platform.url} 
-                      alt={`${platform.name} - Official Distribution`} 
-                      className="h-10 md:h-14 object-contain transition-all duration-500 filter brightness-[1] contrast-[1.05] drop-shadow-[0_4px_12px_rgba(0,0,0,0.08)]" 
+                      alt={platform.name} 
+                      className="h-10 md:h-16 w-auto object-contain transition-all duration-500 rounded-lg shadow-sm group-hover:shadow-md" 
                       referrerPolicy="no-referrer"
                     />
                   </motion.div>

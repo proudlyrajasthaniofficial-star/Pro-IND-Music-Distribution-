@@ -191,14 +191,70 @@ export default function GalaxyBackground() {
         className="absolute bottom-[10%] left-[20%] w-[30%] h-[30%] bg-amber-400/10 blur-[100px] rounded-full"
       />
 
+      {/* 3D Modern Color Blobs (Figma Glass Style) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{
+            x: [0, 200, -100, 0],
+            y: [0, -150, 100, 0],
+            scale: [1, 1.4, 0.8, 1],
+            rotate: [0, 45, -45, 0],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[10%] left-[15%] w-[45vw] h-[45vw] bg-linear-to-br from-indigo-500/20 to-purple-600/10 blur-[140px] rounded-full mix-blend-screen"
+        />
+        <motion.div
+          animate={{
+            x: [0, -250, 150, 0],
+            y: [0, 200, -100, 0],
+            scale: [1, 1.2, 1.5, 1],
+            rotate: [0, -60, 30, 0],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[20%] right-[10%] w-[50vw] h-[50vw] bg-linear-to-tr from-blue-600/15 to-emerald-400/10 blur-[160px] rounded-full mix-blend-screen"
+        />
+        <motion.div
+          animate={{
+            x: [0, 300, -200, 0],
+            y: [0, 100, -200, 0],
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[30vw] bg-pink-500/10 blur-[130px] rounded-full mix-blend-overlay rotate-45"
+        />
+      </div>
+
       {/* Star Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none opacity-80"
       />
       
-      {/* Overlay for grid/texture */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+      {/* Overlay for grid/texture and Live Milky Way */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay overflow-hidden">
+        {/* Milky Way Band - Enhanced with 3D depth feel */}
+        <motion.div
+          animate={{
+            rotate: [0, 360],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            rotate: { duration: 300, repeat: Infinity, ease: "linear" },
+            opacity: { duration: 12, repeat: Infinity, ease: "easeInOut" }
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400%] h-[35%] bg-linear-to-r from-transparent via-blue-600/15 via-indigo-500/25 via-purple-600/20 via-white/10 via-amber-400/5 to-transparent blur-[160px] skew-y-[-12deg] pointer-events-none"
+        />
+        
+        {/* Secondary Galaxy Core Glow - Pulsing 3D Center */}
+        <motion.div
+          animate={{
+            scale: [0.8, 1.5, 0.8],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-indigo-400/15 blur-[200px] rounded-full"
+        />
+      </div>
     </div>
   );
 }
