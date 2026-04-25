@@ -1,90 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core Pages -->
+
   <url>
     <loc>https://musicdistributionindia.online/</loc>
-    <lastmod>2026-04-25</lastmod>
     <priority>1.0</priority>
   </url>
+
   <url>
-    <loc>https://musicdistributionindia.online/features</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.8</priority>
+    <loc>https://musicdistributionindia.online/about</loc>
   </url>
-  <url>
-    <loc>https://musicdistributionindia.online/founder-developer</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://musicdistributionindia.online/contact</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.7</priority>
   </url>
 
-  <!-- SEO Targeted Landing Pages -->
+  <url>
+    <loc>https://musicdistributionindia.online/pricing</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/features</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/login</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/register</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/dashboard</loc>
+  </url>
+
   <url>
     <loc>https://musicdistributionindia.online/music-distribution-india</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/upload-song-on-spotify-india</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/distribute-music-jiosaavn</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/indian-music-distribution-platform</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/caller-tune-distribution-india</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/instagram-reels-music-distribution</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.9</priority>
   </url>
 
-  <!-- High-Value Intelligence Reports (Blog Posts) -->
   <url>
-    <loc>https://musicdistributionindia.online/blog/how-to-release-song-in-india-2026</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/earn-money-from-spotify-india</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/best-music-distribution-platforms-comparison</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.8</priority>
+    <loc>https://musicdistributionindia.online/best-music-distribution-india</loc>
   </url>
 
-  <!-- Legal & Support -->
   <url>
-    <loc>https://musicdistributionindia.online/terms</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.3</priority>
+    <loc>https://musicdistributionindia.online/free-music-distribution-india</loc>
   </url>
+
   <url>
-    <loc>https://musicdistributionindia.online/refunds</loc>
-    <lastmod>2026-04-25</lastmod>
-    <priority>0.3</priority>
+    <loc>https://musicdistributionindia.online/digital-music-distribution-india</loc>
   </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/b2b-music-distribution-india</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/white-label-music-distribution-india</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/blog</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/privacy-policy</loc>
+  </url>
+
+  <url>
+    <loc>https://musicdistributionindia.online/terms-conditions</loc>
+  </url>
+
 </urlset>

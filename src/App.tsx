@@ -91,10 +91,19 @@ function AppContent() {
           <Route path="/indian-music-distribution-platform" element={<SEOLandingPage />} />
           <Route path="/caller-tune-distribution-india" element={<SEOLandingPage />} />
           <Route path="/instagram-reels-music-distribution" element={<SEOLandingPage />} />
+          <Route path="/best-music-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/free-music-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/digital-music-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/b2b-music-distribution-india" element={<SEOLandingPage />} />
+          <Route path="/white-label-music-distribution-india" element={<SEOLandingPage />} />
           
           <Route path="/terms" element={<Terms />} />
           <Route path="/refunds" element={<Refunds />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<Navigate to="/founder-developer" replace />} />
+          <Route path="/pricing" element={<Navigate to="/" replace />} />
+          <Route path="/privacy-policy" element={<Navigate to="/terms" replace />} />
+          <Route path="/terms-conditions" element={<Navigate to="/terms" replace />} />
           
           {/* Auth Routes */}
           <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/dashboard" />} />

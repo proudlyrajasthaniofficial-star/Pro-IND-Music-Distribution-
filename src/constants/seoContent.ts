@@ -112,5 +112,55 @@ export const SEO_PAGES_CONTENT = {
       <h2>Built for Scale</h2>
       <p>Whether you're releasing one track or managing a label with thousands of songs, our infrastructure is built to scale. Our dashboard provides the same level of sophistication used by major labels, but remains accessible to every independent artist in India.</p>
     `
+  },
+  "best-music-distribution-india": {
+    title: "Best Music Distribution India 2026 | Top Rated & Highest Payouts",
+    h1: "The Best Music Distribution for Indian Artists",
+    description: "Rated #1 for independent artists in India. Experience the best music distribution service with real-time analytics and direct payouts to Indian bank accounts.",
+    keywords: ["best music distribution india", "top music distribution india", "high payout music distribution", "indian music aggregator"],
+    content: `
+      <h2>Why We Are Number One</h2>
+      <p>Choosing the best music distribution in India means looking for three things: speed, support, and transparency. IND Distribution excels in all three, providing a tailored experience for the Indian music landscape.</p>
+    `
+  },
+  "free-music-distribution-india": {
+    title: "Free Music Distribution India | Release Music for $0 Upfront",
+    h1: "Free Music Distribution for Independent Artists in India",
+    description: "Start your musical journey without upfront costs. Get your songs on Spotify and JioSaavn with our free tier distribution plans specially for Indian talent.",
+    keywords: ["free music distribution india", "zero cost music release india", "free spotify upload india", "free artist services"],
+    content: `
+      <h2>Launch Your Career for Free</h2>
+      <p>We believe every artist should have the chance to be heard. Our free distribution tier allows you to get your feet wet in the industry without financial risk.</p>
+    `
+  },
+  "digital-music-distribution-india": {
+    title: "Digital Music Distribution India | Advanced Content ID & Protection",
+    h1: "The Future of Digital Music Distribution in India",
+    description: "Modern digital distribution strategies for the Indian web. Advanced anti-piracy, content ID, and global digital rights management for your music.",
+    keywords: ["digital music distribution india", "online music release india", "drm for music india", "content id india"],
+    content: `
+      <h2>Securing Your Digital Legacy</h2>
+      <p>Digital distribution is more than just sending files; it's about protecting your rights. Our advanced Digital Rights Management (DRM) ensures that your content is protected.</p>
+    `
+  },
+  "b2b-music-distribution-india": {
+    title: "B2B Music Distribution India | White Label Solutions for Labels",
+    h1: "B2B & Enterprise Music Distribution Solutions",
+    description: "Custom B2B distribution pipelines for Indian record labels and media houses. Powerful API access and high-volume ingestion capabilities.",
+    keywords: ["b2b music distribution india", "enterprise music distribution", "label services india", "music distribution api india"],
+    content: `
+      <h2>Scaling Your Business</h2>
+      <p>For record labels and enterprise partners, IND Distribution offers high-performance B2B solutions.</p>
+    `
+  },
+  "white-label-music-distribution-india": {
+    title: "White Label Music Distribution India | Your Own Music Platform",
+    h1: "Start Your Own Music Distribution Service",
+    description: "White label solutions to launch your own music distribution brand in India. Powered by IND technology with your unique branding.",
+    keywords: ["white label music distribution india", "reseller music distribution", "custom music portal india", "launch distribution company"],
+    content: `
+      <h2>Your Brand, Our Technology</h2>
+      <p>Empower your own artist community by launching a white-label distribution portal. We provide the infrastructure, you provide the brand.</p>
+    `
   }
 };
