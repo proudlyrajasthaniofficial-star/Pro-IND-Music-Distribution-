@@ -153,29 +153,44 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Trusted Platforms Bar - Professional replacement for the marquee */}
+          {/* Trusted Platforms Bar - Professional & Clearly Visible */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mt-32 pt-20 border-t border-white/5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="mt-32 relative group"
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12">Integrated with key global platforms</p>
-            <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-10 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
-              {[
-                { name: "Spotify India", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_kIbRxSl97-mhR2ECvUEqSByUnzTrFQciF1Ax836EBAZiehVnNis_Wqq9-MDRY6DF7l4Sw7YSf4xm9A8FK5FUH20M5c0xt-tynh2-8jbFWIKdfewohVdQ46_5CPa8cCnRCkvhdQxDrHvWHh_MlldxLv59SJsP-dgAGCSD52_llRKMOFw55KLFmRVSm7M/s1600/1000611952.png" },
-                { name: "JioSaavn Distribution", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png" },
-                { name: "Gaana Music Platform", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgukPF5D6DVe7qztGz8oLq_CO6iVA05Lv-Vg8qizenOpJ8kVtCJ7mlTEOFeA_kxMHmXuJL-VLwi_-iApmePw6hTRLwUHcGTx_Ae2_NRjjqKBlUGOdrIObtN42TugzRu6lAUK3lALt_0hE2m7GJijHqZJhBxPnRRDjYkAYJtXIlJsIq2AR-xoqkPC1q3nSk/s1600/1000611956.png" },
-                { name: "Wynk Artist Services", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png" }
-              ].map((platform, idx) => (
-                <img 
-                  key={idx} 
-                  src={platform.url} 
-                  alt={`${platform.name} - music distribution platform India`} 
-                  className="h-10 md:h-14 object-contain brightness-0 invert opacity-40 hover:opacity-100 transition-opacity" 
-                  referrerPolicy="no-referrer"
-                />
-              ))}
+            {/* Background Accent */}
+            <div className="absolute inset-0 bg-linear-to-r from-electric-blue/5 via-indigo-500/5 to-purple-500/5 blur-3xl opacity-50 px-20"></div>
+
+            <div className="relative z-10 bg-white/95 border border-white rounded-[3rem] px-12 py-10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)]">
+              <div className="flex items-center justify-center gap-4 mb-10">
+                <div className="h-[1px] w-12 bg-linear-to-r from-transparent to-black/10"></div>
+                <p className="text-[11px] font-black uppercase tracking-[0.5em] text-black/50">Global Distribution Infrastructure</p>
+                <div className="h-[1px] w-12 bg-linear-to-l from-transparent to-black/10"></div>
+              </div>
+
+              <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-10 md:gap-x-20">
+                {[
+                  { name: "Spotify", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_kIbRxSl97-mhR2ECvUEqSByUnzTrFQciF1Ax836EBAZiehVnNis_Wqq9-MDRY6DF7l4Sw7YSf4xm9A8FK5FUH20M5c0xt-tynh2-8jbFWIKdfewohVdQ46_5CPa8cCnRCkvhdQxDrHvWHh_MlldxLv59SJsP-dgAGCSD52_llRKMOFw55KLFmRVSm7M/s1600/1000611952.png" },
+                  { name: "JioSaavn", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png" },
+                  { name: "Gaana", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgukPF5D6DVe7qztGz8oLq_CO6iVA05Lv-Vg8qizenOpJ8kVtCJ7mlTEOFeA_kxMHmXuJL-VLwi_-iApmePw6hTRLwUHcGTx_Ae2_NRjjqKBlUGOdrIObtN42TugzRu6lAUK3lALt_0hE2m7GJijHqZJhBxPnRRDjYkAYJtXIlJsIq2AR-xoqkPC1q3nSk/s1600/1000611956.png" },
+                  { name: "Wynk", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png" }
+                ].map((platform, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    className="relative group/logo"
+                  >
+                    <img 
+                      src={platform.url} 
+                      alt={`${platform.name} - Official Distribution`} 
+                      className="h-9 md:h-12 object-contain transition-all duration-500 filter brightness-[1] contrast-[1.1] drop-shadow-[0_4px_10px_rgba(0,0,0,0.05)]" 
+                      referrerPolicy="no-referrer"
+                    />
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
