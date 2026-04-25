@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import LegalNavbar from "../../components/legal/LegalNavbar";
 import SEO from "../../components/SEO";
 import { cn } from "../../lib/utils";
+import PublicFooter from "../../components/PublicFooter";
 
 const SECTIONS = [
   {
@@ -313,27 +314,7 @@ export default function Terms() {
         </div>
       </main>
 
-      {/* Modern Footer for Legal Pages */}
-      <footer className="bg-slate-50 border-t border-slate-100 py-20 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-               <Music className="text-white w-5 h-5" />
-             </div>
-             <span className="font-display text-xl font-black uppercase italic text-slate-900 tracking-tighter">IND Distribution</span>
-          </div>
-          
-          <div className="flex gap-10 text-[10px] font-black uppercase tracking-widest text-slate-400">
-            <Link to="/terms" className="text-indigo-600">Terms</Link>
-            <Link to="/refunds" className="hover:text-slate-900 transition-colors">Refunds</Link>
-            <Link to="/contact" className="hover:text-slate-900 transition-colors">Contact</Link>
-          </div>
-          
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
-            © 2026 IND Distribution. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

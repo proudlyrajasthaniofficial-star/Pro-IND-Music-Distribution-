@@ -4,19 +4,27 @@ import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { SEO_PAGES_CONTENT } from '../constants/seoContent';
 import PublicNavbar from '../components/PublicNavbar';
+import PublicFooter from '../components/PublicFooter';
 import { ArrowRight, CheckCircle2, Music, Zap, Globe, ShieldCheck } from 'lucide-react';
 
 const SEOLandingPage = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug: paramSlug } = useParams<{ slug: string }>();
+  const location = window.location.pathname;
+  const slug = paramSlug || location.split('/').pop() || '';
   const pageContent = SEO_PAGES_CONTENT[slug as keyof typeof SEO_PAGES_CONTENT];
 
   if (!pageContent) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <h1 className="text-4xl font-black mb-4">404</h1>
-          <p className="text-slate-500 mb-8">This intelligence report is currently unavailable.</p>
-          <Link to="/" className="px-8 py-3 bg-brand-blue text-white rounded-full font-bold">Return Home</Link>
+        <div className="text-center group">
+          <div className="mb-8 relative inline-block">
+             <div className="absolute inset-0 bg-brand-blue/20 blur-3xl rounded-full scale-150 animate-pulse" />
+             <h1 className="text-9xl font-display font-black tracking-tighter text-slate-100 relative z-10">404</h1>
+          </div>
+          <p className="text-xl text-slate-500 font-medium mb-12 max-w-sm mx-auto">This intelligence report is currently unavailable or has been archived.</p>
+          <Link to="/" className="inline-flex items-center gap-3 px-8 py-4 bg-[#020617] text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-brand-blue transition-all group">
+            Return to Command Center <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+          </Link>
         </div>
       </div>
     );
@@ -40,18 +48,18 @@ const SEOLandingPage = () => {
 
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/20 mb-8">
-              <Zap className="w-3.5 h-3.5 text-brand-blue" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue">Premier Insights // 2026</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/5 border border-brand-blue/10 mb-10">
+              <Zap className="w-3.5 h-3.5 text-brand-blue animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue/60">Strategic Insights // Vol. 2026</span>
             </div>
-            <h1 className="text-4xl md:text-7xl font-display font-black tracking-tighter leading-[0.9] uppercase mb-8">
+            <h1 className="text-5xl md:text-8xl font-display font-black tracking-tight leading-[0.88] uppercase mb-10 bg-clip-text text-transparent bg-linear-to-b from-slate-950 to-slate-500 drop-shadow-[0_0_25px_rgba(37,99,235,0.08)]">
               {pageContent.h1}
             </h1>
-            <p className="text-xl text-slate-500 font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto mb-14 leading-relaxed tracking-tight">
               {pageContent.description}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -77,11 +85,28 @@ const SEOLandingPage = () => {
               viewport={{ once: true }}
               className="prose prose-slate prose-lg max-w-none 
                 prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:uppercase prose-h2:font-display prose-h2:mt-16
+                prose-h3:text-2xl prose-h3:font-black prose-h3:tracking-tight prose-h3:mt-10 prose-h3:text-slate-800
                 prose-p:text-slate-600 prose-p:leading-relaxed prose-p:text-lg
                 prose-li:text-slate-600 prose-li:text-lg
-                prose-strong:text-slate-900 prose-strong:font-black"
+                prose-strong:text-slate-900 prose-strong:font-black
+                prose-img:rounded-3xl prose-img:shadow-2xl"
               dangerouslySetInnerHTML={{ __html: pageContent.content }}
             />
+
+            {/* FAQ Section if available */}
+            {pageContent.faqs && pageContent.faqs.length > 0 && (
+              <div className="mt-24 pt-24 border-t border-slate-100">
+                <h2 className="text-4xl font-black font-display tracking-tighter uppercase mb-12">Frequently Asked Questions</h2>
+                <div className="space-y-6">
+                  {pageContent.faqs.map((faq, i) => (
+                    <div key={i} className="p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100">
+                      <h3 className="text-xl font-black text-slate-900 mb-4">{faq.question}</h3>
+                      <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Quick Stats Grid */}
             <div className="grid sm:grid-cols-3 gap-6 mt-20">
@@ -168,26 +193,7 @@ const SEOLandingPage = () => {
         </div>
       </section>
 
-      {/* Footer Branding */}
-      <footer className="py-20 px-8 border-t border-slate-100 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-           <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center">
-                 <Music className="text-white w-4 h-4" />
-              </div>
-              <span className="font-display font-black text-xl tracking-tighter uppercase">IND Distribution</span>
-           </div>
-           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
-              <Link to="/terms" className="hover:text-brand-blue">Terms</Link>
-              <Link to="/refunds" className="hover:text-brand-blue">Refunds</Link>
-              <Link to="/contact" className="hover:text-brand-blue">Support</Link>
-              <a href="/sitemap.xml" className="hover:text-brand-blue">Sitemap</a>
-           </div>
-           <div className="text-[10px] font-black uppercase tracking-widest text-slate-300">
-              © 2026 // ALL_RIGHTS_RESERVED
-           </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 };

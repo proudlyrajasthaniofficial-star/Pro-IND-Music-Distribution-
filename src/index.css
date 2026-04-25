@@ -68,6 +68,23 @@
   animation: pulseSubtle 4s infinite ease-in-out;
 }
 
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, 0.2);
+    border-radius: 10px;
+    &:hover {
+      background: rgba(236, 72, 153, 0.4);
+    }
+  }
+}
+
 @utility neon-glow {
   filter: drop-shadow(0 0 10px currentColor);
 }
