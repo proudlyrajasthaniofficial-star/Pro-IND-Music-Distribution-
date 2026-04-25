@@ -73,16 +73,17 @@ const LANGUAGES = [
 
 const YEARS = Array.from({ length: 2070 - 2017 + 1 }, (_, i) => (2017 + i).toString());
 const PLATFORMS = [
-  { name: "Spotify", gradient: "from-[#1DB954] to-[#191414]", color: "#1DB954" },
-  { name: "Apple Music", gradient: "from-[#FA243C] to-[#fc3c44]", color: "#FA243C" },
-  { name: "YouTube Music", gradient: "from-[#FF0000] to-[#282828]", color: "#FF0000" },
-  { name: "Instagram", gradient: "from-[#F58529] via-[#DD2A7B] to-[#8134AF]", color: "#E1306C" },
-  { name: "JioSaavn", gradient: "from-[#00B0F0] to-[#0089BD]", color: "#00B0F0" },
-  { name: "Gaana", gradient: "from-[#E72C33] to-[#FF5252]", color: "#E72C33" },
-  { name: "Facebook", gradient: "from-[#1877F2] to-[#3b5998]", color: "#1877F2" },
-  { name: "Snapchat", gradient: "from-[#FFFC00] to-[#000000]", color: "#FFFC00" },
-  { name: "Amazon Music", gradient: "from-[#00A8E1] to-[#232F3E]", color: "#00A8E1" },
-  { name: "Wynk Music", gradient: "from-[#FF2D55] to-[#FF3B30]", color: "#FF2D55" },
+  { name: "Facebook", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiT4AraHOBV5Z8hsEFIqSk-x4MH9Bq6HCvLcVy0BdUZfa05thWfnrXvS27CHv14oSQ9WCyahaXNoBChRgJ3B8GzDPOqUBKegOqo6bSIgxEHPq8-pDoIMidDxRzhN1Dbcp9AYtrpLOiOvvOlxVaTwmOKUWYfhLt0kKe0MSVwbsxM4W9tIH6Q_QXebieY-FQ/s225/1000625038.png" },
+  { name: "YouTube Content ID", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQEP7K3_JFRWDwHOwB8zvSzwDvb2FHws9aZTtxDlOecHoh4acgXA58jJcJ0SuuJhc0Ins6RGcvL6fM-rXYv7Wzp1t-cYfu6Y35xqKmLDgasn-vadrwvlaMxvP4s-7udpvsgbIUu02xGVfgV8rgPHIsj3UvKRIYgXS9oXKFhLDBZvVlFQbkU6Z49rSEfw8/s390/1000625039.png" },
+  { name: "YouTube Music", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCBvvdrkwgOYchq85w_ntr8jgL_VnWuHbXE8D5xktwlb1RkHQKPEKu25m3pPXULu9r5ZkqUbmjZGh5hjBm-9e8SXeazxM-0_5gyItH6czSh3ZvtFewhHB-pRDvVoJv8lw11Z3qMmVj9TnCA6-hUkLF9yGJR2QdRUe-B9e0r4FHTRgV2sr_UHr6VfekCHM/s900/1000625040.jpg" },
+  { name: "YouTube", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEVQjuWWqit8Sb75qVR7lk36_4Lp5rbYYskV1-p07lnQWiUk1KG2biUAN_Bp-36oaOQk33_x7AuGhL416wD5eFjgk0DHapjlHQooqqJzgYZervYA6_ckhFqJNnNeYrhsQLBbXcTH8eqdw5enYkNO_xLZn2My_uYVTtStDAzjWmuCUOwzy02QVlB0THYHw/s225/1000625041.png" },
+  { name: "Apple Music", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzohmzK39V2QK71HU443ccu-WGjXmGGStVl0E_uUG2xGCaKtjWWHE0r0yvetl7SxWNPUYYc7tHb_bTqL7gRgeQhIG7_e0M4mJdeh1tXR7LVKMfDSrKJdjH9fBk2GEuVsxOJ9VfEv_OsW-TNSuzsOIi-dRVd_g5WlL1Fmc1l-CEko4pcRT8lxUR72ipzJM/s554/1000625034.jpg" },
+  { name: "Wynk", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_8gQQpLDy3RYSgfgDsIglEijRKzfxWtmFrElw25N-b6nRFyM512Na6GN8kFJ_HGDzQy04Uob9hg0OZW_csKFekqMq2w89cSrrE9mdxvH4CWqsK3YNC6_ZQwoULGocxy37eDAh8droYGb7d6eolS6aZ2MAdmLXQAzESaJIHOApjTDVXQfbVsmG8qhb1tc/s225/1000625035.png" },
+  { name: "Snapchat", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnmd1cJShVfhlnQhlwgkW5oBjz_wNUc-j0SgdDJ9Rm8rnPDZNL7gY1sww99LLCOTZ4BBEXVe7Qs_eJEk3s0uRl5k7IQutxtQbx3kWIZCT7N-p5HajRaCcbXDoj_SXaixa5GFhktXabHzy9UONMF3F80n4DDVFE0mZMGif6kULL8LigW1TTRUgCvHiBXec/s210/1000625036.png" },
+  { name: "Instagram", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhE0GzAMMtOcf7clhoWZr5xY9cY1EYjqYtZMYl-ndVMiBbr64GCJGX46ShXVTWfky_FNQSnyfMkGXgsgiVrqT67qi2N0uWerrZZt1A3rdaMuEVAx46XgQNiERKWNKkDK1H4bSj9AmZdYluYwpnD-c1AX4IFrnmhEDZMIfy93NFX92fH0RngdU0D9tBR83Y/s225/1000625037.jpg" },
+  { name: "Spotify", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidEVJ6vlUjuTbfUY6oSdwxTadADIm1bzHDcD4L1xAnknuUiO6dTbu6mKc0pyBq-QOFDtnh9sJe1QEMyKBu_eWUH8kLoy2x_vnsp3cQ8pH297d6kMTvig8TgBDpo55BhwbZds0DLuGn4XwNylIeXn3EwubOnw-k-nFIzpiuTPBEbhj7ZsLSCRMOrrylpQQ/s225/1000625032.png" },
+  { name: "JioSaavn", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhk0sfcoYPosDFUis2uzahyD1tQD1T2GC_V9ywhvgxtJvVHORzjzhOM83PAT1GhHF9GiXPUwoxAUEXhvGmCE0ofUJz_FGvRNAegRWecVjsF0eXdq-y_7-W90H9NXe4fJTVG6N6Bb71PeZPx6dQZOFjzJyHFGj-UsrhyPNSFLYX6En0NzYDoSlthT1G6224/s160/1000625033.png" },
+  { name: "Copyright ©️", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Copyright.svg" }
 ];
 
 export default function Upload() {
@@ -785,13 +786,13 @@ export default function Upload() {
                             selectedPlatforms.includes(p.name) ? "border-brand-blue bg-brand-blue/5 shadow-2xl" : "border-slate-100 bg-white opacity-40 grayscale group-hover:grayscale-0"
                           )}
                         >
-                           <div className={cn(
-                             "w-16 h-16 rounded-[1.5rem] shadow-xl flex items-center justify-center p-2 relative z-10 bg-gradient-to-br",
-                             p.gradient
-                           )}>
-                              <span className="text-white font-black text-[14px] leading-none text-center transform -rotate-12 uppercase scale-110 drop-shadow-lg">
-                                {p.name.split(" ")[0]}
-                              </span>
+                           <div className="w-16 h-16 rounded-[1.5rem] shadow-xl flex items-center justify-center p-2 relative z-10 bg-white border border-slate-50 group-hover:scale-110 transition-transform">
+                              <img 
+                                src={p.logo} 
+                                alt={p.name} 
+                                className="w-full h-full object-contain" 
+                                referrerPolicy="no-referrer"
+                              />
                            </div>
                            <span className={cn(
                              "text-[9px] font-black uppercase tracking-[0.2em] transition-colors",
@@ -815,10 +816,9 @@ export default function Upload() {
                         }}
                         className="p-8 rounded-[3.5rem] bg-brand-dark text-white flex flex-col items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all group"
                       >
-                         <span className="text-xs font-black uppercase tracking-widest">
-                           {selectedPlatforms.length === PLATFORMS.length ? "Deselect All" : "Select All"}
+                         <span className="text-[10px] font-black uppercase tracking-widest text-center leading-tight whitespace-pre-line">
+                           {selectedPlatforms.length === PLATFORMS.length ? "Deselect All" : "Select All\n250+ Stores"}
                          </span>
-                         <span className="text-[9px] font-bold text-white/40 uppercase">250+ Stores</span>
                       </button>
                    </div>
                    <div className="pt-12 flex justify-center gap-6">
@@ -891,8 +891,8 @@ export default function Upload() {
                                {selectedPlatforms.slice(0, 6).map(p => {
                                   const pf = PLATFORMS.find(item => item.name === p);
                                   return pf ? (
-                                    <div key={p} className={cn("aspect-square rounded-2xl p-2 flex items-center justify-center shadow-sm bg-gradient-to-br", pf.gradient)}>
-                                       <span className="text-white font-black text-[8px] uppercase">{pf.name.split(" ")[0]}</span>
+                                    <div key={p} className="aspect-square rounded-2xl p-2 flex items-center justify-center shadow-sm bg-white border border-slate-100">
+                                       <img src={pf.logo} alt={pf.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                                     </div>
                                   ) : null;
                                })}

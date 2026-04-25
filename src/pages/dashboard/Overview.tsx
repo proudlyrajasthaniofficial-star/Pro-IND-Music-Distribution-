@@ -274,21 +274,24 @@ export default function Overview() {
                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 italic">Active Distribution Network</p>
                  <div className="flex flex-wrap items-center gap-10">
                     {[
-                      { name: "Spotify", logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" },
-                      { name: "Apple Music", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Apple_Music_logo.svg" },
-                      { name: "YT Music", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Youtube_Music_icon.svg" },
-                      { name: "Instagram", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" },
-                      { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" },
-                      { name: "Snapchat", logo: "https://upload.wikimedia.org/wikipedia/en/c/c4/Snapchat_logo.svg" },
-                      { name: "FB", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" },
+                      { name: "Facebook", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiT4AraHOBV5Z8hsEFIqSk-x4MH9Bq6HCvLcVy0BdUZfa05thWfnrXvS27CHv14oSQ9WCyahaXNoBChRgJ3B8GzDPOqUBKegOqo6bSIgxEHPq8-pDoIMidDxRzhN1Dbcp9AYtrpLOiOvvOlxVaTwmOKUWYfhLt0kKe0MSVwbsxM4W9tIH6Q_QXebieY-FQ/s225/1000625038.png" },
+                      { name: "YouTube Content ID", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQEP7K3_JFRWDwHOwB8zvSzwDvb2FHws9aZTtxDlOecHoh4acgXA58jJcJ0SuuJhc0Ins6RGcvL6fM-rXYv7Wzp1t-cYfu6Y35xqKmLDgasn-vadrwvlaMxvP4s-7udpvsgbIUu02xGVfgV8rgPHIsj3UvKRIYgXS9oXKFhLDBZvVlFQbkU6Z49rSEfw8/s390/1000625039.png" },
+                      { name: "YouTube Music", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCBvvdrkwgOYchq85w_ntr8jgL_VnWuHbXE8D5xktwlb1RkHQKPEKu25m3pPXULu9r5ZkqUbmjZGh5hjBm-9e8SXeazxM-0_5gyItH6czSh3ZvtFewhHB-pRDvVoJv8lw11Z3qMmVj9TnCA6-hUkLF9yGJR2QdRUe-B9e0r4FHTRgV2sr_UHr6VfekCHM/s900/1000625040.jpg" },
+                      { name: "YouTube", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEVQjuWWqit8Sb75qVR7lk36_4Lp5rbYYskV1-p07lnQWiUk1KG2biUAN_Bp-36oaOQk33_x7AuGhL416wD5eFjgk0DHapjlHQooqqJzgYZervYA6_ckhFqJNnNeYrhsQLBbXcTH8eqdw5enYkNO_xLZn2My_uYVTtStDAzjWmuCUOwzy02QVlB0THYHw/s225/1000625041.png" },
+                      { name: "Apple Music", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzohmzK39V2QK71HU443ccu-WGjXmGGStVl0E_uUG2xGCaKtjWWHE0r0yvetl7SxWNPUYYc7tHb_bTqL7gRgeQhIG7_e0M4mJdeh1tXR7LVKMfDSrKJdjH9fBk2GEuVsxOJ9VfEv_OsW-TNSuzsOIi-dRVd_g5WlL1Fmc1l-CEko4pcRT8lxUR72ipzJM/s554/1000625034.jpg" },
+                      { name: "Wynk", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_8gQQpLDy3RYSgfgDsIglEijRKzfxWtmFrElw25N-b6nRFyM512Na6GN8kFJ_HGDzQy04Uob9hg0OZW_csKFekqMq2w89cSrrE9mdxvH4CWqsK3YNC6_ZQwoULGocxy37eDAh8droYGb7d6eolS6aZ2MAdmLXQAzESaJIHOApjTDVXQfbVsmG8qhb1tc/s259/1000625035.png" },
+                      { name: "Snapchat", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnmd1cJShVfhlnQhlwgkW5oBjz_wNUc-j0SgdDJ9Rm8rnPDZNL7gY1sww99LLCOTZ4BBEXVe7Qs_eJEk3s0uRl5k7IQutxtQbx3kWIZCT7N-p5HajRaCcbXDoj_SXaixa5GFhktXabHzy9UONMF3F80n4DDVFE0mZMGif6kULL8LigW1TTRUgCvHiBXec/s210/1000625036.png" },
+                      { name: "Instagram", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhE0GzAMMtOcf7clhoWZr5xY9cY1EYjqYtZMYl-ndVMiBbr64GCJGX46ShXVTWfky_FNQSnyfMkGXgsgiVrqT67qi2N0uWerrZZt1A3rdaMuEVAx46XgQNiERKWNKkDK1H4bSj9AmZdYluYwpnD-c1AX4IFrnmhEDZMIfy93NFX92fH0RngdU0D9tBR83Y/s225/1000625037.jpg" },
+                      { name: "Spotify", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidEVJ6vlUjuTbfUY6oSdwxTadADIm1bzHDcD4L1xAnknuUiO6dTbu6mKc0pyBq-QOFDtnh9sJe1QEMyKBu_eWUH8kLoy2x_vnsp3cQ8pH297d6kMTvig8TgBDpo55BhwbZds0DLuGn4XwNylIeXn3EwubOnw-k-nFIzpiuTPBEbhj7ZsLSCRMOrrylpQQ/s225/1000625032.png" },
+                      { name: "JioSaavn", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhk0sfcoYPosDFUis2uzahyD1tQD1T2GC_V9ywhvgxtJvVHORzjzhOM83PAT1GhHF9GiXPUwoxAUEXhvGmCE0ofUJz_FGvRNAegRWecVjsF0eXdq-y_7-W90H9NXe4fJTVG6N6Bb71PeZPx6dQZOFjzJyHFGj-UsrhyPNSFLYX6En0NzYDoSlthT1G6224/s160/1000625033.png" }
                     ].map((p, i) => (
                       <motion.img 
                         key={i}
-                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        whileHover={{ scale: 1.3, y: -5, rotate: 5 }}
                         src={p.logo} 
                         alt={p.name}
                         title={p.name}
-                        className="h-7 w-auto grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer"
+                        className="h-8 md:h-12 w-auto transition-all cursor-pointer drop-shadow-md"
                         referrerPolicy="no-referrer"
                       />
                     ))}

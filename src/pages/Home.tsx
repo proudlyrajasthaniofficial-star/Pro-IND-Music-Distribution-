@@ -163,29 +163,38 @@ export default function Home() {
             {/* Background Accent */}
             <div className="absolute inset-0 bg-linear-to-r from-electric-blue/5 via-indigo-500/5 to-purple-500/5 blur-3xl opacity-50 px-20"></div>
 
-            <div className="relative z-10 bg-white/95 border border-white rounded-[3rem] px-12 py-10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)]">
-              <div className="flex items-center justify-center gap-4 mb-10">
-                <div className="h-[1px] w-12 bg-linear-to-r from-transparent to-black/10"></div>
-                <p className="text-[11px] font-black uppercase tracking-[0.5em] text-black/50">Global Distribution Infrastructure</p>
-                <div className="h-[1px] w-12 bg-linear-to-l from-transparent to-black/10"></div>
+            <div className="relative z-10 bg-white border-2 border-slate-100 rounded-[3.5rem] px-12 py-14 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.15)] overflow-hidden">
+              {/* Highlight Accents */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-electric-blue to-transparent"></div>
+              
+              <div className="flex items-center justify-center gap-4 mb-14">
+                <div className="h-[1px] w-16 bg-linear-to-r from-transparent to-slate-200"></div>
+                <p className="text-[12px] font-black uppercase tracking-[0.5em] text-slate-400">Global Strategic Distribution Partners</p>
+                <div className="h-[1px] w-16 bg-linear-to-l from-transparent to-slate-200"></div>
               </div>
 
-              <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-10 md:gap-x-20">
+              <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-12 md:gap-x-16">
                 {[
-                  { name: "Spotify", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_kIbRxSl97-mhR2ECvUEqSByUnzTrFQciF1Ax836EBAZiehVnNis_Wqq9-MDRY6DF7l4Sw7YSf4xm9A8FK5FUH20M5c0xt-tynh2-8jbFWIKdfewohVdQ46_5CPa8cCnRCkvhdQxDrHvWHh_MlldxLv59SJsP-dgAGCSD52_llRKMOFw55KLFmRVSm7M/s1600/1000611952.png" },
-                  { name: "JioSaavn", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgmbVKcd85-8ZLE6r3q2gBnJ0cTAlgJDn7wuRyGX2mVIKCj7-3gVe-V30KqakxLKq4SSAbIjbfpwnqtBR2ekcKkVfTm_qd-R7UDHjP5ih1Vul8xVl1uQbIMluMJp-Nx3spN6X2u46Bwt9i3PtkEnpUkgSsphtB6If83ZeV6IDw5JFyNzIrMEht0Iql1yqc/s1286/1000611954.png" },
-                  { name: "Gaana", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgukPF5D6DVe7qztGz8oLq_CO6iVA05Lv-Vg8qizenOpJ8kVtCJ7mlTEOFeA_kxMHmXuJL-VLwi_-iApmePw6hTRLwUHcGTx_Ae2_NRjjqKBlUGOdrIObtN42TugzRu6lAUK3lALt_0hE2m7GJijHqZJhBxPnRRDjYkAYJtXIlJsIq2AR-xoqkPC1q3nSk/s1600/1000611956.png" },
-                  { name: "Wynk", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnVIN2g1bhQ1ZVfzCM2uNqQryVuAe4ew75SC6TiZI-DD1erBC033758fbNq-BvAOTwDBMveHEjZMiwbEw0vL0EIQPyryd1Ge8pCsYeabWkTRoUXllV1mITeciEPO_nVQ-DwDSRXzF11NnPxha1Pv7tU0Hkl9HMRV7sT5qkW1IlbJPJ-f6iBgnPrN4n_Is/s1640/1000611957.png" }
+                  { name: "Platform 1", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiT4AraHOBV5Z8hsEFIqSk-x4MH9Bq6HCvLcVy0BdUZfa05thWfnrXvS27CHv14oSQ9WCyahaXNoBChRgJ3B8GzDPOqUBKegOqo6bSIgxEHPq8-pDoIMidDxRzhN1Dbcp9AYtrpLOiOvvOlxVaTwmOKUWYfhLt0kKe0MSVwbsxM4W9tIH6Q_QXebieY-FQ/s225/1000625038.png" },
+                  { name: "Platform 2", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQEP7K3_JFRWDwHOwB8zvSzwDvb2FHws9aZTtxDlOecHoh4acgXA58jJcJ0SuuJhc0Ins6RGcvL6fM-rXYv7Wzp1t-cYfu6Y35xqKmLDgasn-vadrwvlaMxvP4s-7udpvsgbIUu02xGVfgV8rgPHIsj3UvKRIYgXS9oXKFhLDBZvVlFQbkU6Z49rSEfw8/s390/1000625039.png" },
+                  { name: "Platform 3", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCBvvdrkwgOYchq85w_ntr8jgL_VnWuHbXE8D5xktwlb1RkHQKPEKu25m3pPXULu9r5ZkqUbmjZGh5hjBm-9e8SXeazxM-0_5gyItH6czSh3ZvtFewhHB-pRDvVoJv8lw11Z3qMmVj9TnCA6-hUkLF9yGJR2QdRUe-B9e0r4FHTRgV2sr_UHr6VfekCHM/s900/1000625040.jpg" },
+                  { name: "Platform 4", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEVQjuWWqit8Sb75qVR7lk36_4Lp5rbYYskV1-p07lnQWiUk1KG2biUAN_Bp-36oaOQk33_x7AuGhL416wD5eFjgk0DHapjlHQooqqJzgYZervYA6_ckhFqJNnNeYrhsQLBbXcTH8eqdw5enYkNO_xLZn2My_uYVTtStDAzjWmuCUOwzy02QVlB0THYHw/s225/1000625041.png" },
+                  { name: "Platform 5", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzohmzK39V2QK71HU443ccu-WGjXmGGStVl0E_uUG2xGCaKtjWWHE0r0yvetl7SxWNPUYYc7tHb_bTqL7gRgeQhIG7_e0M4mJdeh1tXR7LVKMfDSrKJdjH9fBk2GEuVsxOJ9VfEv_OsW-TNSuzsOIi-dRVd_g5WlL1Fmc1l-CEko4pcRT8lxUR72ipzJM/s554/1000625034.jpg" },
+                  { name: "Platform 6", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_8gQQpLDy3RYSgfgDsIglEijRKzfxWtmFrElw25N-b6nRFyM512Na6GN8kFJ_HGDzQy04Uob9hg0OZW_csKFekqMq2w89cSrrE9mdxvH4CWqsK3YNC6_ZQwoULGocxy37eDAh8droYGb7d6eolS6aZ2MAdmLXQAzESaJIHOApjTDVXQfbVsmG8qhb1tc/s259/1000625035.png" },
+                  { name: "Platform 7", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnmd1cJShVfhlnQhlwgkW5oBjz_wNUc-j0SgdDJ9Rm8rnPDZNL7gY1sww99LLCOTZ4BBEXVe7Qs_eJEk3s0uRl5k7IQutxtQbx3kWIZCT7N-p5HajRaCcbXDoj_SXaixa5GFhktXabHzy9UONMF3F80n4DDVFE0mZMGif6kULL8LigW1TTRUgCvHiBXec/s210/1000625036.png" },
+                  { name: "Platform 8", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhE0GzAMMtOcf7clhoWZr5xY9cY1EYjqYtZMYl-ndVMiBbr64GCJGX46ShXVTWfky_FNQSnyfMkGXgsgiVrqT67qi2N0uWerrZZt1A3rdaMuEVAx46XgQNiERKWNKkDK1H4bSj9AmZdYluYwpnD-c1AX4IFrnmhEDZMIfy93NFX92fH0RngdU0D9tBR83Y/s225/1000625037.jpg" },
+                  { name: "Platform 9", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidEVJ6vlUjuTbfUY6oSdwxTadADIm1bzHDcD4L1xAnknuUiO6dTbu6mKc0pyBq-QOFDtnh9sJe1QEMyKBu_eWUH8kLoy2x_vnsp3cQ8pH297d6kMTvig8TgBDpo55BhwbZds0DLuGn4XwNylIeXn3EwubOnw-k-nFIzpiuTPBEbhj7ZsLSCRMOrrylpQQ/s225/1000625032.png" },
+                  { name: "Platform 10", url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhk0sfcoYPosDFUis2uzahyD1tQD1T2GC_V9ywhvgxtJvVHORzjzhOM83PAT1GhHF9GiXPUwoxAUEXhvGmCE0ofUJz_FGvRNAegRWecVjsF0eXdq-y_7-W90H9NXe4fJTVG6N6Bb71PeZPx6dQZOFjzJyHFGj-UsrhyPNSFLYX6En0NzYDoSlthT1G6224/s160/1000625033.png" }
                 ].map((platform, idx) => (
                   <motion.div
                     key={idx}
-                    whileHover={{ scale: 1.1, y: -5 }}
+                    whileHover={{ scale: 1.15, y: -8 }}
                     className="relative group/logo"
                   >
                     <img 
                       src={platform.url} 
                       alt={`${platform.name} - Official Distribution`} 
-                      className="h-9 md:h-12 object-contain transition-all duration-500 filter brightness-[1] contrast-[1.1] drop-shadow-[0_4px_10px_rgba(0,0,0,0.05)]" 
+                      className="h-10 md:h-14 object-contain transition-all duration-500 filter brightness-[1] contrast-[1.05] drop-shadow-[0_4px_12px_rgba(0,0,0,0.08)]" 
                       referrerPolicy="no-referrer"
                     />
                   </motion.div>
