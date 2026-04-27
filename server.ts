@@ -40,6 +40,20 @@ async function startServer() {
   const PORT = 3000;
 
   setupCloudinary();
+  
+  // Explicitly serve static files from public directory
+  app.use(express.static(path.join(__dirname, "public")));
+
+  // Explicit handlers for sitemap and robots to ensure correct content headers
+  app.get("/sitemap.xml", (req, res) => {
+    res.header("Content-Type", "application/xml");
+    res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
+  });
+
+  app.get("/robots.txt", (req, res) => {
+    res.header("Content-Type", "text/plain");
+    res.sendFile(path.join(__dirname, "public", "robots.txt"));
+  });
 
   // JSON Body Parser
   app.use(express.json());
