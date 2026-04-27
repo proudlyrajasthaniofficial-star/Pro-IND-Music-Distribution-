@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 import { triggerNotification } from "../../lib/notifications";
 
@@ -65,9 +66,9 @@ export default function OACRequest() {
 
       setFormData({ artistId: "", channelUrl: "", topicUrl: "", vevoUrl: "" });
       fetchData();
-      alert("OAC upgrade request submitted.");
+      toast.success("OAC upgrade request submitted.");
     } catch (err) {
-      alert("Submission failed.");
+      toast.error("Submission failed.");
     } finally {
       setSubmitting(false);
     }

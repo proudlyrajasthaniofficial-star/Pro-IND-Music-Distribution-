@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 
 const WITHDRAWAL_STATUSES = [
   { id: 'pending', label: 'Processing', color: 'bg-amber-50 rounded-full text-amber-600 border border-amber-100' },
@@ -78,11 +79,11 @@ export default function WalletPage() {
     e.preventDefault();
     const withdrawAmount = parseFloat(amount);
     if (!user || isNaN(withdrawAmount) || withdrawAmount < 1000) {
-      alert("Minimum withdrawal is ₹1,000");
+      toast.error("Minimum withdrawal is ₹1,000");
       return;
     }
     if (withdrawAmount > (profile?.walletBalance || 0)) {
-      alert("Insufficient funds in treasury.");
+      toast.error("Insufficient funds in treasury.");
       return;
     }
 
@@ -109,9 +110,9 @@ export default function WalletPage() {
       setDetails("");
       setShowForm(false);
       fetchData();
-      alert("Withdrawal request initiated. Expected processing: 3-5 business rotations.");
+      toast.success("Withdrawal request initiated. Expected processing: 3-5 business rotations.");
     } catch (err) {
-      alert("Transmission failed.");
+      toast.error("Transmission failed.");
     } finally {
       setSubmitting(false);
     }
