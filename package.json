@@ -15,7 +15,6 @@
     "@firebase/eslint-plugin-security-rules": "^0.0.1",
     "@getbrevo/brevo": "^5.0.4",
     "@google/genai": "^1.29.0",
-    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.0",

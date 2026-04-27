@@ -19,7 +19,6 @@ import LegalNavbar from "../../components/legal/LegalNavbar";
 import SEO from "../../components/SEO";
 import { LoadingSpinner } from "../../components/ui/Loading";
 import { cn } from "../../lib/utils";
-import PublicFooter from "../../components/PublicFooter";
 
 export default function Contact() {
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -215,7 +214,15 @@ export default function Contact() {
         </div>
       </main>
 
-      <PublicFooter />
+      <footer className="bg-slate-50 border-t border-slate-100 py-10 px-6">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-300">
+          <p>© 2026 IND Distribution</p>
+          <div className="flex gap-6 items-center">
+            <Globe className="w-3 h-3" />
+            <span>HQ / Rajasthan / India</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

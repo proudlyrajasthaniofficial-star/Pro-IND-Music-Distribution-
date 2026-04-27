@@ -25,7 +25,6 @@ import { auth } from "../../lib/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { uploadToCloudinary } from "../../lib/cloudinary";
-import { toast } from "sonner";
 import { generateBio } from "../../services/geminiService";
 
 export default function Profile() {
@@ -51,9 +50,8 @@ export default function Profile() {
       const url = await uploadToCloudinary(file);
       await updateDoc(doc(db, "users", user!.uid), { photoURL: url });
       setFormData(prev => ({ ...prev, photoURL: url }));
-      toast.success("Identity visual updated.");
-    } catch (err: any) {
-      toast.error("Photo transmission failed: " + (err.message || "Unknown error"));
+    } catch (err) {
+      alert("Photo transmission failed");
     } finally {
       setUploading(false);
     }
@@ -66,24 +64,22 @@ export default function Profile() {
     try {
       await updateDoc(doc(db, "users", user.uid), formData);
       setSuccess(true);
-      toast.success("Manifest record successfully synced.");
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      toast.error("Profile update failed: " + (err.message || "Security rejection"));
+    } catch (err) {
+      alert("Profile update failed.");
     } finally {
       setSaving(false);
     }
   };
 
   const runBioGenerator = async () => {
-    if (!formData.displayName) return toast.error("Please set a display name first.");
+    if (!formData.displayName) return alert("Please set a display name first.");
     setGeneratingBio(true);
     try {
       const result = await generateBio(formData.displayName, formData.genre || "Music");
       setFormData(prev => ({ ...prev, bio: result }));
-      toast.success("AI Synthesis complete.");
-    } catch (err: any) {
-      toast.error("AI Generation failure: " + (err.message || "Quantum sync lost"));
+    } catch (err) {
+      alert("AI Generation failed.");
     } finally {
       setGeneratingBio(false);
     }

@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { BLOG_POSTS } from '../constants/blogData';
 import PublicNavbar from '../components/PublicNavbar';
-import PublicFooter from '../components/PublicFooter';
 import { ArrowLeft, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 
 const BlogPost = () => {
@@ -167,7 +166,12 @@ const BlogPost = () => {
         </div>
       </section>
 
-      <PublicFooter />
+      <footer className="py-20 px-8 border-t border-slate-100 bg-white">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+           <Link to="/" className="font-display font-black text-xl tracking-tighter uppercase">IND Distribution</Link>
+           <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 italic">© 2026 // NODE_SYNC_SUCCESS</span>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion } from "motion/react";
-import { toast } from "sonner";
 
 export default function ContentID() {
   const { user } = useAuth();
@@ -59,9 +58,9 @@ export default function ContentID() {
       });
       setFormData({ releaseId: "", youtubeUrl: "", type: "whitelist" });
       fetchData();
-      toast.success("Content ID request submitted.");
+      alert("Content ID request submitted.");
     } catch (err) {
-      toast.error("Submission failed.");
+      alert("Submission failed.");
     } finally {
       setSubmitting(false);
     }

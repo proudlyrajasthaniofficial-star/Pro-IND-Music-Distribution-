@@ -13,7 +13,6 @@ import {
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import PublicNavbar from "../components/PublicNavbar";
-import PublicFooter from "../components/PublicFooter";
 
 const Founder = () => {
   return (
@@ -224,7 +223,20 @@ const Founder = () => {
           </div>
         </motion.div>
       </main>
-      <PublicFooter />
+
+      {/* Modern Footer Branding */}
+      <footer className="relative z-10 border-t border-slate-50 py-12 px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-6">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">© 2026 IND Distribution</span>
+            <div className="w-[1px] h-4 bg-slate-100" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">Engineered by SK Ji</span>
+          </div>
+          <Link to="/dashboard" className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-brand-blue group">
+            Access Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 };

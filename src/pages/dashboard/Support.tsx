@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext";
 import { MessageSquare, Send, Clock, CheckCircle2, AlertCircle, HelpCircle, LifeBuoy } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import { toast } from "sonner";
 
 export default function Support() {
   const { user, profile } = useAuth();
@@ -52,9 +51,9 @@ export default function Support() {
       setSubject("");
       setMessage("");
       fetchTickets();
-      toast.success("Support ticket transmitted. Our task force will respond shortly.");
+      alert("Support ticket transmitted. Our task force will respond shortly.");
     } catch (err) {
-      toast.error("Transmission failed.");
+      alert("Transmission failed.");
     } finally {
       setSubmitting(false);
     }
