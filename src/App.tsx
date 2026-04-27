@@ -84,24 +84,32 @@ function AppContent() {
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           
-          {/* SEO Landing Pages */}
+          {/* SEO Landing Pages (The Core 10) */}
           <Route path="/best-music-distribution-india" element={<SEOLandingPage />} />
           <Route path="/free-music-distribution-india" element={<SEOLandingPage />} />
           <Route path="/upload-song-on-spotify-india" element={<SEOLandingPage />} />
+          <Route path="/music-distribution-pricing-india" element={<SEOLandingPage />} />
+          <Route path="/independent-artist-guide-india" element={<SEOLandingPage />} />
           <Route path="/digital-music-distribution-india" element={<SEOLandingPage />} />
-          <Route path="/caller-tune-distribution-india" element={<SEOLandingPage />} />
-          <Route path="/instagram-reels-music-distribution" element={<SEOLandingPage />} />
-          <Route path="/jio-saavn-music-distribution" element={<SEOLandingPage />} />
-          <Route path="/gaana-wynk-music-distribution" element={<SEOLandingPage />} />
-          <Route path="/youtube-content-id-india" element={<SEOLandingPage />} />
-          <Route path="/music-royalties-in-india" element={<SEOLandingPage />} />
-          
-          {/* Historical Slugs / Aliases */}
-          <Route path="/music-distribution-india" element={<Navigate to="/best-music-distribution-india" replace />} />
-          <Route path="/distribute-music-jiosaavn" element={<Navigate to="/jio-saavn-music-distribution" replace />} />
-          <Route path="/indian-music-distribution-platform" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/music-marketing-india" element={<SEOLandingPage />} />
+          <Route path="/music-publishing-india" element={<SEOLandingPage />} />
+          <Route path="/record-label-services-india" element={<SEOLandingPage />} />
           <Route path="/b2b-music-distribution-india" element={<SEOLandingPage />} />
-          <Route path="/white-label-music-distribution-india" element={<SEOLandingPage />} />
+          
+          {/* SEO Redirects & Aliases */}
+          <Route path="/music-distribution-india" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/jio-saavn-music-distribution" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/gaana-wynk-music-distribution" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/caller-tune-distribution-india" element={<Navigate to="/digital-music-distribution-india" replace />} />
+          <Route path="/instagram-reels-music-distribution" element={<Navigate to="/music-marketing-india" replace />} />
+          <Route path="/youtube-content-id-india" element={<Navigate to="/music-publishing-india" replace />} />
+          <Route path="/music-royalties-in-india" element={<Navigate to="/music-publishing-india" replace />} />
+          <Route path="/distribute-music-jiosaavn" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/indian-music-distribution-platform" element={<Navigate to="/best-music-distribution-india" replace />} />
+          <Route path="/white-label-music-distribution-india" element={<Navigate to="/b2b-music-distribution-india" replace />} />
+          <Route path="/music-distribution-pricing" element={<Navigate to="/music-distribution-pricing-india" replace />} />
+          <Route path="/artist-guide" element={<Navigate to="/independent-artist-guide-india" replace />} />
+          <Route path="/music-marketing" element={<Navigate to="/music-marketing-india" replace />} />
           
           <Route path="/terms" element={<Terms />} />
           <Route path="/refunds" element={<Refunds />} />

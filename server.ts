@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
 import * as userCtrl from "./controllers/userController.ts";
@@ -37,9 +38,58 @@ function setupCloudinary() {
 
 async function startServer() {
   const app = express();
+  app.set("trust proxy", true);
   const PORT = 3000;
 
   setupCloudinary();
+  
+  // Force HTTPS in production
+  app.use((req, res, next) => {
+    if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
+      return res.redirect(`https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
+
+  // Explicitly serve static files from public directory
+  app.use(express.static(path.join(__dirname, "public")));
+
+  // Explicit handlers for sitemap and robots to ensure correct content headers
+  // Search engines prefer these with explicit Content-Type and fast response
+  app.get("/sitemap.xml", (req, res) => {
+    const possiblePaths = [
+      path.join(process.cwd(), "public", "sitemap.xml"),
+      path.join(__dirname, "public", "sitemap.xml"),
+      path.join(process.cwd(), "dist", "sitemap.xml")
+    ];
+
+    res.header("Content-Type", "application/xml");
+    res.header("Cache-Control", "public, max-age=3600");
+
+    for (const sPath of possiblePaths) {
+      if (fs.existsSync(sPath)) {
+        return res.sendFile(sPath);
+      }
+    }
+    res.status(404).end();
+  });
+
+  app.get("/robots.txt", (req, res) => {
+    const possiblePaths = [
+      path.join(process.cwd(), "public", "robots.txt"),
+      path.join(__dirname, "public", "robots.txt"),
+      path.join(process.cwd(), "dist", "robots.txt")
+    ];
+
+    res.header("Content-Type", "text/plain");
+    
+    for (const rPath of possiblePaths) {
+      if (fs.existsSync(rPath)) {
+        return res.sendFile(rPath);
+      }
+    }
+    res.status(404).end();
+  });
 
   // JSON Body Parser
   app.use(express.json());
@@ -71,7 +121,7 @@ async function startServer() {
       const apiKey = (process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY)?.trim();
       const apiSecret = (process.env.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_SECRET)?.trim();
       const cloudName = (process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME)?.trim();
-      const uploadPreset = (process.env.CLOUDINARY_UPLOAD_PRESET || process.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ind-distribution")?.trim();
+      const uploadPreset = (process.env.CLOUDINARY_UPLOAD_PRESET || process.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ml_default")?.trim();
       
       if (!apiKey || !apiSecret || !cloudName) {
         console.error("❌ Cloudinary Config Missing:", { hasKey: !!apiKey, hasSecret: !!apiSecret, cloudName });

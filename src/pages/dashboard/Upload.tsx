@@ -4,8 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "motion/react";
-import { db, storage } from "../../lib/firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db } from "../../lib/firebase";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -93,7 +92,7 @@ export default function Upload() {
   const [step, setStep] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, fileName: "" });
+  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: { current: number, name: string } }>({});
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(PLATFORMS.map(p => p.name));
   const [existingRelease, setExistingRelease] = useState<any>(null);
   
@@ -179,8 +178,8 @@ export default function Upload() {
       publisherYear: new Date().getFullYear().toString(),
       publisherHolder: "",
       language: "Hindi",
-      primaryGenre: "Pop",
-      secondaryGenre: "HipHop",
+      primaryGenre: "Romantic",
+      secondaryGenre: "Desi Pop",
       isrc: "",
       upc: "",
       releaseDate: "",
@@ -236,30 +235,6 @@ export default function Upload() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const uploadFileWithProgress = (file: File, path: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const storageRef = ref(storage, path);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(prev => ({ 
-            ...prev, 
-            current: progress,
-            fileName: file.name
-          }));
-        },
-        (error) => reject(error),
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          resolve(downloadURL);
-        }
-      );
-    });
-  };
-
   const onSubmit = async (data: any) => {
     setFormError(null);
     if (!audioFile && !existingAudioUrl) {
@@ -275,22 +250,38 @@ export default function Upload() {
     if (!user) return;
     
     setIsUploading(true);
+    setUploadProgress({}); // Reset progress map
     try {
-      // 1. Upload Cover to Cloudinary if new file
+      const uploadPromises: Promise<any>[] = [];
       let coverUrl = existingCoverUrl;
+      let audioUrl = existingAudioUrl;
+
+      // 1. Prepare Cover Upload
       if (coverFile) {
-        coverUrl = await uploadToCloudinary(coverFile, (progress) => {
-          setUploadProgress({ current: progress, total: 100, fileName: "Cover Art" });
-        });
+        uploadPromises.push(
+          uploadToCloudinary(coverFile, (progress) => {
+            setUploadProgress(prev => ({ 
+              ...prev, 
+              cover: { current: progress, name: "Cover Art" }
+            }));
+          }).then(url => coverUrl = url)
+        );
       }
 
-      // 2. Upload Audio to Cloudinary if new file
-      let audioUrl = existingAudioUrl;
+      // 2. Prepare Audio Upload
       if (audioFile) {
-        audioUrl = await uploadToCloudinary(audioFile, (progress) => {
-          setUploadProgress({ current: progress, total: 100, fileName: "Master Audio" });
-        });
+        uploadPromises.push(
+          uploadToCloudinary(audioFile, (progress) => {
+            setUploadProgress(prev => ({ 
+              ...prev, 
+              audio: { current: progress, name: "Master Audio" }
+            }));
+          }).then(url => audioUrl = url)
+        );
       }
+
+      // Execute uploads in parallel
+      await Promise.all(uploadPromises);
 
       const releaseData = {
         userId: user.uid,
@@ -333,21 +324,17 @@ export default function Upload() {
       setStep(8); // Finished
     } catch (err: any) {
       console.error(err);
-      let errorMessage = "An unexpected error occurred during upload.";
-      if (err.code === 'storage/unauthorized') {
-        errorMessage = "Permission denied to Firebase Storage. Please ensure you are logged in and authorized.";
-      } else if (err.code === 'storage/quota-exceeded') {
-        errorMessage = "Storage quota exceeded on the server. Please try again later.";
-      } else if (err.code === 'storage/retry-limit-exceeded') {
-        errorMessage = "Upload timed out. Please check your internet connection.";
+      let errorMessage = "An unexpected error occurred during asset transmission.";
+      if (err.message && (err.message.includes("Signature") || err.message.includes("config"))) {
+        errorMessage = "Cloudinary connection failure. Please verify Server API keys in settings.";
       } else if (err.message) {
         errorMessage = err.message;
       }
-      setFormError(`Critical Upload Failure: ${errorMessage}`);
+      setFormError(`Transmission Failure: ${errorMessage}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsUploading(false);
-      setUploadProgress({ current: 0, total: 0, fileName: "" });
+      setUploadProgress({});
     }
   };
 
@@ -453,20 +440,27 @@ export default function Upload() {
                  </div>
               </div>
 
-              <div className="w-full max-w-sm md:max-w-md space-y-4 md:space-y-6 text-center">
-                 <div className="flex flex-col md:flex-row items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-widest gap-2">
-                    <span className="text-slate-400">Transmitting: <span className="text-slate-800 break-all">{uploadProgress.fileName}</span></span>
-                    <span className="text-brand-blue">{Math.round(uploadProgress.current)}%</span>
+              <div className="w-full max-w-sm md:max-w-md space-y-6 md:space-y-8 text-center">
+                 <div className="space-y-4">
+                    {Object.entries(uploadProgress).map(([key, data]) => (
+                      <div key={key} className="space-y-2">
+                        <div className="flex items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-widest px-2">
+                           <span className="text-slate-400">{data.name}</span>
+                           <span className="text-brand-blue">{Math.round(data.current)}%</span>
+                        </div>
+                        <div className="h-3 bg-slate-100 rounded-full overflow-hidden p-0.5 shadow-inner">
+                           <motion.div 
+                             initial={{ width: 0 }}
+                             animate={{ width: `${data.current}%` }}
+                             className="h-full bg-linear-to-r from-brand-blue to-cyan-400 rounded-full"
+                           />
+                        </div>
+                      </div>
+                    ))}
                  </div>
-                 <div className="h-4 bg-slate-100 rounded-full overflow-hidden p-1 shadow-inner">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${uploadProgress.current}%` }}
-                      className="h-full bg-linear-to-r from-brand-blue to-cyan-400 rounded-full shadow-lg shadow-blue-500/20"
-                    />
-                 </div>
-                 <div className="text-center">
-                    <p className="font-display font-black text-3xl text-slate-800 tracking-tighter uppercase mb-2">Transmitting Audio Assets</p>
+                 
+                 <div className="text-center pt-4">
+                    <p className="font-display font-black text-3xl text-slate-800 tracking-tighter uppercase mb-2">Transmitting Studio Assets</p>
                     <p className="text-slate-400 font-medium tracking-widest text-[10px] uppercase">Integrating Creative Data with Global Metadata Mesh</p>
                  </div>
               </div>
@@ -596,23 +590,19 @@ export default function Upload() {
                             <button type="button" className="text-[9px] font-black uppercase text-brand-purple flex items-center gap-1.5 hover:scale-105 transition-transform"><Zap className="w-3 h-3 fill-brand-purple" /> Auto Suggest (AI)</button>
                          </div>
                          <select {...register("primaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
-                            <optgroup label="Primary Genres">
-                               {INDIAN_GENRES.primary.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
-                            <optgroup label="Regional Genres">
-                               {INDIAN_GENRES.regional.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
+                            {Object.keys(INDIAN_GENRES).map(category => (
+                               <option key={category} value={category}>{category}</option>
+                            ))}
                          </select>
                       </div>
                       <div className="space-y-4">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-4">Secondary Genre</label>
                          <select {...register("secondaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
-                            <optgroup label="Primary Genres">
-                               {INDIAN_GENRES.primary.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
-                            <optgroup label="Regional Genres">
-                               {INDIAN_GENRES.regional.map(g => <option key={g} value={g}>{g}</option>)}
-                            </optgroup>
+                            {Object.entries(INDIAN_GENRES).map(([category, subgenres]) => (
+                               <optgroup key={category} label={category}>
+                                  {subgenres.map(g => <option key={g} value={g}>{g}</option>)}
+                               </optgroup>
+                            ))}
                          </select>
                       </div>
                       <div className="space-y-2 md:space-y-3">
@@ -760,7 +750,7 @@ export default function Upload() {
                       </div>
                       <div className="pt-8 flex justify-center gap-6">
                         <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500">Back</button>
-                        <button type="button" disabled={!coverFile} onClick={nextStep} className="btn-premium btn-glow py-5 px-12 disabled:opacity-50">Confirm Canvas</button>
+                        <button type="button" disabled={!coverFile && !existingCoverUrl} onClick={nextStep} className="btn-premium btn-glow py-5 px-12 disabled:opacity-50">Confirm Canvas</button>
                       </div>
                    </div>
                 </motion.div>

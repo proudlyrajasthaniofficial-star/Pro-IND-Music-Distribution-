@@ -1,30 +1,21 @@
-export const INDIAN_GENRES = {
-  primary: [
-    "Bollywood",
-    "Indi-Pop",
-    "Hip-Hop / Rap",
-    "EDM",
-    "Rock",
-    "Classical",
-    "Folk",
-    "Devotional",
-    "Ghazal",
-    "Sufi",
-    "Jazz",
-    "Instrumental"
-  ],
-  regional: [
-    "Punjabi Pop",
-    "Haryanvi Beat",
-    "Bhojpuri Folk",
-    "Rajasthani Folk",
-    "Marathi Lavani",
-    "Bengali Rabindra Sangeet",
-    "Tamil Kollywood",
-    "Telugu Tollywood",
-    "Kannada Sandalwood",
-    "Malayalam Mollywood"
-  ]
+export const INDIAN_GENRES: Record<string, string[]> = {
+  "Bollywood / Filmi": ["Romantic", "Sad", "Dance / Party", "Item Song", "Retro Bollywood", "Lo-fi Bollywood", "Acoustic Bollywood"],
+  "Pop": ["Desi Pop", "Electro Pop", "Teen Pop", "Synth Pop", "Dance Pop"],
+  "Hip-Hop / Rap": ["Desi Hip-Hop", "Underground Rap", "Commercial Rap", "Trap", "Drill", "Conscious Rap", "Gangster Rap"],
+  "Indie / Independent": ["Indie Pop", "Indie Rock", "Indie Folk", "Experimental Indie", "Bedroom Pop"],
+  "Punjabi": ["Bhangra", "Punjabi Pop", "Punjabi Rap", "Folk Punjabi", "Punjabi Romantic", "Punjabi Sad"],
+  "Haryanvi": ["Haryanvi Pop", "Haryanvi Rap", "Desi Ragni", "Dance Haryanvi"],
+  "Rajasthani": ["Baagdi", "Marwadi", "Folk Rajasthani", "Rajasthani Pop", "Traditional Manganiyar", "Fusion Rajasthani"],
+  "Bhojpuri": ["Bhojpuri Romantic", "Bhojpuri Sad", "Bhojpuri Dance", "Devotional Bhojpuri"],
+  "Devotional / Bhakti": ["Bhajan", "Aarti", "Kirtan", "Sufi", "Qawwali", "Mantra / Chant"],
+  "Classical": ["Hindustani Classical", "Carnatic Classical", "Instrumental Classical", "Semi-Classical (Thumri, Ghazal)"],
+  "Folk (Regional)": ["Gujarati Folk", "Marathi Folk", "Bengali Folk", "Assamese Folk", "Kashmiri Folk"],
+  "Electronic / EDM": ["House", "Techno", "Trance", "Dubstep", "Future Bass", "Lo-fi Chill"],
+  "Rock": ["Alternative Rock", "Indie Rock", "Hard Rock", "Soft Rock", "Punk Rock"],
+  "Jazz / Blues": ["Smooth Jazz", "Fusion Jazz", "Blues Rock"],
+  "Instrumental": ["Piano", "Guitar", "Flute", "Ambient", "Background Score"],
+  "Kids / Educational": ["Nursery Rhymes", "Kids Learning Songs"],
+  "Regional (Language-based)": ["Tamil Pop", "Telugu Pop", "Kannada Pop", "Malayalam Pop", "Bengali Pop"]
 };
 
 export const INDIAN_LANGUAGES = [
