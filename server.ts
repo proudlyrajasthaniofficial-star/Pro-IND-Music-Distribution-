@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
 import * as userCtrl from "./controllers/userController.ts";
@@ -47,44 +48,38 @@ async function startServer() {
   // Explicit handlers for sitemap and robots to ensure correct content headers
   // Search engines prefer these with explicit Content-Type and fast response
   app.get("/sitemap.xml", (req, res) => {
-    const isProd = process.env.NODE_ENV === "production";
-    const sitemapPath = isProd 
-      ? path.join(process.cwd(), "dist", "sitemap.xml")
-      : path.join(process.cwd(), "public", "sitemap.xml");
-    
+    const possiblePaths = [
+      path.join(process.cwd(), "public", "sitemap.xml"),
+      path.join(__dirname, "public", "sitemap.xml"),
+      path.join(process.cwd(), "dist", "sitemap.xml")
+    ];
+
     res.header("Content-Type", "application/xml");
-    res.header("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
-    res.sendFile(sitemapPath, (err) => {
-      if (err) {
-        console.error("Sitemap fetch failure:", err);
-        // Fallback to public folder if dist fails (or vice versa)
-        const fallback = isProd 
-          ? path.join(process.cwd(), "public", "sitemap.xml")
-          : path.join(process.cwd(), "dist", "sitemap.xml");
-        res.sendFile(fallback, (err2) => {
-          if (err2) res.status(404).end();
-        });
+    res.header("Cache-Control", "public, max-age=3600");
+
+    for (const sPath of possiblePaths) {
+      if (fs.existsSync(sPath)) {
+        return res.sendFile(sPath);
       }
-    });
+    }
+    res.status(404).end();
   });
 
   app.get("/robots.txt", (req, res) => {
-    const isProd = process.env.NODE_ENV === "production";
-    const robotsPath = isProd
-      ? path.join(process.cwd(), "dist", "robots.txt")
-      : path.join(process.cwd(), "public", "robots.txt");
+    const possiblePaths = [
+      path.join(process.cwd(), "public", "robots.txt"),
+      path.join(__dirname, "public", "robots.txt"),
+      path.join(process.cwd(), "dist", "robots.txt")
+    ];
 
     res.header("Content-Type", "text/plain");
-    res.sendFile(robotsPath, (err) => {
-      if (err) {
-        const fallback = isProd
-          ? path.join(process.cwd(), "public", "robots.txt")
-          : path.join(process.cwd(), "dist", "robots.txt");
-        res.sendFile(fallback, (err2) => {
-          if (err2) res.status(404).end();
-        });
+    
+    for (const rPath of possiblePaths) {
+      if (fs.existsSync(rPath)) {
+        return res.sendFile(rPath);
       }
-    });
+    }
+    res.status(404).end();
   });
 
   // JSON Body Parser

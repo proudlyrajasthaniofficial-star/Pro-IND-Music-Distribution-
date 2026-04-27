@@ -15,7 +15,14 @@
   <url>
     <loc>https://musicdistributionindia.online/founder-developer</loc>
     <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/contact</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://musicdistributionindia.online/blog</loc>
@@ -24,9 +31,24 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://musicdistributionindia.online/contact</loc>
+    <loc>https://musicdistributionindia.online/blog/how-to-release-song-in-india-2026</loc>
     <lastmod>2026-04-27</lastmod>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/blog/earn-money-from-spotify-india</loc>
+    <lastmod>2026-04-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/blog/best-music-distribution-platforms-comparison</loc>
+    <lastmod>2026-04-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/blog/music-marketing-strategies-india-2026</loc>
+    <lastmod>2026-04-27</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://musicdistributionindia.online/best-music-distribution-india</loc>
@@ -77,5 +99,15 @@
     <loc>https://musicdistributionindia.online/b2b-music-distribution-india</loc>
     <lastmod>2026-04-27</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/terms</loc>
+    <lastmod>2026-04-27</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://musicdistributionindia.online/refunds</loc>
+    <lastmod>2026-04-27</lastmod>
+    <priority>0.3</priority>
   </url>
 </urlset>
