@@ -45,14 +45,46 @@ async function startServer() {
   app.use(express.static(path.join(__dirname, "public")));
 
   // Explicit handlers for sitemap and robots to ensure correct content headers
+  // Search engines prefer these with explicit Content-Type and fast response
   app.get("/sitemap.xml", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const sitemapPath = isProd 
+      ? path.join(process.cwd(), "dist", "sitemap.xml")
+      : path.join(process.cwd(), "public", "sitemap.xml");
+    
     res.header("Content-Type", "application/xml");
-    res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
+    res.header("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
+    res.sendFile(sitemapPath, (err) => {
+      if (err) {
+        console.error("Sitemap fetch failure:", err);
+        // Fallback to public folder if dist fails (or vice versa)
+        const fallback = isProd 
+          ? path.join(process.cwd(), "public", "sitemap.xml")
+          : path.join(process.cwd(), "dist", "sitemap.xml");
+        res.sendFile(fallback, (err2) => {
+          if (err2) res.status(404).end();
+        });
+      }
+    });
   });
 
   app.get("/robots.txt", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const robotsPath = isProd
+      ? path.join(process.cwd(), "dist", "robots.txt")
+      : path.join(process.cwd(), "public", "robots.txt");
+
     res.header("Content-Type", "text/plain");
-    res.sendFile(path.join(__dirname, "public", "robots.txt"));
+    res.sendFile(robotsPath, (err) => {
+      if (err) {
+        const fallback = isProd
+          ? path.join(process.cwd(), "public", "robots.txt")
+          : path.join(process.cwd(), "dist", "robots.txt");
+        res.sendFile(fallback, (err2) => {
+          if (err2) res.status(404).end();
+        });
+      }
+    });
   });
 
   // JSON Body Parser

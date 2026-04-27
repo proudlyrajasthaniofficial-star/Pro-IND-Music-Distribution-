@@ -1,12 +1,12 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 // Use import.meta.env for Vite client-side or fallback to process.env if in SSR/Node
 const GEMINI_API_KEY = (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) || (import.meta as any).env?.VITE_GEMINI_API_KEY;
 
-let ai: GoogleGenAI | null = null;
+let ai: GoogleGenerativeAI | null = null;
 
 if (GEMINI_API_KEY) {
-  ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+  ai = new GoogleGenerativeAI(GEMINI_API_KEY);
 } else {
   console.warn("GEMINI_API_KEY is not defined. AI features will be disabled.");
 }
@@ -37,23 +37,22 @@ export const analyzeReleaseMetadata = async (metadata: any): Promise<MetadataChe
     Metadata: ${JSON.stringify(metadata)}
     `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-      config: {
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
-          type: Type.OBJECT,
+          type: SchemaType.OBJECT,
           properties: {
-            isValid: { type: Type.BOOLEAN },
-            issues: { type: Type.ARRAY, items: { type: Type.STRING } },
+            isValid: { type: SchemaType.BOOLEAN },
+            issues: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
             suggestions: {
-              type: Type.OBJECT,
+              type: SchemaType.OBJECT,
               properties: {
-                title: { type: Type.STRING },
-                artist: { type: Type.STRING },
-                genre: { type: Type.STRING },
-                description: { type: Type.STRING }
+                title: { type: SchemaType.STRING },
+                artist: { type: SchemaType.STRING },
+                genre: { type: SchemaType.STRING },
+                description: { type: SchemaType.STRING }
               }
             }
           },
@@ -62,7 +61,9 @@ export const analyzeReleaseMetadata = async (metadata: any): Promise<MetadataChe
       }
     });
 
-    return JSON.parse(response.text || "{}");
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    return JSON.parse(response.text() || "{}");
   } catch (error) {
     console.error("Gemini Analysis Error:", error);
     throw error;
@@ -72,11 +73,9 @@ export const analyzeReleaseMetadata = async (metadata: any): Promise<MetadataChe
 export const generateBio = async (artistName: string, genre: string): Promise<string> => {
   if (!ai) return "";
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Generate a professional, compelling 2-paragraph artist bio for "${artistName}", a ${genre} artist. Focus on their impact and style.`,
-    });
-    return response.text || "";
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(`Generate a professional, compelling 2-paragraph artist bio for "${artistName}", a ${genre} artist. Focus on their impact and style.`);
+    return result.response.text() || "";
   } catch (error) {
     console.error("Gemini Bio Generation Error:", error);
     return "";

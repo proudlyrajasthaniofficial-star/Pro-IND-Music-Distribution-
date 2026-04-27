@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Core Pages -->
   <url>
     <loc>https://musicdistributionindia.online/</loc>
     <lastmod>2026-04-27</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://musicdistributionindia.online/features</loc>
     <lastmod>2026-04-27</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -18,39 +18,16 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://musicdistributionindia.online/blog</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://musicdistributionindia.online/contact</loc>
     <lastmod>2026-04-27</lastmod>
     <priority>0.6</priority>
   </url>
-
-  <!-- Blog -->
-  <url>
-    <loc>https://musicdistributionindia.online/blog</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/how-to-release-song-in-india-2026</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/earn-money-from-spotify-india</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/best-music-distribution-platforms-comparison</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/blog/music-marketing-strategies-india-2026</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- SEO Landing Pages -->
   <url>
     <loc>https://musicdistributionindia.online/best-music-distribution-india</loc>
     <lastmod>2026-04-27</lastmod>
@@ -101,17 +78,4 @@
     <lastmod>2026-04-27</lastmod>
     <priority>0.8</priority>
   </url>
-
-  <!-- Legal -->
-  <url>
-    <loc>https://musicdistributionindia.online/terms</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://musicdistributionindia.online/refunds</loc>
-    <lastmod>2026-04-27</lastmod>
-    <priority>0.3</priority>
-  </url>
-
 </urlset>
