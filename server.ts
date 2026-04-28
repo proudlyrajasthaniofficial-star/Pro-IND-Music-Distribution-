@@ -45,12 +45,11 @@ async function startServer() {
   
   // Force HTTPS in production
   app.use((req, res, next) => {
-    // Check for HTTPS using x-forwarded-proto (standard for Cloud Run/Nginx)
     const isHttps = req.headers["x-forwarded-proto"] === "https";
-    const isProd = process.env.NODE_ENV === "production";
+    const isProd = process.env.NODE_ENV === "production" || req.hostname.includes("musicdistributionindia.online");
     
     if (isProd && !isHttps) {
-      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+      return res.redirect(301, `https://${req.get("host")}${req.url}`);
     }
     next();
   });
@@ -59,25 +58,48 @@ async function startServer() {
   // We place these BEFORE express.static to ensure headers are correctly set
   app.get("/sitemap.xml", (req, res) => {
     const sitemapPath = path.join(process.cwd(), "public", "sitemap.xml");
+    const distSitemap = path.join(process.cwd(), "dist", "sitemap.xml");
+    const target = fs.existsSync(sitemapPath) ? sitemapPath : distSitemap;
     
-    if (fs.existsSync(sitemapPath)) {
-      res.header("Content-Type", "application/xml");
-      res.header("X-Robots-Tag", "noindex, follow"); // Sitemap itself shouldn't be indexed, but followed
-      res.header("Cache-Control", "public, max-age=3600");
-      return res.sendFile(sitemapPath);
+    res.header("Content-Type", "application/xml");
+    res.header("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", "0");
+
+    if (fs.existsSync(target)) {
+      return res.sendFile(target);
+    } else {
+      // Fallback simple sitemap if file missing
+      const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://musicdistributionindia.online/</loc><priority>1.0</priority></url>
+  <url><loc>https://musicdistributionindia.online/features</loc><priority>0.8</priority></url>
+  <url><loc>https://musicdistributionindia.online/blog</loc><priority>0.8</priority></url>
+</urlset>`;
+      res.send(fallbackSitemap);
     }
-    res.status(404).end();
   });
 
   app.get("/robots.txt", (req, res) => {
-    const robotsPath = path.join(process.cwd(), "public", "robots.txt");
+    res.header("Content-Type", "text/plain");
+    res.header("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", "0");
+
+    // We hardcode the "Allow everything" rules to be 100% sure Google sees them
+    const robotsContent = `User-agent: *
+Allow: /
+Disallow: /admin/login
+Disallow: /dashboard/login
+
+Sitemap: https://musicdistributionindia.online/sitemap.xml`;
     
-    if (fs.existsSync(robotsPath)) {
-      res.header("Content-Type", "text/plain");
-      res.header("Cache-Control", "public, max-age=3600");
-      return res.sendFile(robotsPath);
-    }
-    res.status(404).end();
+    res.send(robotsContent);
+  });
+
+  // Server-side redirect for /about to founder page for better SEO
+  app.get("/about", (req, res) => {
+    res.redirect(301, "/founder-developer");
   });
 
   // Explicitly serve static files from public directory
