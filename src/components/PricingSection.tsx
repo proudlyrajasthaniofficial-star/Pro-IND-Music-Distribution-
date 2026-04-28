@@ -1,15 +1,36 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
-import { CheckCircle2, ShieldCheck, Zap, Star, Layout, Users, Globe, Building2, Headset, MessageCircle } from "lucide-react";
+import { 
+  CheckCircle2, 
+  ShieldCheck, 
+  Zap, 
+  Star, 
+  Layout, 
+  Users, 
+  Globe, 
+  Building2, 
+  Headset, 
+  MessageCircle,
+  Youtube,
+  Phone,
+  Instagram,
+  Music,
+  Target,
+  Hash,
+  ExternalLink
+} from "lucide-react";
 import { cn } from "../lib/utils";
 
 const ADDONS = [
-  { name: "YouTube Content ID", price: "₹199", icon: "Youtube" },
-  { name: "Caller Tune", price: "₹299/song", icon: "Phone" },
-  { name: "Fast Release", price: "₹99", icon: "Zap" },
-  { name: "Spotify Verification", price: "₹199", icon: "CheckCircle" },
-  { name: "Playlist Pitching", price: "₹299", icon: "Music" }
+  { name: "Fast Release (24 hrs)", price: "₹299", icon: "Zap" },
+  { name: "YouTube Monetization", price: "₹199", icon: "Youtube" },
+  { name: "Caller Tune Boost", price: "₹99", icon: "Phone" },
+  { name: "Instagram Promotion", price: "₹499", icon: "Instagram" },
+  { name: "Playlist Pitching", price: "₹999", icon: "Music" },
+  { name: "YouTube Ads Campaign", price: "₹1999+", icon: "Target" },
+  { name: "Custom ISRC", price: "₹49", icon: "Hash" },
+  { name: "Smart Link Premium", price: "₹99", icon: "ExternalLink" }
 ];
 
 export default function PricingSection() {
@@ -17,79 +38,96 @@ export default function PricingSection() {
 
   const plans = [
     {
-      name: "Starter Artist",
-      price: billingCycle === 'yearly' ? 699 : 79,
-      tag: "Beginner Friendly",
+      name: "Free Plan",
+      id: "free",
+      price: 0,
+      lifetime: true,
+      tag: "Entry Funnel",
       features: [
-        "1 Artist Profile",
-        "Unlimited Audio Releases",
-        "All Major Platforms",
+        "1 Song Release (per month)",
+        "70% Royalty Earnings",
+        "Basic Distribution",
+        "Standard Delivery (7–10 days)",
+        "Basic Artist Dashboard",
+        "Track Status Monitoring"
+      ],
+      cta: "Grab Trial",
+      color: "slate"
+    },
+    {
+      name: "Artist Plan",
+      id: "artist",
+      price: billingCycle === 'yearly' ? 1499 : 199,
+      tag: "Core Plan",
+      features: [
+        "Unlimited Song Releases",
+        "85% Royalty Earnings",
+        "150+ Platforms",
+        "YouTube Content ID (Basic)",
+        "Caller Tune (India)",
+        "ISRC & UPC Generation",
         "Basic Analytics",
-        "YouTube Distribution"
+        "Lyrics Distribution",
+        "Cover Song Support"
       ],
       cta: "Start Now",
       color: "blue"
     },
     {
       name: "Pro Artist",
-      price: billingCycle === 'yearly' ? 999 : 129,
+      id: "pro",
+      price: billingCycle === 'yearly' ? 2499 : 349,
       popular: true,
-      highlight: "🔥 Most Popular",
+      highlight: "🔥 High Conversion",
+      tag: "Serious Artists",
       features: [
-        "1 Artist Profile",
-        "Unlimited Audio + Video Releases",
-        "YouTube Content ID",
-        "Caller Tune (Jio, Airtel, Vi)",
-        "Global Distribution",
-        "90% Revenue Share",
-        "Fast Release (2–3 Days)"
+        "Everything in Artist Plan",
+        "90% Royalty Earnings",
+        "Fast Release (48 Hours)",
+        "Instagram & Facebook Music",
+        "YouTube OAC Support",
+        "Advanced Analytics",
+        "Smart Link / Pre-save",
+        "Release Scheduling",
+        "Priority Support (WhatsApp)"
       ],
-      cta: "Go Pro",
+      cta: "Unlock Pro",
       color: "purple"
     },
     {
-      name: "Premium Artist",
-      price: billingCycle === 'yearly' ? 1999 : 249,
-      tag: "Best Value",
+      name: "Label Plan",
+      id: "label",
+      price: billingCycle === 'yearly' ? 4999 : 699,
+      tag: "Business Starter",
       features: [
-        "2 Artist Profiles",
+        "Manage up to 10 Artists",
         "Unlimited Releases",
-        "Content ID + Social Platforms",
-        "Caller Tune Priority",
-        "Spotify Verification Help",
-        "Playlist Pitch Support",
-        "95% Revenue Share",
-        "Advanced Analytics"
+        "90% Royalty Earnings",
+        "Team Access Dashboard",
+        "Revenue Split System",
+        "Label Name Branding",
+        "Bulk Upload System",
+        "YouTube Content ID (Adv)"
       ],
-      cta: "Upgrade Now",
+      cta: "Start Label",
       color: "pink"
     },
     {
-      name: "Label Plan",
-      price: billingCycle === 'yearly' ? 4999 : 599,
-      features: [
-        "5 Artists",
-        "Unlimited Releases",
-        "Rights Management",
-        "Team Access",
-        "97% Revenue Share",
-        "Priority Support"
-      ],
-      cta: "For Labels",
-      color: "yellow"
-    },
-    {
-      name: "Enterprise",
+      name: "Unlimited Label",
+      id: "unlimited-label",
       price: billingCycle === 'yearly' ? 9999 : 1299,
-      priceSuffix: "+",
+      tag: "Scale Plan",
       features: [
         "Unlimited Artists",
-        "Dedicated Manager",
-        "White Label",
-        "API Access",
-        "Custom Revenue"
+        "Unlimited Releases",
+        "95% Royalty Earnings",
+        "Advanced Bulk Upload",
+        "Dedicated Account Manager",
+        "Full Analytics Dashboard",
+        "White-label Branding",
+        "API Access (Optional)"
       ],
-      cta: "Contact Sales",
+      cta: "Scale Now",
       color: "red"
     }
   ];
@@ -208,7 +246,7 @@ export default function PricingSection() {
                 <div className="flex items-baseline mb-8">
                   <span className="text-4xl font-black text-slate-900">₹{plan.price}{(plan as any).priceSuffix || ""}</span>
                   <span className="text-[10px] font-black text-slate-400 ml-1.5 uppercase tracking-widest">
-                    / {billingCycle === 'yearly' ? 'Year' : 'Month'}
+                    / {(plan as any).lifetime ? 'Lifetime' : (billingCycle === 'yearly' ? 'Year' : 'Month')}
                   </span>
                 </div>
 
@@ -264,11 +302,14 @@ export default function PricingSection() {
                 className="bg-white border border-slate-100 p-6 rounded-3xl shadow-lg shadow-slate-100/50 flex flex-col items-center gap-3 min-w-[180px] group transition-all hover:border-indigo-200"
               >
                 <div className="w-12 h-12 bg-slate-50 text-indigo-600 rounded-2xl flex items-center justify-center transition-colors group-hover:bg-indigo-50">
-                  {addon.icon === 'Youtube' && <Zap className="w-6 h-6" />}
-                  {addon.icon === 'Phone' && <Layout className="w-6 h-6" />}
+                  {addon.icon === 'Youtube' && <Youtube className="w-6 h-6" />}
+                  {addon.icon === 'Phone' && <Phone className="w-6 h-6" />}
                   {addon.icon === 'Zap' && <Zap className="w-6 h-6" />}
-                  {addon.icon === 'CheckCircle' && <CheckCircle2 className="w-6 h-6" />}
-                  {addon.icon === 'Music' && <Globe className="w-6 h-6" />}
+                  {addon.icon === 'Instagram' && <Instagram className="w-6 h-6" />}
+                  {addon.icon === 'Music' && <Music className="w-6 h-6" />}
+                  {addon.icon === 'Target' && <Target className="w-6 h-6" />}
+                  {addon.icon === 'Hash' && <Hash className="w-6 h-6" />}
+                  {addon.icon === 'ExternalLink' && <ExternalLink className="w-6 h-6" />}
                 </div>
                 <p className="text-xs font-black uppercase tracking-widest text-slate-500">{addon.name}</p>
                 <p className="text-lg font-black text-indigo-600">{addon.price}</p>
@@ -276,6 +317,19 @@ export default function PricingSection() {
             ))}
           </div>
         </div>
+
+        {/* Killer Line */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-32 text-center"
+        >
+          <p className="text-2xl md:text-4xl font-display font-black tracking-tight uppercase leading-tight italic bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 text-transparent bg-clip-text max-w-4xl mx-auto">
+            “Gaana banana talent hai… <br className="hidden md:block" />
+            usko duniya tak pahuchana system hai — aur wo system yahi hai.”
+          </p>
+        </motion.div>
 
         {/* Floating Particles (Decorative) */}
         <div className="absolute inset-0 pointer-events-none">

@@ -228,65 +228,30 @@ export const SEO_PAGES_CONTENT: Record<string, SEOContent> = {
   "music-distribution-pricing-india": {
     title: "Music Distribution Pricing India – Plans for Artists & Labels",
     h1: "Music Distribution Pricing India – Most Affordable Plans to Grow Fast",
-    description: "Compare music distribution pricing in India. Choose between free and premium plans for independent artists and record labels. Get 100% royalties.",
-    keywords: ["music distribution pricing india", "music distribution cost india", "cheap music distribution india", "affordable music aggregator india", "music subscription plans india", "per release music distribution cost", "yearly music distribution fee india", "free vs paid music distribution india", "tune-core india pricing", "distro-kid india alternative pricing", "best value music distribution india", "independent label pricing music", "music royalty percentage distribution", "digital distribution price chart", "music release budget india", "start music career budget india", "hidden costs music distribution", "music distribution offers india", "bulk upload pricing music", "music aggregator comparison india"],
+    description: "Compare music distribution pricing in India. Choose between Free, Artist, Pro Artist, and Label plans. Get 100% transparent royalties and global distribution.",
+    keywords: ["music distribution pricing india", "music distribution cost india", "cheap music distribution india", "artist plan music distribution", "pro artist plan india", "music label pricing india", "yearly music distribution fee india", "free vs paid music distribution india", "best value music distribution india", "independent label pricing music", "music royalty percentage distribution", "digital music distribution india price", "unlimited music distribution india"],
     content: `
-      <p>Music distribution platforms India mein alag-alag pricing models aur options offer karte hain. Ek beginner artist ke liye sahi plan choose karna confusion bhara ho sakta hai—kuch log per release mangte hain, kuch per year, aur kuch commission lete hain. Is guide mein hum breakthrough analysis karenge music distribution pricing ka.</p>
+      <p>Music distribution platforms India mein alag-alag pricing models offer karte hain. Hamare 2026 ke updated plans beginners se lekar professional labels tak sabki needs ko poora karte hain. Sahi plan choose karna confusion bhara ho sakta hai, lekin yahan humne simplify kiya hai.</p>
       
-      <p>Choice aapke career stage par depend karti hai. Kya aap saal mein sirf ek gaana dalte ho? Ya aap ek professional ho jo har mahine 4 gaane release karta hai? Pricing hi decide karegi ki end of the year aapki pocket mein kitna royalty bachega. Chaliye vistaar mein samajhte hain different models ko.</p>
+      <p>Choice aapke career stage par depend karti hai. Kya aap saal mein sirf ek gaana dalte ho? Ya aap ek professional ho jo har mahine multiple gaane release karta hai? Pricing hi decide karegi ki end of the year aapki pocket mein kitna royalty bachega.</p>
 
-      <h2>Types of Pricing Models in India</h2>
-      <p>India mein mainly 3 tarah ke pricing schemes popular hain:</p>
+      <h2>Updated Plans Overview (2026)</h2>
       <ul>
-        <li><strong>Free Distribution (Revenue Share):</strong> Upfront paisa zero hota hai, lekin 15-30% royalty distributor rakhta hai. Beginners ke liye perfect hai.</li>
-        <li><strong>Subscription Model (Annual Fee):</strong> Aap ek fix saal ki fee dete ho (e.g. Rs. 1499/year) aur unlimited gaane upload karte ho. Professional artists ke liye ye best hai kyunki 100% royalty artist ko milti hai.</li>
-        <li><strong>Per Release Model (One-time Fee):</strong> Isme aap ek single gaane ke liye pay karte ho (e.g. Rs. 499). Kam releases walo ke liye ye suit karta hai.</li>
+        <li><strong>Free Plan (Entry Funnel):</strong> ₹0 Lifetime. Best for beginners. 1 Song Release per month limit, 70% Royalty Earnings.</li>
+        <li><strong>Artist Plan (Core):</strong> ₹199/mo or ₹1499/year. Unlimited releases, 85% Royalty, Caller Tune distribution, YouTube Content ID (basic).</li>
+        <li><strong>Pro Artist (High Conversion):</strong> ₹349/mo or ₹2499/year. 90% Royalty, Fast Release (48 Hours), YouTube Official Artist Channel (OAC) support, and Advanced Analytics.</li>
+        <li><strong>Label Plan (Business Starter):</strong> ₹699/mo or ₹4999/year. Manage up to 10 Artists, Revenue Split system, and Label Branding.</li>
+        <li><strong>Unlimited Label (Scale Plan):</strong> ₹1299/mo or ₹9999/year. Unlimited Artists, Dedicated Manager, and 95% Royalty Earnings.</li>
       </ul>
 
-      <h2>What is Music Distribution Pricing?</h2>
-      <p>Pricing ka matlab sirf "paisa dena" nahi hai, balki "services khareedna" hai. Jab aap kisi premium plan ke liye pay karte ho, to aap faster approval, priority support, caller tune services, aur marketing tools access karte ho. <strong>Music Distribution India</strong> jaise platforms localized plans offer karte hain jo Indian economy ke hisaab se designed hain.</p>
-
-      <h2>How It Works (Choosing Your Plan)</h2>
-      <p>Sahi plan choose karne ke liye ye steps follow karein:</p>
-      <ol>
-        <li><strong>Analyze Your Release Frequency:</strong> Check karein saal mein kitne gaane dalne hain.</li>
-        <li><strong>Royalty Goal:</strong> Agar aapko lagta hai gaana viral hoga, to 100% royalty wala plan lein (Paid).</li>
-        <li><strong>Feature Needs:</strong> Content ID ya YouTube monetization chahiye? Inke costs check karein.</li>
-        <li><strong>Compare Distributors:</strong> Compare karein TuneCore, DistroKid aur local options ko.</li>
-      </ol>
-
-      <h2>Benefits of Paid Plans in India</h2>
-      <ul>
-        <li><strong>Keep 100% Royalties:</strong> Million streams hone par aapka bohot saara commission bach jata hai.</li>
-        <li><strong>Priority Store Support:</strong> Gaana ya Spotify par issue hone par jaldi solve hota hai.</li>
-        <li><strong>YouTube Content ID:</strong> Bina additional cost ke kai baar Content ID features include hote hain.</li>
-        <li><strong>Faster Delivery:</strong> 24-48 hours delivery fast speed support milta hai.</li>
-        <li><strong>Verified Badges:</strong> Artiste verified profile process fast ho jata hai.</li>
-        <li><strong>Advanced Analytics:</strong> Detailed daily reports jo free plans mein missing hoti hain.</li>
-        <li><strong>Custom Release Dates:</strong> Sahi waqt par marketing launch karne ki azadi.</li>
-      </ul>
-
-      <h2>Advanced Pricing Strategies for Labels</h2>
-      <p><strong>🔥 Label/Business Plans:</strong> Agar aapke paas multiple artists hain, to B2B bulk plans best hote hain. Isme "Cost per artist" bohot kam ho jata hai.</p>
-      <p><strong>🔥 Revenue Projection:</strong> Release se pehle dekhen ki kitni reach hai. Agar hype achhi hai, to investment (Paid Plan) return on investment (ROI) deti hai.</p>
-      <p><strong>🔥 Bundle Offers:</strong> Kayi platforms distribution + PR packages dete hain jo cost effective hote hain.</p>
-
-      <h2>Common Mistakes (Mistakes to Avoid)</h2>
-      <ul>
-        <li><strong>Falling for "Hidden" Fees:</strong> Kuch platforms base price kam dikhate hain par YouTube monetization ka extra mangte hain. T&C dhyan se padhein.</li>
-        <li><strong>Paying Too Much:</strong> Chote releases ke liye expensive enterprise plans lena bevkufi hai.</li>
-        <li><strong>Ignoring Commission:</strong> 30% commission sunne mein kam lagta hai, lekin 1 lakh ki earning par 30,000 dena chubhta hai.</li>
-      </ul>
-
-      <h2>Pro Tips for Budget Control</h2>
-      <p>Start with a flexible platform like <strong>Music Distribution India</strong>. Pehle free se audience check karein, aur jaise hi pehla payout aaye, use premium plan mein reinvest karein. Isse aap apni jeb se paisa nahi lagayenge aur aapka career self-sustaining ban jayega.</p>
+      <h2>Benefits of Premium Plans</h2>
+      <p>Jab aap premium plans like <strong>Pro Artist</strong> ya <strong>Label Plan</strong> choose karte ho, to aap sirf distribution nahi, balki growth system khareedte ho. Isme faster approval, priority support, caller tune services, aur advance marketing tools access milte hain.</p>
     `,
     faqs: [
-      { question: "Sabse sasta distributor kaunsa hai?", answer: "Indian context mein local distributors saste padte hain kyunki conversion rates (Dollar to Rupee) zyada nahi lagte." },
-      { question: "Kya free plan me 100% royalty milti hai?", answer: "Nahi, free platform usually standard percentage share mangte hain." },
-      { question: "Subscription expire ho jaye to gaane hat jayenge?", answer: "Depends on platform. Kuch platforms lifetime presence dete hain, kuch renewal mangte hain." },
-      { question: "YouTube Content ID ka cost kya hai?", answer: "Kayi paid plans mein free hai, otherwise iska usually annual fee hota hai per track." },
-      { question: "Kya main currency change kar sakta hoon?", answer: "Indian platforms par aap INR mein hi transaction karte hain via Net Banking or UPI." }
+      { question: "Free plan better hai ya Paid?", answer: "Free plan users ko acquire karne ke liye hai, lekin real profit aur feature access (like 90%+ royalty) hamare Artist aur Pro plans mein hai." },
+      { question: "Artist Plan me kya benefits hain?", answer: "Isme unlimited releases, 85% royalty, aur Caller Tune (India) jaise core features milte hain jo career grow karne ke liye zaroori hain." },
+      { question: "What is Pro Artist Plan?", answer: "Ye serious artists ke liye hai jo 48-hour delivery, YouTube OAC support, aur 90% royalty earnings chahte hain." },
+      { question: "Labels ke liye pricing kya hai?", answer: "Small labels ke liye ₹4999/year aur professional agencies ke liye Unlimited plan ₹9999/year hai." }
     ]
   },
   "independent-artist-guide-india": {
