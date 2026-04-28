@@ -45,51 +45,43 @@ async function startServer() {
   
   // Force HTTPS in production
   app.use((req, res, next) => {
-    if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
-      return res.redirect(`https://${req.headers.host}${req.url}`);
+    // Check for HTTPS using x-forwarded-proto (standard for Cloud Run/Nginx)
+    const isHttps = req.headers["x-forwarded-proto"] === "https";
+    const isProd = process.env.NODE_ENV === "production";
+    
+    if (isProd && !isHttps) {
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
     }
     next();
   });
 
-  // Explicitly serve static files from public directory
-  app.use(express.static(path.join(__dirname, "public")));
-
   // Explicit handlers for sitemap and robots to ensure correct content headers
-  // Search engines prefer these with explicit Content-Type and fast response
+  // We place these BEFORE express.static to ensure headers are correctly set
   app.get("/sitemap.xml", (req, res) => {
-    const possiblePaths = [
-      path.join(process.cwd(), "public", "sitemap.xml"),
-      path.join(__dirname, "public", "sitemap.xml"),
-      path.join(process.cwd(), "dist", "sitemap.xml")
-    ];
-
-    res.header("Content-Type", "application/xml");
-    res.header("Cache-Control", "public, max-age=3600");
-
-    for (const sPath of possiblePaths) {
-      if (fs.existsSync(sPath)) {
-        return res.sendFile(sPath);
-      }
+    const sitemapPath = path.join(process.cwd(), "public", "sitemap.xml");
+    
+    if (fs.existsSync(sitemapPath)) {
+      res.header("Content-Type", "application/xml");
+      res.header("X-Robots-Tag", "noindex, follow"); // Sitemap itself shouldn't be indexed, but followed
+      res.header("Cache-Control", "public, max-age=3600");
+      return res.sendFile(sitemapPath);
     }
     res.status(404).end();
   });
 
   app.get("/robots.txt", (req, res) => {
-    const possiblePaths = [
-      path.join(process.cwd(), "public", "robots.txt"),
-      path.join(__dirname, "public", "robots.txt"),
-      path.join(process.cwd(), "dist", "robots.txt")
-    ];
-
-    res.header("Content-Type", "text/plain");
+    const robotsPath = path.join(process.cwd(), "public", "robots.txt");
     
-    for (const rPath of possiblePaths) {
-      if (fs.existsSync(rPath)) {
-        return res.sendFile(rPath);
-      }
+    if (fs.existsSync(robotsPath)) {
+      res.header("Content-Type", "text/plain");
+      res.header("Cache-Control", "public, max-age=3600");
+      return res.sendFile(robotsPath);
     }
     res.status(404).end();
   });
+
+  // Explicitly serve static files from public directory
+  app.use(express.static(path.join(__dirname, "public")));
 
   // JSON Body Parser
   app.use(express.json());
