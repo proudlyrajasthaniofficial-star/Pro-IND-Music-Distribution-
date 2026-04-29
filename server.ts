@@ -125,11 +125,20 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // API Health Check
   app.get("/api/health", (req, res) => {
+    const cfAppId = process.env.CASHFREE_APP_ID;
+    const cfSecret = process.env.CASHFREE_SECRET_KEY;
+    const cfEnv = process.env.CASHFREE_ENV || "SANDBOX (default)";
+
     res.json({ 
       status: "ok", 
       timestamp: new Date().toISOString(),
       cloudinary: {
         configured: !!(process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME),
+      },
+      cashfree: {
+        configured: !!(cfAppId && cfSecret),
+        env: cfEnv,
+        appIdPreview: cfAppId ? `${cfAppId.substring(0, 4)}...` : "missing"
       }
     });
   });

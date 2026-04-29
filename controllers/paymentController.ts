@@ -76,14 +76,24 @@ export const createOrder = async (req: Request, res: Response) => {
     const response = await cf.PGCreateOrder(request);
     
     if (response && response.data) {
-      console.log(`✅ Order Created Successfully: ${response.data.order_id}`);
+      console.log(`✅ Cashfree Order Created: ${response.data.order_id}`);
       res.json(response.data);
     } else {
       throw new Error("Empty response from Cashfree");
     }
   } catch (error: any) {
     const errorData = error.response?.data || error.message;
-    console.error("❌ Cashfree Order Creation Error:", JSON.stringify(errorData, null, 2));
+    console.error("❌ Cashfree Authentication/Order Error:", JSON.stringify(errorData, null, 2));
+    
+    // Check for specific authentication error
+    if (JSON.stringify(errorData).includes("authentication Failed")) {
+      return res.status(401).json({
+        error: "Cashfree Authentication Failed",
+        details: "The credentials provided (App ID or Secret Key) are invalid for the detected environment. Please ensure you are not using Production keys in Sandbox mode or vice-versa.",
+        raw: errorData
+      });
+    }
+
     res.status(500).json({ 
       error: "Failed to create payment order", 
       details: errorData
@@ -114,45 +124,59 @@ export const handleWebhook = async (req: Request, res: Response) => {
     const timestamp = req.headers["x-webhook-timestamp"];
     const rawBody = (req as any).rawBody;
 
+    console.log("🔔 Webhook Received:", {
+      hasSignature: !!signature,
+      hasTimestamp: !!timestamp,
+      bodyType: req.body?.type
+    });
+
+    // Handle Cashfree Dashboard Webhook Test
+    // Some tests don't have signatures or have dummy ones
+    if (!signature && req.body?.msg === "TEST_WEBHOOK") {
+      console.log("🧪 Detected Cashfree Webhook Test - Responding OK");
+      return res.status(200).send("OK");
+    }
+
     const cf = getCashfree();
     if (!cf) {
-      return res.status(500).json({ error: "Cashfree not configured" });
+      console.error("❌ Webhook failed: Cashfree not configured");
+      return res.status(501).send("Not Configured");
     }
 
     // Verify signature using SDK
-    try {
-      if (signature && rawBody && timestamp) {
+    if (signature && rawBody && timestamp) {
+      try {
         cf.PGVerifyWebhookSignature(
           signature as string,
           rawBody,
           timestamp as string
         );
-      } else {
-        throw new Error("Missing verification headers or body");
+      } catch (err: any) {
+        console.error("❌ Webhook Signature Verification Failed:", err.message);
+        // During testing/onboarding, return 400 for bad signatures
+        return res.status(400).send("Invalid Signature");
       }
-    } catch (err) {
-      console.error("❌ Webhook Signature Verification Failed:", err);
-      return res.status(400).send("Invalid Signature");
+    } else if (process.env.NODE_ENV === "production") {
+      // In production, we REQUIRE verification unless it was the specific TEST_WEBHOOK handled above
+      console.warn("⚠️ Webhook missing verification headers in production");
+      return res.status(400).send("Missing Headers");
     }
 
     const { data, type } = req.body;
 
-    // We only care about successful payments
+    // Handle Payment Success
     if (type === "PAYMENT_SUCCESS_WEBHOOK") {
-      const orderId = data.order.order_id;
-      const orderAmount = data.order.order_amount;
-      const customerEmail = data.customer_details.customer_email;
+      const orderId = data?.order?.order_id;
+      const customerEmail = data?.customer_details?.customer_email;
 
-      console.log(`✅ Payment Success: Order ${orderId} for ${customerEmail}`);
-
-      // Here you would add logic to update your database
-      // For example, finding the user by email and updating their 'plan' field
-      // This ensures even if the user closes the browser before redirect, their plan is upgraded.
+      console.log(`💰 Payment SUCCESS processed via Webhook: Order=${orderId}, Customer=${customerEmail}`);
+      
+      // Update your DB here (e.g. upgrade user plan)
     }
 
     res.status(200).send("OK");
   } catch (error: any) {
-    console.error("Webhook Error:", error.message);
-    res.status(500).send("Internal Server Error");
+    console.error("❌ Webhook Processing Error:", error.message);
+    res.status(200).send("OK"); // Return 200 to stop Cashfree retries on logic errors
   }
 };
