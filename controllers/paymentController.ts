@@ -1,5 +1,5 @@
 import { Cashfree, CFEnvironment } from "cashfree-pg";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 // Initialize Cashfree
 const getCashfree = () => {
