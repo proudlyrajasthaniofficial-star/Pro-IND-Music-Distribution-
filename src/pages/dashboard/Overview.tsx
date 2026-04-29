@@ -15,7 +15,8 @@ import {
   Shield,
   Bell,
   CheckCircle,
-  ShieldAlert
+  ShieldAlert,
+  ShieldCheck
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
@@ -183,12 +184,25 @@ export default function Overview() {
         </AnimatePresence>
 
         {/* Welcome & Earnings Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8 px-4 md:px-0">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 md:gap-8 px-4 md:px-0">
           <div className="text-left">
             <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight mb-2 uppercase flex flex-wrap items-center gap-2 md:gap-4">
               Welcome, <span className="text-brand-blue">{profile?.displayName?.split(" ")[0]}</span>
             </h1>
-            <p className="text-xs md:text-sm text-slate-400 font-medium">Your global music empire is scaling. Here's your mission control.</p>
+            <p className="text-xs md:text-sm text-slate-400 font-medium mb-6">Your global music empire is scaling. Here's your mission control.</p>
+            
+            {/* Plan Info Tag */}
+            <div className="flex items-center gap-3">
+              <div className="px-4 py-2 bg-slate-900 text-white rounded-xl flex items-center gap-2 group cursor-pointer hover:bg-slate-800 transition-colors">
+                <ShieldCheck className="w-4 h-4 text-brand-blue" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+                  Plan: {profile?.planId ? profile.planId.toUpperCase() : 'FREE'}
+                </span>
+              </div>
+              <Link to="/pricing" className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">
+                Upgrade Plan
+              </Link>
+            </div>
           </div>
           
           <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-slate-100 flex items-center gap-4 md:gap-8 group">

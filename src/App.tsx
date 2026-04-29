@@ -13,6 +13,10 @@ const SEOLandingPage = lazy(() => import('./pages/SEOLanding'));
 const BlogList = lazy(() => import('./pages/BlogList'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 
+const Pricing = lazy(() => import('./pages/Pricing'));
+const Success = lazy(() => import('./pages/checkout/Success'));
+const Cancel = lazy(() => import('./pages/checkout/Cancel'));
+
 // Dashboard Components
 const DashboardLayout = lazy(() => import('./components/DashboardLayout'));
 
@@ -115,7 +119,9 @@ function AppContent() {
           <Route path="/refunds" element={<Refunds />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<Navigate to="/founder-developer" replace />} />
-          <Route path="/pricing" element={<Navigate to="/" replace />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/checkout/success" element={<Success />} />
+          <Route path="/checkout/cancel" element={<Cancel />} />
           <Route path="/privacy-policy" element={<Navigate to="/terms" replace />} />
           <Route path="/terms-conditions" element={<Navigate to="/terms" replace />} />
           

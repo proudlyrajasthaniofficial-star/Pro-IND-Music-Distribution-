@@ -109,6 +109,7 @@ export default function AdminUsers() {
             <thead>
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                   <th className="px-12 py-8">User Identity</th>
+                  <th className="px-6 py-8">Plan</th>
                   <th className="px-6 py-8">Role</th>
                   <th className="px-6 py-8">Wallet Balance</th>
                   <th className="px-6 py-8">Join Date</th>
@@ -131,6 +132,16 @@ export default function AdminUsers() {
                              </div>
                           </div>
                        </div>
+                    </td>
+                    <td className="px-6 py-8">
+                       <span className={cn(
+                          "text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg",
+                          u.planId === 'premium' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
+                          u.planId === 'enterprise' ? "bg-purple-500/10 text-purple-500 border border-purple-500/20" :
+                          "bg-slate-800 text-slate-500 border border-slate-700"
+                       )}>
+                          {u.planId || 'FREE'}
+                       </span>
                     </td>
                     <td className="px-6 py-8">
                        <span className="text-xs font-bold uppercase tracking-widest text-slate-300 px-3 py-1 bg-slate-800 border border-slate-700 rounded-lg">

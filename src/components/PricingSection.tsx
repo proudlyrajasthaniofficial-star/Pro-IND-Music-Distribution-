@@ -265,7 +265,7 @@ export default function PricingSection() {
                 </ul>
 
                 <Link 
-                  to="/auth?mode=signup" 
+                  to="/pricing" 
                   className={cn(
                     "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl",
                     plan.popular 

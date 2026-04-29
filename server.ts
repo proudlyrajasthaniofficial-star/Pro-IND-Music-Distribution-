@@ -11,7 +11,9 @@ import * as userCtrl from "./controllers/userController.ts";
 import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
 import * as reqCtrl from "./controllers/requestController.ts";
-import "./events/emailEvents.ts"; // Initialize listeners
+import * as stripeService from "./services/stripeService.ts";
+import { admin, adminDb } from "./services/firebaseAdmin.ts";
+import Stripe from "stripe";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -105,8 +107,78 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Explicitly serve static files from public directory
   app.use(express.static(path.join(__dirname, "public")));
 
-  // JSON Body Parser
-  app.use(express.json());
+  // JSON Body Parser (except for Stripe webhook)
+  app.use((req, res, next) => {
+    if (req.originalUrl === "/api/stripe/webhook") {
+      next();
+    } else {
+      express.json()(req, res, next);
+    }
+  });
+
+  // Stripe Checkout Endpoint
+  app.post("/api/stripe/create-checkout-session", async (req, res) => {
+    try {
+      const { planId, priceId, userId, successUrl, cancelUrl } = req.body;
+      if (!planId || !priceId || !userId) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      
+      const session = await stripeService.createCheckoutSession(userId, planId, priceId, successUrl, cancelUrl);
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error("Stripe Checkout Error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Stripe Webhook Endpoint
+  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!sig || !webhookSecret) {
+      console.error("❌ Missing stripe-signature or webhook secret");
+      return res.status(400).send("Webhook Error: Missing signature or secret");
+    }
+
+    let event: Stripe.Event;
+    const stripe = stripeService.getStripe();
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (err: any) {
+      console.error(`❌ Webhook signature verification failed: ${err.message}`);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const userId = session.metadata?.userId;
+      const planId = session.metadata?.planId;
+
+      if (userId && planId) {
+        // Update user profile and subscription in Firestore using adminDb
+        await adminDb.collection("users").doc(userId).update({
+          planId: planId,
+          stripeCustomerId: session.customer as string,
+        });
+
+        await adminDb.collection("subscriptions").add({
+          userId,
+          planId,
+          status: "active",
+          stripeSubscriptionId: session.subscription as string,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        console.log(`✅ Subscription activated for user ${userId} on plan ${planId}`);
+      }
+    }
+
+    res.json({ received: true });
+  });
 
   // Simple Request Logger
   app.use((req, res, next) => {
