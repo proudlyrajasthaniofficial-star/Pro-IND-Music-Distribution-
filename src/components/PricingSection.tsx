@@ -21,6 +21,10 @@ import {
   ExternalLink
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { initiatePayment } from "../services/cashfreeService";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const ADDONS = [
   { name: "Fast Release (24 hrs)", price: "₹299", icon: "Zap" },
@@ -35,6 +39,34 @@ const ADDONS = [
 
 export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleBuyPlan = async (plan: any) => {
+    if (plan.id === 'free') {
+      navigate('/auth?mode=signup');
+      return;
+    }
+
+    if (!user) {
+      toast.info("Please login or signup to continue with the purchase");
+      navigate(`/auth?mode=signup&plan=${plan.id}&amount=${plan.price}`);
+      return;
+    }
+
+    const toastId = toast.loading(`Preparing payment for ${plan.name}...`);
+    try {
+      await initiatePayment({
+        amount: plan.price,
+        planName: plan.name,
+        customerEmail: user.email || undefined,
+        customerName: user.displayName || undefined,
+      });
+      // Cashfree handles the redirect internally
+    } catch (error: any) {
+      toast.error(error.message || "Failed to initiate payment", { id: toastId });
+    }
+  };
 
   const plans = [
     {
@@ -264,8 +296,8 @@ export default function PricingSection() {
                   ))}
                 </ul>
 
-                <Link 
-                  to="/auth?mode=signup" 
+                <button 
+                  onClick={() => handleBuyPlan(plan)}
                   className={cn(
                     "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl",
                     plan.popular 
@@ -281,7 +313,7 @@ export default function PricingSection() {
                   {plan.popular && (
                     <div className="absolute -inset-1 bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 rounded-2xl blur-lg opacity-30 group-hover/btn:opacity-60 transition-opacity pointer-events-none" />
                   )}
-                </Link>
+                </button>
               </div>
             </motion.div>
           ))}
