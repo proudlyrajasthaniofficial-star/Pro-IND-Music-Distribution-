@@ -12,7 +12,9 @@ const getCashfree = () => {
     return null;
   }
 
-  return new Cashfree(env, appId, secretKey);
+  const cf = new Cashfree(env, appId, secretKey);
+  cf.XApiVersion = "2023-08-01";
+  return cf;
 };
 
 export const createOrder = async (req: Request, res: Response) => {
@@ -25,14 +27,21 @@ export const createOrder = async (req: Request, res: Response) => {
 
     const { amount, customerId, customerPhone, customerEmail, orderId, orderNote } = req.body;
 
-    console.log(`💳 Creating order for ${customerEmail || "anonymous"}, Amount: ${amount}`);
+    // Sanitize amount to be a number with 2 decimal places (as string or number)
+    const orderAmount = parseFloat(amount?.toString() || "0");
+    
+    console.log(`💳 Creating order for ${customerEmail || "anonymous"}, Amount: ${orderAmount}`);
+
+    if (orderAmount <= 0) {
+      return res.status(400).json({ error: "Order amount must be greater than 0" });
+    }
 
     const request = {
-      order_amount: parseFloat(amount?.toString()) || 0,
+      order_amount: orderAmount,
       order_currency: "INR",
       order_id: orderId || `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       customer_details: {
-        customer_id: customerId || `user_${Date.now()}`,
+        customer_id: customerId || `cust_${Date.now()}`,
         customer_phone: customerPhone || "9999999999",
         customer_email: customerEmail || "test@example.com",
       },
