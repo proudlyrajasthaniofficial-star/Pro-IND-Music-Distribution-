@@ -31,13 +31,11 @@ const OACRequest = lazy(() => import('./pages/dashboard/OACRequest'));
 const ContentID = lazy(() => import('./pages/dashboard/ContentID'));
 const Reports = lazy(() => import('./pages/dashboard/Reports'));
 const GrowthTools = lazy(() => import('./pages/dashboard/GrowthTools'));
-const Plans = lazy(() => import('./pages/dashboard/Plans'));
 
 // Legal Pages
 const Terms = lazy(() => import('./pages/legal/Terms'));
 const Refunds = lazy(() => import('./pages/legal/Refunds'));
 const Contact = lazy(() => import('./pages/legal/Contact'));
-const PaymentStatus = lazy(() => import('./pages/PaymentStatus'));
 
 // Admin Pages
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
@@ -116,7 +114,6 @@ function AppContent() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/refunds" element={<Refunds />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="/about" element={<Navigate to="/founder-developer" replace />} />
           <Route path="/pricing" element={<Navigate to="/" replace />} />
           <Route path="/privacy-policy" element={<Navigate to="/terms" replace />} />
@@ -164,7 +161,6 @@ function AppContent() {
             <Route path="content-id" element={<ContentID />} />
             <Route path="reports" element={<Reports />} />
             <Route path="growth" element={<GrowthTools />} />
-            <Route path="plans" element={<Plans />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

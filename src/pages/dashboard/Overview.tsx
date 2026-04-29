@@ -205,21 +205,6 @@ export default function Overview() {
                 <ArrowUpRight className="w-4 h-4 md:w-6 md:h-6" />
              </Link>
           </div>
-
-          <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-slate-100 flex items-center gap-4 md:gap-8 group">
-             <div className="w-10 h-10 md:w-16 md:h-16 bg-blue-500/10 rounded-xl md:rounded-[2rem] flex items-center justify-center text-blue-500 shrink-0">
-                <Shield className="w-5 h-5 md:w-8 md:h-8" />
-             </div>
-             <div>
-                <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-0.5 md:mb-1 whitespace-nowrap">Current Plan</p>
-                <h2 className="text-xl md:text-3xl font-black font-display tracking-tight uppercase">
-                  {profile?.plan || "Free Tier"}
-                </h2>
-             </div>
-             <Link to="/dashboard/plans" className="px-4 py-2 bg-slate-950 text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-brand-blue transition-all ml-auto">
-                Upgrade
-             </Link>
-          </div>
         </div>
 
         {/* 3D Quick Actions */}

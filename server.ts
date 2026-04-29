@@ -11,7 +11,6 @@ import * as userCtrl from "./controllers/userController.ts";
 import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
 import * as reqCtrl from "./controllers/requestController.ts";
-import * as paymentCtrl from "./controllers/paymentController.ts";
 import "./events/emailEvents.ts"; // Initialize listeners
 
 const __filename = fileURLToPath(import.meta.url);
@@ -106,12 +105,8 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Explicitly serve static files from public directory
   app.use(express.static(path.join(__dirname, "public")));
 
-  // JSON Body Parser with raw body capture for webhooks
-  app.use(express.json({
-    verify: (req: any, res, buf) => {
-      req.rawBody = buf.toString();
-    }
-  }));
+  // JSON Body Parser
+  app.use(express.json());
 
   // Simple Request Logger
   app.use((req, res, next) => {
@@ -125,20 +120,11 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // API Health Check
   app.get("/api/health", (req, res) => {
-    const cfAppId = process.env.CASHFREE_APP_ID;
-    const cfSecret = process.env.CASHFREE_SECRET_KEY;
-    const cfEnv = process.env.CASHFREE_ENV || "SANDBOX (default)";
-
     res.json({ 
       status: "ok", 
       timestamp: new Date().toISOString(),
       cloudinary: {
         configured: !!(process.env.CLOUDINARY_CLOUD_NAME || process.env.VITE_CLOUDINARY_CLOUD_NAME),
-      },
-      cashfree: {
-        configured: !!(cfAppId && cfSecret),
-        env: cfEnv,
-        appIdPreview: cfAppId ? `${cfAppId.substring(0, 4)}...` : "missing"
       }
     });
   });
@@ -202,11 +188,6 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Request Endpoints
   app.post("/api/requests/submit", reqCtrl.submitRequest);
   app.post("/api/requests/status-update", reqCtrl.updateRequestStatus);
-
-  // Payment Endpoints
-  app.post("/api/payments/create-order", paymentCtrl.createOrder);
-  app.post("/api/payments/verify", paymentCtrl.verifyPayment);
-  app.post("/api/payments/webhook", paymentCtrl.handleWebhook);
 
   // API Catch-all (Before static assets) - EXPLICIT 404
   app.all("/api/*", (req, res) => {
