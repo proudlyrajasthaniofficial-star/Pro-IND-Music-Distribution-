@@ -20,10 +20,10 @@ const Cancel = () => {
           No worries! You weren't charged anything. If you're having trouble, our support team is here to help.
         </p>
         <div className="space-y-4">
-          <Link to="/pricing" className={buttonVariants({ className: "w-full", size: "lg" })}>
+          <a href="/#pricing" className={buttonVariants({ className: "w-full", size: "lg" })}>
             <RefreshCcw className="mr-2 w-4 h-4" />
             Try Again
-          </Link>
+          </a>
           <Link to="/dashboard" className={buttonVariants({ variant: "ghost", className: "w-full text-neutral-500" })}>
             Return to Dashboard
           </Link>

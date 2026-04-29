@@ -24,9 +24,9 @@ const Success = () => {
             Go to Dashboard
             <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
-          <Link to="/pricing" className={buttonVariants({ variant: "outline", className: "w-full" })}>
+          <a href="/#pricing" className={buttonVariants({ variant: "outline", className: "w-full" })}>
             View Plan Details
-          </Link>
+          </a>
         </div>
       </motion.div>
     </div>

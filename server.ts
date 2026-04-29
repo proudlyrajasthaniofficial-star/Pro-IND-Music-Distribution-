@@ -11,9 +11,8 @@ import * as userCtrl from "./controllers/userController.ts";
 import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
 import * as reqCtrl from "./controllers/requestController.ts";
-import * as stripeService from "./services/stripeService.ts";
+import * as cashfreeService from "./services/cashfreeService.ts";
 import { admin, adminDb } from "./services/firebaseAdmin.ts";
-import Stripe from "stripe";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,77 +106,78 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Explicitly serve static files from public directory
   app.use(express.static(path.join(__dirname, "public")));
 
-  // JSON Body Parser (except for Stripe webhook)
+  // JSON Body Parser (except for webhooks)
   app.use((req, res, next) => {
-    if (req.originalUrl === "/api/stripe/webhook") {
+    if (req.originalUrl === "/api/cashfree/webhook") {
       next();
     } else {
       express.json()(req, res, next);
     }
   });
 
-  // Stripe Checkout Endpoint
-  app.post("/api/stripe/create-checkout-session", async (req, res) => {
+  // Cashfree Order Creation Endpoint
+  app.post("/api/cashfree/create-order", async (req, res) => {
     try {
-      const { planId, priceId, userId, successUrl, cancelUrl } = req.body;
-      if (!planId || !priceId || !userId) {
+      const { planId, amount, userId, customerEmail, customerPhone } = req.body;
+      if (!planId || !amount || !userId || !customerEmail || !customerPhone) {
         return res.status(400).json({ error: "Missing required fields" });
       }
       
-      const session = await stripeService.createCheckoutSession(userId, planId, priceId, successUrl, cancelUrl);
-      res.json({ url: session.url });
+      const orderData = await cashfreeService.createCashfreeOrder(userId, planId, amount, customerEmail, customerPhone);
+      res.json(orderData);
     } catch (error: any) {
-      console.error("Stripe Checkout Error:", error);
+      console.error("Cashfree Order Error:", error);
       res.status(500).json({ error: error.message });
     }
   });
 
-  // Stripe Webhook Endpoint
-  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-    const sig = req.headers["stripe-signature"];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-    if (!sig || !webhookSecret) {
-      console.error("❌ Missing stripe-signature or webhook secret");
-      return res.status(400).send("Webhook Error: Missing signature or secret");
+  // Cashfree Webhook Endpoint
+  app.post("/api/cashfree/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+    const signature = req.headers["x-webhook-signature"] as string;
+    
+    if (!signature) {
+      return res.status(400).send("Missing signature");
     }
-
-    let event: Stripe.Event;
-    const stripe = stripeService.getStripe();
 
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } catch (err: any) {
-      console.error(`❌ Webhook signature verification failed: ${err.message}`);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+      const isValid = cashfreeService.verifyCashfreeWebhook(req.body.toString(), signature);
 
-    // Handle event
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
-      const planId = session.metadata?.planId;
-
-      if (userId && planId) {
-        // Update user profile and subscription in Firestore using adminDb
-        await adminDb.collection("users").doc(userId).update({
-          planId: planId,
-          stripeCustomerId: session.customer as string,
-        });
-
-        await adminDb.collection("subscriptions").add({
-          userId,
-          planId,
-          status: "active",
-          stripeSubscriptionId: session.subscription as string,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-
-        console.log(`✅ Subscription activated for user ${userId} on plan ${planId}`);
+      if (!isValid) {
+          console.error("❌ Invalid Cashfree Webhook Signature");
+          return res.status(400).send("Invalid signature");
       }
-    }
 
-    res.json({ received: true });
+      const event = JSON.parse(req.body.toString());
+      
+      if (event.type === "PAYMENT_SUCCESS_WEBHOOK") {
+        const order = event.data.order;
+        const userId = order.customer_details.customer_id;
+        const planId = order.order_tags?.planId;
+
+        if (userId && planId) {
+          await adminDb.collection("users").doc(userId).update({
+            planId: planId,
+            lastPaymentId: event.data.payment.cf_payment_id,
+          });
+
+          await adminDb.collection("subscriptions").add({
+            userId,
+            planId,
+            status: "active",
+            cfOrderId: order.order_id,
+            amount: order.order_amount,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+          console.log(`✅ Cashfree payment successful for user ${userId}, plan ${planId}`);
+        }
+      }
+
+      res.json({ received: true });
+    } catch (err: any) {
+      console.error(`❌ Webhook error: ${err.message}`);
+      return res.status(500).send(`Webhook Error: ${err.message}`);
+    }
   });
 
   // Simple Request Logger

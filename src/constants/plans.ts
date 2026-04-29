@@ -3,63 +3,87 @@ export interface Plan {
   name: string;
   price: number;
   currency: string;
-  interval: 'month' | 'year';
+  interval: 'month' | 'year' | 'lifetime';
   description: string;
   features: string[];
-  stripePriceId: string;
-  variant: 'basic' | 'premium' | 'enterprise';
+  variant: 'basic' | 'premium' | 'enterprise' | 'label' | 'unlimited-label';
 }
 
 export const PLANS: Plan[] = [
   {
-    id: 'basic',
-    name: 'Standard Artist',
-    price: 99,
-    currency: 'USD',
-    interval: 'year',
-    description: 'Perfect for getting your music on stores.',
+    id: 'free',
+    name: 'Free Plan',
+    price: 0,
+    currency: 'INR',
+    interval: 'lifetime',
+    description: 'Perfect for beginners starting their journey.',
     features: [
-      'Unlimited Releases',
-      'Spotify & Apple Music',
-      'keep 100% Royalties',
-      'Basic Analytics',
-      'Standard Support'
+      "1 Song Release (per month)",
+      "70% Royalty Earnings",
+      "Basic Distribution",
+      "Standard Delivery (7–10 days)",
+      "Basic Artist Dashboard",
+      "Track Status Monitoring"
     ],
-    stripePriceId: 'price_basic_placeholder', // User will update this
     variant: 'basic'
   },
   {
-    id: 'premium',
-    name: 'Pro Artist',
-    price: 199,
-    currency: 'USD',
+    id: 'artist',
+    name: 'Artist Plan',
+    price: 1499,
+    currency: 'INR',
     interval: 'year',
-    description: 'Advanced tools for the professional artist.',
+    description: 'Advanced tools for the serious artist.',
     features: [
-      'Everything in Standard',
-      'Content ID (YouTube/TikTok)',
-      'Advanced Analytics',
-      'Priority Artist Support',
-      'Official Artist Channel (OAC)'
+      "Unlimited Song Releases",
+      "85% Royalty Earnings",
+      "150+ Platforms",
+      "YouTube Content ID (Basic)",
+      "Caller Tune (India)",
+      "ISRC & UPC Generation",
+      "Basic Analytics",
+      "Lyrics Distribution",
+      "Cover Song Support"
     ],
-    stripePriceId: 'price_premium_placeholder', // User will update this
     variant: 'premium'
   },
   {
-    id: 'enterprise',
-    name: 'Indie Label',
-    price: 499,
-    currency: 'USD',
+    id: 'pro',
+    name: 'Pro Artist',
+    price: 2499,
+    currency: 'INR',
+    interval: 'year',
+    description: 'The ultimate toolkit for professional artists.',
+    features: [
+      "Everything in Artist Plan",
+      "90% Royalty Earnings",
+      "Fast Release (48 Hours)",
+      "Instagram & Facebook Music",
+      "YouTube OAC Support",
+      "Advanced Analytics",
+      "Smart Link / Pre-save",
+      "Release Scheduling",
+      "Priority Support (WhatsApp)"
+    ],
+    variant: 'enterprise'
+  },
+  {
+    id: 'label',
+    name: 'Label Plan',
+    price: 4999,
+    currency: 'INR',
     interval: 'year',
     description: 'For record labels and collectives.',
     features: [
-      'Everything in Pro',
-      'Unlimited Artists',
-      'Royalties Splitting',
-      'White-label Support',
-      'Dedicated Account Manager'
+      "Manage up to 10 Artists",
+      "Unlimited Releases",
+      "90% Royalty Earnings",
+      "Team Access Dashboard",
+      "Revenue Split System",
+      "Label Name Branding",
+      "Bulk Upload System",
+      "YouTube Content ID (Adv)"
     ],
-    stripePriceId: 'price_enterprise_placeholder', // User will update this
     variant: 'enterprise'
   }
 ];

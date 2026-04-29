@@ -199,9 +199,9 @@ export default function Overview() {
                   Plan: {profile?.planId ? profile.planId.toUpperCase() : 'FREE'}
                 </span>
               </div>
-              <Link to="/pricing" className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">
+              <a href="/#pricing" className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">
                 Upgrade Plan
-              </Link>
+              </a>
             </div>
           </div>
           

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   CheckCircle2, 
   ShieldCheck, 
@@ -21,6 +21,9 @@ import {
   ExternalLink
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
+import { Plan } from "../constants/plans";
 
 const ADDONS = [
   { name: "Fast Release (24 hrs)", price: "₹299", icon: "Zap" },
@@ -34,7 +37,65 @@ const ADDONS = [
 ];
 
 export default function PricingSection() {
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+
+  const handleBuyNow = async (plan: any) => {
+    if (!user) {
+      toast.info("Please login to upgrade your plan");
+      navigate("/auth?mode=login");
+      return;
+    }
+
+    if (plan.id === 'free') {
+       toast.success("You are already on the Free Plan or can start here.");
+       navigate("/dashboard");
+       return;
+    }
+
+    // For Cashfree, we need a phone number to create an order.
+    const customerPhone = profile?.phoneNumber || "9876543210"; 
+
+    try {
+      const response = await fetch('/api/cashfree/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planId: plan.id,
+          amount: plan.price,
+          userId: user.uid,
+          customerEmail: user.email,
+          customerPhone: customerPhone,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.payment_session_id) {
+        toast.info("Order created. Loading checkout...");
+        
+        // Use the Cashfree SDK injected in index.html
+        // @ts-ignore
+        if (window.Cashfree) {
+           // @ts-ignore
+           const cf = new window.Cashfree({ mode: "sandbox" });
+           cf.checkout({
+             paymentSessionId: data.payment_session_id,
+             redirectTarget: "_self" 
+           });
+        } else {
+           toast.error("Cashfree SDK not loaded. Check index.html.");
+        }
+      } else {
+        toast.error(data.error || "Failed to initiate checkout");
+      }
+    } catch (error) {
+      console.error("Checkout Error:", error);
+      toast.error("An error occurred during checkout initialization");
+    }
+  };
 
   const plans = [
     {
@@ -264,8 +325,8 @@ export default function PricingSection() {
                   ))}
                 </ul>
 
-                <Link 
-                  to="/pricing" 
+                <button 
+                  onClick={() => handleBuyNow(plan)}
                   className={cn(
                     "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl",
                     plan.popular 
@@ -281,7 +342,7 @@ export default function PricingSection() {
                   {plan.popular && (
                     <div className="absolute -inset-1 bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 rounded-2xl blur-lg opacity-30 group-hover/btn:opacity-60 transition-opacity pointer-events-none" />
                   )}
-                </Link>
+                </button>
               </div>
             </motion.div>
           ))}
