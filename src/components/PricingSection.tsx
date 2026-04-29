@@ -39,7 +39,7 @@ const ADDONS = [
 
 export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
 
   const handleBuyPlan = async (plan: any) => {
@@ -60,7 +60,8 @@ export default function PricingSection() {
         amount: plan.price,
         planName: plan.name,
         customerEmail: user.email || undefined,
-        customerName: user.displayName || undefined,
+        customerName: profile?.displayName || user.displayName || undefined,
+        customerPhone: profile?.phone || undefined,
       });
       // Cashfree handles the redirect internally
     } catch (error: any) {

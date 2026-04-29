@@ -3,17 +3,36 @@ import type { Request, Response } from "express";
 
 // Initialize Cashfree
 const getCashfree = () => {
-  const appId = process.env.CASHFREE_APP_ID;
-  const secretKey = process.env.CASHFREE_SECRET_KEY;
-  const env = process.env.CASHFREE_ENV === "PRODUCTION" ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+  const appId = process.env.CASHFREE_APP_ID?.trim();
+  const secretKey = process.env.CASHFREE_SECRET_KEY?.trim();
+  const envValue = process.env.CASHFREE_ENV?.trim()?.toUpperCase();
+  
+  // Auto-detect environment if not explicitly set correctly
+  // If appId starts with 'TEST', it's sandbox. 
+  // Sandbox IDs usually start with TEST and keys start with cfsk_ma_test
+  const isSandbox = appId?.startsWith("TEST") || appId?.startsWith("TEST_") || envValue !== "PRODUCTION";
+  const env = isSandbox ? CFEnvironment.SANDBOX : CFEnvironment.PRODUCTION;
 
   if (!appId || !secretKey) {
-    console.warn("⚠️ Cashfree Credentials Missing");
+    console.error("❌ Cashfree Configuration Missing:");
+    if (!appId) console.error("   - CASHFREE_APP_ID is not set");
+    if (!secretKey) console.error("   - CASHFREE_SECRET_KEY is not set");
     return null;
   }
 
+  console.log(`ℹ️ Cashfree Info: Env=${isSandbox ? "SANDBOX" : "PRODUCTION"}, AppId starts with=${appId.substring(0, 4)}..., Env Value=${env}`);
+  
   const cf = new Cashfree(env, appId, secretKey);
+  
+  // Explicitly set properties to be safe
+  cf.XClientId = appId;
+  cf.XClientSecret = secretKey;
+  cf.XEnvironment = env;
+  
+  // High-priority fix: Use standard API version
+  // 2023-08-01 is the most stable and widely supported version currently
   cf.XApiVersion = "2023-08-01";
+  
   return cf;
 };
 
@@ -41,17 +60,18 @@ export const createOrder = async (req: Request, res: Response) => {
       order_currency: "INR",
       order_id: orderId || `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       customer_details: {
-        customer_id: customerId || `cust_${Date.now()}`,
-        customer_phone: customerPhone || "9999999999",
+        customer_id: (customerId || `cust_${Date.now()}`).toString(),
+        customer_phone: (customerPhone || "9999999999").toString(),
         customer_email: customerEmail || "test@example.com",
       },
       order_meta: {
         return_url: `${req.protocol}://${req.get("host")}/payment-status?order_id={order_id}`,
         notify_url: `${req.protocol}://${req.get("host")}/api/payments/webhook`,
-        payment_methods: "cc,dc,ccc,pp,wb,upi,nb",
       },
       order_note: orderNote || "Music Distribution Plan",
     };
+
+    console.log("📦 Request Payload for Cashfree:", JSON.stringify(request, null, 2));
 
     const response = await cf.PGCreateOrder(request);
     
