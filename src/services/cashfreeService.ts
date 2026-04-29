@@ -39,14 +39,20 @@ export const initiatePayment = async (planData: {
 
     const orderData = await response.json();
 
+    if (!response.ok) {
+      const errorMsg = orderData.details?.message || orderData.error || "Server failed to initiate transaction";
+      throw new Error(errorMsg);
+    }
+
     if (!orderData.payment_session_id) {
-      throw new Error("Failed to create payment session");
+      console.error("Missing payment_session_id in response:", orderData);
+      throw new Error("Payment session could not be established. Please check your credentials.");
     }
 
     // 2. Open Cashfree Checkout
     const checkoutOptions = {
       paymentSessionId: orderData.payment_session_id,
-      redirectTarget: "_self", // Optional: "_self" or "_modal"
+      redirectTarget: "_self", 
     };
 
     return cashfree.checkout(checkoutOptions);

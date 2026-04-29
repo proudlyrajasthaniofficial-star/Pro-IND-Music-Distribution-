@@ -19,17 +19,20 @@ export const createOrder = async (req: Request, res: Response) => {
   try {
     const cf = getCashfree();
     if (!cf) {
-      return res.status(500).json({ error: "Cashfree not configured" });
+      console.error("❌ Cashfree not configured: Check Environment Variables (CASHFREE_APP_ID, CASHFREE_SECRET_KEY)");
+      return res.status(500).json({ error: "Cashfree not configured on server. Please check environment variables." });
     }
 
     const { amount, customerId, customerPhone, customerEmail, orderId, orderNote } = req.body;
 
+    console.log(`💳 Creating order for ${customerEmail || "anonymous"}, Amount: ${amount}`);
+
     const request = {
-      order_amount: amount,
+      order_amount: parseFloat(amount?.toString()) || 0,
       order_currency: "INR",
-      order_id: orderId || `order_${Date.now()}`,
+      order_id: orderId || `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       customer_details: {
-        customer_id: customerId || "guest_user",
+        customer_id: customerId || `user_${Date.now()}`,
         customer_phone: customerPhone || "9999999999",
         customer_email: customerEmail || "test@example.com",
       },
@@ -38,16 +41,23 @@ export const createOrder = async (req: Request, res: Response) => {
         notify_url: `${req.protocol}://${req.get("host")}/api/payments/webhook`,
         payment_methods: "cc,dc,ccc,pp,wb,upi,nb",
       },
-      order_note: orderNote || "Music Distribution Plan Purchase",
+      order_note: orderNote || "Music Distribution Plan",
     };
 
     const response = await cf.PGCreateOrder(request);
-    res.json(response.data);
+    
+    if (response && response.data) {
+      console.log(`✅ Order Created Successfully: ${response.data.order_id}`);
+      res.json(response.data);
+    } else {
+      throw new Error("Empty response from Cashfree");
+    }
   } catch (error: any) {
-    console.error("Cashfree Order Creation Error:", error.response?.data || error.message);
+    const errorData = error.response?.data || error.message;
+    console.error("❌ Cashfree Order Creation Error:", JSON.stringify(errorData, null, 2));
     res.status(500).json({ 
       error: "Failed to create payment order", 
-      details: error.response?.data || error.message 
+      details: errorData
     });
   }
 };
