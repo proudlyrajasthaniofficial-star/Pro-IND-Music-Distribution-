@@ -123,11 +123,22 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
         return res.status(400).json({ error: "Missing required fields" });
       }
       
-      const orderData = await cashfreeService.createCashfreeOrder(userId, planId, amount, customerEmail, customerPhone);
-      res.json(orderData);
+      const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+      const orderData = await cashfreeService.createCashfreeOrder(userId, planId, amount, customerEmail, customerPhone, appUrl);
+      
+      // Include the environment so the frontend knows which mode to use for SDK initialization
+      const environment = process.env.CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox';
+      
+      res.json({
+        ...orderData,
+        environment
+      });
     } catch (error: any) {
-      console.error("Cashfree Order Error:", error);
-      res.status(500).json({ error: error.message });
+      console.error("Cashfree Order Error:", error.response?.data || error.message);
+      res.status(500).json({ 
+        error: "Cashfree Order Creation Failed", 
+        details: error.response?.data || error.message 
+      });
     }
   });
 

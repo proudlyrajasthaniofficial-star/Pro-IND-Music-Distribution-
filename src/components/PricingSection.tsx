@@ -73,23 +73,32 @@ export default function PricingSection() {
       });
 
       const data = await response.json();
+      console.log("Cashfree Order created:", data);
+
       if (data.payment_session_id) {
         toast.info("Order created. Loading checkout...");
         
         // Use the Cashfree SDK injected in index.html
         // @ts-ignore
-        if (window.Cashfree) {
-           // @ts-ignore
-           const cf = new window.Cashfree({ mode: "sandbox" });
+        const CashfreeSDK = window.Cashfree;
+        if (CashfreeSDK) {
+           // Use the environment returned from the backend to ensure sync
+           const mode = data.environment || 'sandbox';
+           console.log("Initializing Cashfree checkout in mode:", mode);
+           
+           // For v3, it can be initialized as a function or new class
+           const cf = CashfreeSDK({ mode });
            cf.checkout({
              paymentSessionId: data.payment_session_id,
              redirectTarget: "_self" 
            });
         } else {
+           console.error("Cashfree SDK not found on window object");
            toast.error("Cashfree SDK not loaded. Check index.html.");
         }
       } else {
-        toast.error(data.error || "Failed to initiate checkout");
+        console.error("Cashfree order creation failed:", data);
+        toast.error(data.details?.message || data.error || "Failed to initiate checkout");
       }
     } catch (error) {
       console.error("Checkout Error:", error);

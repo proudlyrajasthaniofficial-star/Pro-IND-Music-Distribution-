@@ -10,7 +10,6 @@
         "displayName": { "type": "string" },
         "role": { "type": "string", "enum": ["artist", "admin"] },
         "planId": { "type": "string", "description": "Current subscription plan ID" },
-        "stripeCustomerId": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "role"]
@@ -25,8 +24,7 @@
         "price": { "type": "number" },
         "currency": { "type": "string" },
         "interval": { "type": "string", "enum": ["month", "year"] },
-        "features": { "type": "array", "items": { "type": "string" } },
-        "stripePriceId": { "type": "string" }
+        "features": { "type": "array", "items": { "type": "string" } }
       }
     },
     "Subscription": {
@@ -38,8 +36,7 @@
         "userId": { "type": "string" },
         "planId": { "type": "string" },
         "status": { "type": "string", "enum": ["active", "canceled", "past_due", "incomplete"] },
-        "currentPeriodEnd": { "type": "string", "format": "date-time" },
-        "stripeSubscriptionId": { "type": "string" }
+        "currentPeriodEnd": { "type": "string", "format": "date-time" }
       }
     }
   },

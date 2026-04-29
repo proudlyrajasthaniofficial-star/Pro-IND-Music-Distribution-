@@ -1,4 +1,4 @@
-import { Cashfree } from 'cashfree-pg';
+import { Cashfree, CFEnvironment } from 'cashfree-pg';
 
 let cashfreeInstance: Cashfree | null = null;
 
@@ -6,29 +6,25 @@ function getCashfree() {
   if (!cashfreeInstance) {
     const appId = process.env.CASHFREE_APP_ID;
     const secretKey = process.env.CASHFREE_SECRET_KEY;
-    const env = process.env.CASHFREE_ENV === 'PRODUCTION' ? 2 : 1; // 2 for PRODUCTION, 1 for SANDBOX
+    const env = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
 
     if (!appId || !secretKey) {
       throw new Error('CASHFREE_APP_ID and CASHFREE_SECRET_KEY are required');
     }
 
-    // According to README version >= 5 instructions (though README might be slightly inconsistent with types)
-    // The safest way given the linter errors on Property 'Environment' is to use strings or the constructors.
-    // If Cashfree.Environment fails, we check the README again.
-    // README says: new Cashfree(Cashfree.SANDBOX, ...)
-    
     // @ts-ignore
     cashfreeInstance = new Cashfree(
-      // @ts-ignore
-      process.env.CASHFREE_ENV === 'PRODUCTION' ? Cashfree.PRODUCTION : Cashfree.SANDBOX,
+      env,
       appId,
       secretKey
     );
+    // Use the default version from the SDK or explicitly set if needed
+    // The SDK defaults to "2025-01-01" as per our grep.
   }
   return cashfreeInstance;
 }
 
-export async function createCashfreeOrder(userId: string, planId: string, amount: number, customerEmail: string, customerPhone: string) {
+export async function createCashfreeOrder(userId: string, planId: string, amount: number, customerEmail: string, customerPhone: string, appUrl: string) {
   // @ts-ignore
   const cf = getCashfree();
 
@@ -44,8 +40,8 @@ export async function createCashfreeOrder(userId: string, planId: string, amount
       customer_phone: customerPhone,
     },
     order_meta: {
-      return_url: `${process.env.APP_URL}/checkout/success?order_id={order_id}`,
-      notify_url: `${process.env.APP_URL}/api/cashfree/webhook`,
+      return_url: `${appUrl}/checkout/success?order_id={order_id}`,
+      notify_url: `${appUrl}/api/cashfree/webhook`,
     },
     order_note: `Subscription for ${planId}`,
     order_tags: {
