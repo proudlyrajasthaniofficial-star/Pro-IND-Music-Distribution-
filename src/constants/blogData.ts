@@ -6,7 +6,7 @@ export const BLOG_POSTS = [
     date: "April 24, 2026",
     author: "SK Ji",
     category: "Pro Tips",
-    image: "https://picsum.photos/seed/musician/1200/800",
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiaK9OypFc05v4u11Ybz8GVGa7Y9sSxVcDXMkiv4V56wsgKYPUDmnm0gGjF8wN7UMsKpl3V6uNcIMHzOYNykDdD3DbvqmSSYtgcwbZ5thzjFBPlYvB4laImCQYrQbiZ_6zDWJUm8z3GZmdZdKM7Fu79jFnQOzSYe3JDmZg2Abktfmf79-b5TJO7ydHE4E/s1536/1000633580.png",
     content: `
       <h2>The Global Stage is Waiting</h2>
       <p>Releasing music in India used to be about finding a record label. In 2026, it's about finding the right distribution partner. IND Distribution has leveled the playing field, allowing artists from small towns to compete with major label stars.</p>
@@ -28,7 +28,7 @@ export const BLOG_POSTS = [
     date: "April 20, 2026",
     author: "SK Ji",
     category: "Finance",
-    image: "https://picsum.photos/seed/spotify/1200/800",
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3rxmJcVEEmOI_bOvbTlK4qLTVTbBIiHSZHtI-D4U4D5Bs4D7uDYSq3EkqgNV0hTGCucApkt4DR8DKM-kFGjkEd-vqjCnXo84uzP9oMUOvdjWjb5gO2CqN8iW8UtVZ-EWvg8f1CYbAZwGXDZAVpOxs1hyIDSEFELu6OuQbyiJciy1SlRdhyphenhyphenIzyPNV7p0o/s1536/1000633579.png",
     content: `
       <h2>Transparency in Royalties</h2>
       <p>One of the most common questions artists ask is: 'How much does Spotify pay in India?' The truth is, it varys based on subscription type and location. However, with IND Distribution, you get 100% of the royalties we receive from Spotify.</p>
@@ -47,7 +47,7 @@ export const BLOG_POSTS = [
     date: "April 15, 2026",
     author: "SK Ji",
     category: "Industry News",
-    image: "https://picsum.photos/seed/comparison/1200/800",
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhK2QQ6GjwAleMi7C3YO8ULrJuSYUsg0m0uz4h1Ss68CJbGK1c9tzTX1izzi8OIl0kMp614teOvFbLB2j3AiZkYXPIMjhJShfdrqyKYh5xTvXL_sJ0ITJOQgabvPfduvuJQz1W_ZKKbNLQcsF3TUxghKwEUi88A_Ge1bhKOyItUov4jjuPZEHBHyYiSJ3w/s1536/1000633584.png",
     content: `
       <h2>The Indian Distribution Landscape</h2>
       <p>From global players like DistroKid and Tunecore to local aggregators, the choices are numerous. However, very few understand the specific needs of the Indian market, such as CRBT (Caller Tunes) and regional metadata support.</p>
@@ -66,7 +66,7 @@ export const BLOG_POSTS = [
     date: "April 10, 2026",
     author: "SK Ji",
     category: "Marketing",
-    image: "https://picsum.photos/seed/marketing/1200/800",
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi-IapVOERI0pLW1cVlq7cDvMQV5Hg3PClECVO-O37TYsB7BOWUwh5J3vVZjHKSuo8CvdVERRZszS_s_kVD4OU6fthCRX6nSr5yDZOJXer-bD8Mv3suE5C4pHm34B-pFJL0qMBKVtV69sHy6X33pidDcSrEJu53YnGw4VfHYdsYsDR1hIEmIB9O56IczzY/s1536/1000633583.png",
     content: `
       <h2>The Shift in Consumption</h2>
       <p>Indian listeners are moving away from traditional radio to hyper-personalized streaming feeds. Your marketing needs to reflect this shift. It's no longer just about the song; it's about the 'moment' you create around it.</p>

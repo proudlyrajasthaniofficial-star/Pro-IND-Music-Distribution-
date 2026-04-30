@@ -78,12 +78,17 @@ const BlogPost = () => {
           </header>
 
           <motion.div 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative h-[30rem] rounded-[4rem] overflow-hidden mb-20 shadow-2xl"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="relative aspect-video rounded-[3rem] md:rounded-[4rem] overflow-hidden mb-20 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] border border-slate-50 group"
           >
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
+            <img 
+              src={post.image} 
+              alt={post.title} 
+              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" 
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none opacity-60" />
           </motion.div>
 
           <div className="grid lg:grid-cols-12 gap-16">
