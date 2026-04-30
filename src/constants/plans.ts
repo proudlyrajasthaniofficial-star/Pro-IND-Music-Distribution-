@@ -85,5 +85,24 @@ export const PLANS: Plan[] = [
       "YouTube Content ID (Adv)"
     ],
     variant: 'enterprise'
+  },
+  {
+    id: 'unlimited-label',
+    name: 'Unlimited Label',
+    price: 9999,
+    currency: 'INR',
+    interval: 'year',
+    description: 'Scale without boundaries. The ultimate business partner.',
+    features: [
+      "Unlimited Artists",
+      "Unlimited Releases",
+      "95% Royalty Earnings",
+      "Advanced Bulk Upload",
+      "Dedicated Account Manager",
+      "Full Analytics Dashboard",
+      "White-label Branding",
+      "API Access (Optional)"
+    ],
+    variant: 'unlimited-label'
   }
 ];

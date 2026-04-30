@@ -35,6 +35,7 @@ const OACRequest = lazy(() => import('./pages/dashboard/OACRequest'));
 const ContentID = lazy(() => import('./pages/dashboard/ContentID'));
 const Reports = lazy(() => import('./pages/dashboard/Reports'));
 const GrowthTools = lazy(() => import('./pages/dashboard/GrowthTools'));
+const Subscription = lazy(() => import('./pages/dashboard/Subscription'));
 
 // Legal Pages
 const Terms = lazy(() => import('./pages/legal/Terms'));
@@ -167,6 +168,7 @@ function AppContent() {
             <Route path="content-id" element={<ContentID />} />
             <Route path="reports" element={<Reports />} />
             <Route path="growth" element={<GrowthTools />} />
+            <Route path="subscription" element={<Subscription />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

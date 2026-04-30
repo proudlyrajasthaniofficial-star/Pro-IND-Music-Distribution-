@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from "motion/react";
 import { FadeIn } from "../../components/ui/FadeIn";
+import { PLANS } from "../../constants/plans";
 
 export default function Overview() {
   const { user, profile, isAdmin } = useAuth();
@@ -184,24 +185,35 @@ export default function Overview() {
         </AnimatePresence>
 
         {/* Welcome & Earnings Header */}
-        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 md:gap-8 px-4 md:px-0">
-          <div className="text-left">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0">
+          <div className="lg:col-span-2 text-left">
             <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight mb-2 uppercase flex flex-wrap items-center gap-2 md:gap-4">
-              Welcome, <span className="text-brand-blue">{profile?.displayName?.split(" ")[0]}</span>
+              Welcome, <span className="text-brand-blue">{profile?.displayName?.trim() ? profile.displayName.split(" ")[0] : (profile?.artistName || 'Artist')}</span>
             </h1>
             <p className="text-xs md:text-sm text-slate-400 font-medium mb-6">Your global music empire is scaling. Here's your mission control.</p>
             
-            {/* Plan Info Tag */}
-            <div className="flex items-center gap-3">
-              <div className="px-4 py-2 bg-slate-900 text-white rounded-xl flex items-center gap-2 group cursor-pointer hover:bg-slate-800 transition-colors">
-                <ShieldCheck className="w-4 h-4 text-brand-blue" />
-                <span className="text-[10px] font-black uppercase tracking-widest leading-none">
-                  Plan: {profile?.planId ? profile.planId.toUpperCase() : 'FREE'}
-                </span>
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Refined Plan Info Card */}
+              <Link to="/dashboard/subscription" className="group">
+                <div className="px-6 py-4 bg-white border border-slate-100 shadow-xl rounded-[2rem] flex items-center gap-4 hover:border-brand-blue transition-all">
+                  <div className="w-12 h-12 bg-brand-blue rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform">
+                    <ShieldCheck className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5 whitespace-nowrap">Active Plan Status</p>
+                    <p className="text-sm font-black uppercase text-slate-900 leading-none">
+                      {profile?.planId ? (PLANS.find(p => p.id === profile.planId)?.name || profile.planId.toUpperCase()) : 'FREE PLAN'}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-brand-blue group-hover:translate-x-1 group-hover:-translate-y-1 transition-all ml-2" />
+                </div>
+              </Link>
+
+              <div className="flex items-center gap-3">
+                 <Link to="/dashboard/subscription" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-blue transition-colors flex items-center gap-2">
+                   <Plus className="w-3 h-3" /> Upgrade Membership
+                 </Link>
               </div>
-              <a href="/#pricing" className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">
-                Upgrade Plan
-              </a>
             </div>
           </div>
           
@@ -209,15 +221,17 @@ export default function Overview() {
              <div className="w-10 h-10 md:w-16 md:h-16 bg-emerald-500/10 rounded-xl md:rounded-[2rem] flex items-center justify-center text-emerald-500 shrink-0">
                 <Wallet className="w-5 h-5 md:w-8 md:h-8" />
              </div>
-             <div>
+             <div className="flex-1">
                 <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-0.5 md:mb-1 whitespace-nowrap">Treasury Balance</p>
-                <h2 className="text-xl md:text-4xl font-black font-display tracking-tight group-hover:scale-105 transition-transform origin-left whitespace-nowrap">
-                  {formatCurrency(profile?.walletBalance || 0)}
-                </h2>
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-xl md:text-4xl font-black font-display tracking-tight group-hover:scale-105 transition-transform origin-left whitespace-nowrap">
+                    {formatCurrency(profile?.walletBalance || 0)}
+                  </h2>
+                  <Link to="/dashboard/wallet" className="w-8 h-8 md:w-12 md:h-12 bg-slate-950 text-white rounded-lg md:rounded-2xl flex items-center justify-center hover:bg-brand-blue transition-all">
+                    <ArrowUpRight className="w-4 h-4 md:w-6 md:h-6" />
+                  </Link>
+                </div>
              </div>
-             <Link to="/dashboard/wallet" className="w-8 h-8 md:w-12 md:h-12 bg-slate-950 text-white rounded-lg md:rounded-2xl flex items-center justify-center hover:bg-brand-blue transition-all ml-auto">
-                <ArrowUpRight className="w-4 h-4 md:w-6 md:h-6" />
-             </Link>
           </div>
         </div>
 

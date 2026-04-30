@@ -24,7 +24,8 @@ import {
   LifeBuoy,
   Clock,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  ShieldCheck
 } from "lucide-react";
 import { auth, db } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
@@ -39,6 +40,7 @@ const NAV_ITEMS = [
   { label: "My Releases", icon: Music, path: "/dashboard/releases" },
   { label: "Growth Tools", icon: Zap, path: "/dashboard/growth" },
   { label: "Wallet", icon: Wallet, path: "/dashboard/wallet" },
+  { label: "Subscription", icon: ShieldCheck, path: "/dashboard/subscription" },
   { label: "Artists", icon: User, path: "/dashboard/artists" },
   { label: "Labels", icon: Globe, path: "/dashboard/labels" },
   { label: "Content ID", icon: ShieldAlert, path: "/dashboard/content-id" },
