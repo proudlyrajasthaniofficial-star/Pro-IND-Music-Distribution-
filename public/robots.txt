@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard/
-Disallow: /admin/
-Disallow: /api/
 
 Sitemap: https://musicdistributionindia.online/sitemap.xml
