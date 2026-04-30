@@ -24,10 +24,15 @@ import {
 import { cn } from "../lib/utils";
 import IndianFeatures from "../components/IndianFeatures";
 import PublicFooter from "../components/PublicFooter";
+import SEO from "../components/SEO";
 
 export default function Features() {
   return (
     <div className="min-h-screen bg-[#0D1B2A] text-white font-sans selection:bg-electric-blue/30 overflow-x-hidden">
+      <SEO 
+        title="Premium Music Distribution Features"
+        description="Explore the advanced features of IND Distribution: 250+ stores, YouTube Content ID, Real-time Analytics, and high-speed distribution for Indian artists."
+      />
       {/* Floating WhatsApp Button */}
       <a 
         href="https://wa.me/917742789827" 

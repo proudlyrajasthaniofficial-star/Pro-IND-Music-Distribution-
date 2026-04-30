@@ -33,6 +33,7 @@ import { cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { collection, query, where, onSnapshot, orderBy, limit, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { toast } from "sonner";
+import SEO from "./SEO";
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
@@ -127,6 +128,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans">
+      <SEO title="Dashboard Architecture" description="Manage your music distribution, assets, and royalties with IND Distribution neural network." />
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (

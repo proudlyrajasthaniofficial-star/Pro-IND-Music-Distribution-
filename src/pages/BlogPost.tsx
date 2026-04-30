@@ -30,8 +30,8 @@ const BlogPost = () => {
       <SEO 
         title={post.title}
         description={post.excerpt}
-        ogType="article"
-        ogImage={post.image}
+        type="article"
+        image={post.image}
       />
       <PublicNavbar />
 

@@ -5,72 +5,55 @@ interface SEOProps {
   title?: string;
   description?: string;
   keywords?: string;
-  canonical?: string;
-  ogType?: string;
-  ogImage?: string;
-  twitterHandle?: string;
+  image?: string;
+  url?: string;
+  type?: string;
+  schema?: object;
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = "IND Distribution | Global Music Distribution for Artists",
-  description = "Distribute your music worldwide to 250+ platforms like Spotify, Apple Music, and Instagram. Get 24-hour approval, detailed analytics, and 100% royalty transparency with IND Distribution.",
-  keywords = "music distribution, release song, spotify india, jiosaavn distribution, indian music platform",
-  canonical = "https://musicdistributionindia.online",
-  ogType = "website",
-  ogImage = "https://picsum.photos/seed/music-distribution/1200/630",
-  twitterHandle = "@INDDistribution"
+  title = 'IND Distribution | Elite Music Distribution for Indian Artists',
+  description = 'Distribute your music to Spotify, Apple Music, YouTube and 150+ stores. Keep 100% of your rights. Scale your music career with elite-tier technology.',
+  keywords = 'music distribution, indian artists, spotify distribution, youtube content id, music marketing india, digital distribution',
+  image = 'https://musicdistributionindia.in/og-image.jpg',
+  url = 'https://musicdistributionindia.in',
+  type = 'website',
+  schema
 }) => {
-  const siteTitle = title.includes("IND Distribution") ? title : `${title} | IND Distribution`;
+  const siteTitle = title.includes('IND Distribution') ? title : `${title} | IND Distribution`;
 
   return (
     <Helmet>
       {/* Standard Metadata */}
       <title>{siteTitle}</title>
       <meta name="description" content={description} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      <link rel="canonical" href={canonical} />
+      <meta name="keywords" content={keywords} />
+      <meta name="author" content="IND Distribution" />
+      <meta name="robots" content="index, follow" />
 
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content={ogType} />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={url} />
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:url" content={canonical} />
-      <meta property="og:site_name" content="IND Distribution" />
+      <meta property="og:image" content={image} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={url} />
       <meta name="twitter:title" content={siteTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
-      {twitterHandle && <meta name="twitter:site" content={twitterHandle} />}
+      <meta name="twitter:image" content={image} />
 
-      {/* Structured Data (Schema.org) */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "IND Distribution",
-          "url": "https://musicdistributionindia.online",
-          "logo": "https://musicdistributionindia.online/logo.png",
-          "sameAs": [
-            "https://www.instagram.com/inddistribution",
-            "https://www.youtube.com/inddistribution"
-          ],
-          "description": description,
-          "address": {
-            "@type": "PostalAddress",
-            "addressRegion": "India",
-            "addressCountry": "IN"
-          },
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+91-7742789827",
-            "contactType": "customer service",
-            "email": "musicdistributionindia.in@gmail.com"
-          }
-        })}
-      </script>
+      {/* Structured Data */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
+
+      {/* Canonical Link */}
+      <link rel="canonical" href={url} />
     </Helmet>
   );
 };

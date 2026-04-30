@@ -67,8 +67,8 @@ export default function MyReleases() {
       setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       setLoading(false);
     }, (err) => {
-      console.error("Failed to fetch releases:", err);
-      toast.error("Real-time sync failing. Please refresh.");
+      console.error("Releases snapshot error:", err);
+      toast.error("Discography synchronization offline.");
       setLoading(false);
     });
 
