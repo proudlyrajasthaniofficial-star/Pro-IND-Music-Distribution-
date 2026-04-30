@@ -108,7 +108,8 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // JSON Body Parser (except for webhooks)
   app.use((req, res, next) => {
-    if (req.originalUrl === "/api/cashfree/webhook") {
+    const isWebhook = req.path.replace(/\/$/, '') === "/api/cashfree/webhook";
+    if (isWebhook) {
       next();
     } else {
       express.json()(req, res, next);
@@ -149,18 +150,35 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   });
 
   // Cashfree Webhook Endpoint
-  app.post("/api/cashfree/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  app.get("/api/cashfree/webhook", (req, res) => {
+    console.log("⚓ Cashfree Webhook GET ping received");
+    res.json({ 
+      status: "active", 
+      message: "Cashfree Webhook Endpoint is online. Please use POST for actual webhooks.",
+      version: "2023-08-01 (SDK Compatibility)"
+    });
+  });
+
+  app.post("/api/cashfree/webhook", express.raw({ type: "*/*" }), async (req, res) => {
     const signature = req.headers["x-webhook-signature"] as string;
     const timestamp = req.headers["x-webhook-timestamp"] as string;
     
+    console.log(`⚓ Cashfree Webhook POST received. Headers: signature=${!!signature}, timestamp=${!!timestamp}`);
+    
     if (!signature || !timestamp) {
-      console.warn("⚠️ Cashfree Webhook received without signature/timestamp headers. This might be a test ping.");
-      // Return 200 to indicate the endpoint exists
+      console.warn("⚠️ Cashfree Webhook received without signature/timestamp headers. This might be a test ping or check.");
+      // Return 200 to satisfy testers who don't send headers
       return res.status(200).json({ status: "endpoint_active", message: "Missing required auth headers for processing" });
     }
 
     try {
-      const rawBody = req.body.toString();
+      const rawBody = req.body && req.body.length > 0 ? req.body.toString() : "";
+      
+      if (!rawBody) {
+        console.error("❌ Cashfree Webhook received with empty body");
+        return res.status(400).send("Empty body");
+      }
+
       const isValid = cashfreeService.verifyCashfreeWebhook(rawBody, signature, timestamp);
 
       if (!isValid) {
