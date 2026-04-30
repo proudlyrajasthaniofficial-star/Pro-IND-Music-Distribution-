@@ -42,9 +42,20 @@ async function startServer() {
   app.set("trust proxy", true);
   const PORT = 3000;
 
+  // move logger to the top for better debugging
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      const isWebhook = req.url.includes('webhook');
+      if (isWebhook || res.statusCode >= 400) {
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${res.statusCode} - ${duration}ms`);
+      }
+    });
+    next();
+  });
+
   setupCloudinary();
-  
-  // Force HTTPS in production
   app.use((req, res, next) => {
     const isHttps = req.headers["x-forwarded-proto"] === "https";
     const isProd = process.env.NODE_ENV === "production" || req.hostname.includes("musicdistributionindia.online");
@@ -108,7 +119,8 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // JSON Body Parser (except for webhooks)
   app.use((req, res, next) => {
-    const isWebhook = req.path.replace(/\/$/, '') === "/api/cashfree/webhook";
+    const path = req.path.toLowerCase().replace(/\/$/, '');
+    const isWebhook = path === "/api/cashfree/webhook";
     if (isWebhook) {
       next();
     } else {
@@ -149,84 +161,97 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
     }
   });
 
-  // Cashfree Webhook Endpoint
+  // Cashfree Webhook Endpoint (GET for pings/health checks)
   app.get("/api/cashfree/webhook", (req, res) => {
-    console.log("⚓ Cashfree Webhook GET ping received");
+    console.log(`⚓ WEBHOOK_GET: ping received from ${req.ip}`);
     res.json({ 
       status: "active", 
-      message: "Cashfree Webhook Endpoint is online. Please use POST for actual webhooks.",
-      version: "2023-08-01 (SDK Compatibility)"
+      message: "Cashfree Webhook Endpoint is online. Please use POST for actual webhooks from Cashfree.",
+      domain: "musicdistributionindia.online",
+      serverTime: new Date().toISOString()
     });
   });
 
+  // Supporting both with and without trailing slash explicitly if needed
+  app.get("/api/cashfree/webhook/", (req, res) => {
+    res.redirect(301, "/api/cashfree/webhook");
+  });
+
+  // POST handler for actual Cashfree events
   app.post("/api/cashfree/webhook", express.raw({ type: "*/*" }), async (req, res) => {
     const signature = req.headers["x-webhook-signature"] as string;
     const timestamp = req.headers["x-webhook-timestamp"] as string;
     
-    console.log(`⚓ Cashfree Webhook POST received. Headers: signature=${!!signature}, timestamp=${!!timestamp}`);
+    console.log(`⚓ WEBHOOK_POST: signature=${!!signature}, timestamp=${!!timestamp}, body_len=${req.body?.length || 0}`);
     
     if (!signature || !timestamp) {
-      console.warn("⚠️ Cashfree Webhook received without signature/timestamp headers. This might be a test ping or check.");
-      // Return 200 to satisfy testers who don't send headers
-      return res.status(200).json({ status: "endpoint_active", message: "Missing required auth headers for processing" });
+      console.warn("⚠️ WEBHOOK_POST: Missing signature or timestamp header. Returning 200 for check.");
+      return res.status(200).json({ status: "ok", message: "Endpoint active, but credentials missing for processing" });
     }
 
     try {
       const rawBody = req.body && req.body.length > 0 ? req.body.toString() : "";
       
       if (!rawBody) {
-        console.error("❌ Cashfree Webhook received with empty body");
+        console.error("❌ WEBHOOK_POST: Empty body");
         return res.status(400).send("Empty body");
       }
 
       const isValid = cashfreeService.verifyCashfreeWebhook(rawBody, signature, timestamp);
 
       if (!isValid) {
-          console.error("❌ Invalid Cashfree Webhook Signature");
+          console.error("❌ WEBHOOK_POST: Invalid Signature Match");
           return res.status(400).send("Invalid signature");
       }
 
       const event = JSON.parse(rawBody);
+      console.log(`⚓ WEBHOOK_EVENT: ${event.type}`);
       
       if (event.type === "PAYMENT_SUCCESS_WEBHOOK") {
         const order = event.data.order;
-        const userId = order.customer_details.customer_id;
+        const userId = order.order_tags?.userId;
         const planId = order.order_tags?.planId;
 
+        console.log(`💳 WEBHOOK_PAYMENT_SUCCESS: ${event.data.payment.cf_payment_id} for user ${userId}, plan ${planId}`);
+
         if (userId && planId) {
-          await adminDb.collection("users").doc(userId).update({
-            planId: planId,
-            lastPaymentId: event.data.payment.cf_payment_id,
-          });
+          try {
+            await adminDb.collection("users").doc(userId).update({
+              planId: planId,
+              lastPaymentId: event.data.payment.cf_payment_id,
+              subscriptionStatus: 'active',
+              updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
 
-          await adminDb.collection("subscriptions").add({
-            userId,
-            planId,
-            status: "active",
-            cfOrderId: order.order_id,
-            amount: order.order_amount,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          });
+            await adminDb.collection("subscriptions").add({
+              userId,
+              planId,
+              status: "active",
+              cfOrderId: order.order_id,
+              cfPaymentId: event.data.payment.cf_payment_id,
+              amount: order.order_amount,
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
 
-          console.log(`✅ Cashfree payment successful for user ${userId}, plan ${planId}`);
+            console.log(`✅ WEBHOOK_DB_SUCCESS: Reference ${userId} updated`);
+          } catch (dbError: any) {
+            console.error(`❌ WEBHOOK_DB_ERROR: ${dbError.message}`);
+          }
+        } else {
+          console.error("❌ WEBHOOK_DATA_MISSING: userId or planId not in tags", { tags: order.order_tags });
         }
       }
 
-      res.json({ received: true });
+      res.json({ success: true, message: "Webhook processed" });
     } catch (err: any) {
-      console.error(`❌ Webhook error: ${err.message}`);
+      console.error(`❌ WEBHOOK_FATAL_ERROR: ${err.message}`);
       return res.status(500).send(`Webhook Error: ${err.message}`);
     }
   });
 
-  // Simple Request Logger
-  app.use((req, res, next) => {
-    const start = Date.now();
-    res.on('finish', () => {
-      const duration = Date.now() - start;
-      console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${res.statusCode} - ${duration}ms`);
-    });
-    next();
+  // Also handle POST with trailing slash
+  app.post("/api/cashfree/webhook/", (req, res) => {
+    res.redirect(307, "/api/cashfree/webhook");
   });
 
   // API Health Check
