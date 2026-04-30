@@ -37,8 +37,9 @@ const PublicFooter = () => {
                 </span>
               </div>
             </Link>
-            <p className="text-slate-400 max-w-md text-xl font-medium leading-relaxed italic opacity-80 text-left">
-              The ultimate ecosystem for independent music creators and labels. Empowering <span className="text-white font-black">50k+</span> independent artists across Asia with secure global distribution.
+            <p className="text-slate-400 max-w-md text-sm font-medium leading-relaxed italic opacity-80 text-left">
+              Music Distribution India Upload your music, we deliver your music on JioSaavn, Wynk Music, Gaana, Resso, Spotify and more 150+ music platforms. <br /><br />
+              म्यूजिक डिस्ट्रीब्यूशन इंडिया पर अपना संगीत अपलोड करें, हम आपका संगीत JioSaavn, Wynk Music, Gaana, Resso, Spotify और अधिक 150+ संगीत प्लेटफार्मों पर वितरित करते हैं।
             </p>
             <div className="flex gap-4">
               {[
