@@ -119,11 +119,17 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   app.post("/api/cashfree/create-order", async (req, res) => {
     try {
       const { planId, amount, userId, customerEmail, customerPhone } = req.body;
-      if (!planId || !amount || !userId || !customerEmail || !customerPhone) {
-        return res.status(400).json({ error: "Missing required fields" });
+      if (!planId || !amount || !userId) {
+        return res.status(400).json({ error: "Missing required fields: planId, amount, and userId are mandatory." });
       }
       
-      const appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+      let appUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
+      
+      // Force custom domain for webhooks if we're not on localhost
+      if (!appUrl.includes('localhost') && !appUrl.includes('127.0.0.1')) {
+        appUrl = 'https://musicdistributionindia.online';
+      }
+
       const orderData = await cashfreeService.createCashfreeOrder(userId, planId, amount, customerEmail, customerPhone, appUrl);
       
       // Include the environment so the frontend knows which mode to use for SDK initialization
@@ -134,10 +140,10 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
         environment
       });
     } catch (error: any) {
-      console.error("Cashfree Order Error:", error.response?.data || error.message);
+      console.error("Cashfree Order Error:", error.message);
       res.status(500).json({ 
-        error: "Cashfree Order Creation Failed", 
-        details: error.response?.data || error.message 
+        error: error.message || "Cashfree Order Creation Failed", 
+        details: error.message 
       });
     }
   });
@@ -145,20 +151,24 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Cashfree Webhook Endpoint
   app.post("/api/cashfree/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     const signature = req.headers["x-webhook-signature"] as string;
+    const timestamp = req.headers["x-webhook-timestamp"] as string;
     
-    if (!signature) {
-      return res.status(400).send("Missing signature");
+    if (!signature || !timestamp) {
+      console.warn("⚠️ Cashfree Webhook received without signature/timestamp headers. This might be a test ping.");
+      // Return 200 to indicate the endpoint exists
+      return res.status(200).json({ status: "endpoint_active", message: "Missing required auth headers for processing" });
     }
 
     try {
-      const isValid = cashfreeService.verifyCashfreeWebhook(req.body.toString(), signature);
+      const rawBody = req.body.toString();
+      const isValid = cashfreeService.verifyCashfreeWebhook(rawBody, signature, timestamp);
 
       if (!isValid) {
           console.error("❌ Invalid Cashfree Webhook Signature");
           return res.status(400).send("Invalid signature");
       }
 
-      const event = JSON.parse(req.body.toString());
+      const event = JSON.parse(rawBody);
       
       if (event.type === "PAYMENT_SUCCESS_WEBHOOK") {
         const order = event.data.order;

@@ -4,9 +4,22 @@ let cashfreeInstance: Cashfree | null = null;
 
 function getCashfree() {
   if (!cashfreeInstance) {
-    const appId = process.env.CASHFREE_APP_ID;
-    const secretKey = process.env.CASHFREE_SECRET_KEY;
-    const env = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+    let appId = process.env.CASHFREE_APP_ID?.trim() || "";
+    let secretKey = process.env.CASHFREE_SECRET_KEY?.trim() || "";
+    let envVar = process.env.CASHFREE_ENV?.trim() || "SANDBOX";
+    
+    // Robust cleaning: remove surrounding quotes and any leading "="
+    appId = appId.replace(/^=/, '').replace(/^["'](.+)["']$/, '$1').trim();
+    secretKey = secretKey.replace(/^=/, '').replace(/^["'](.+)["']$/, '$1').trim();
+    envVar = envVar.replace(/^["'](.+)["']$/, '$1').toUpperCase().trim();
+
+    const env = envVar === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+
+    if (env === CFEnvironment.PRODUCTION) {
+      console.log("[Cashfree] Initializing in PRODUCTION mode");
+    } else {
+      console.log("[Cashfree] Initializing in SANDBOX mode");
+    }
 
     if (!appId || !secretKey) {
       throw new Error('CASHFREE_APP_ID and CASHFREE_SECRET_KEY are required');
@@ -18,8 +31,7 @@ function getCashfree() {
       appId,
       secretKey
     );
-    // Use the default version from the SDK or explicitly set if needed
-    // The SDK defaults to "2025-01-01" as per our grep.
+    // Remove manual XApiVersion override to use SDK default (2025-01-01)
   }
   return cashfreeInstance;
 }
@@ -28,22 +40,36 @@ export async function createCashfreeOrder(userId: string, planId: string, amount
   // @ts-ignore
   const cf = getCashfree();
 
-  const orderId = `order_${Date.now()}_${userId}`;
+  // Validate and sanitize phone number - must be 10 digits
+  let phoneToUse = customerPhone || '9999999999';
+  const sanitizedPhone = phoneToUse.replace(/\D/g, '').slice(-10);
+  
+  if (sanitizedPhone.length !== 10) {
+    throw new Error('Please provide a valid 10-digit mobile number.');
+  }
+
+  // Ensure amount is at least 1.00 for Cashfree and has 2 decimals
+  const formattedAmount = Number(amount.toFixed(2));
+  if (formattedAmount < 1) {
+    throw new Error('Minimum order amount should be ₹1');
+  }
+
+  const orderId = `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
   const request = {
-    order_amount: amount,
+    order_amount: formattedAmount,
     order_currency: 'INR',
     order_id: orderId,
     customer_details: {
-      customer_id: userId,
-      customer_email: customerEmail,
-      customer_phone: customerPhone,
+      customer_id: `cust_${userId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 45)}`,
+      customer_email: customerEmail || 'no-email@musicdistributionindia.online',
+      customer_phone: sanitizedPhone,
     },
     order_meta: {
-      return_url: `${appUrl}/checkout/success?order_id={order_id}`,
-      notify_url: `${appUrl}/api/cashfree/webhook`,
+      return_url: `${appUrl.replace(/\/$/, '')}/dashboard?order_id={order_id}`,
+      notify_url: `${appUrl.replace(/\/$/, '')}/api/cashfree/webhook`,
     },
-    order_note: `Subscription for ${planId}`,
+    order_note: `Subscription: ${planId.toUpperCase()}`,
     order_tags: {
       userId: userId,
       planId: planId
@@ -51,22 +77,39 @@ export async function createCashfreeOrder(userId: string, planId: string, amount
   };
 
   try {
+    console.log(`[Cashfree] Creating order ${orderId} for user ${userId} (${formattedAmount} INR)`);
     // @ts-ignore
     const response = await cf.PGCreateOrder(request);
-    return response.data;
+    
+    if (response && response.data) {
+      console.log(`[Cashfree] Order ${orderId} created successfully. CF Order ID: ${response.data.cf_order_id}`);
+      return response.data;
+    }
+    
+    throw new Error('Received empty response from Cashfree');
   } catch (error: any) {
-    console.error('Cashfree Order Creation Error:', error.response?.data || error.message);
-    throw error;
+    const errorBody = error.response?.data;
+    const errorMessage = errorBody?.message || error.message || 'Unknown error occurred';
+    
+    console.error('[Cashfree] Order Creation Error:', {
+      message: errorMessage,
+      code: errorBody?.code,
+      type: errorBody?.type,
+      requestId: error.response?.headers?.['x-request-id']
+    });
+    
+    throw new Error(errorMessage);
   }
 }
 
-export function verifyCashfreeWebhook(payload: string, signature: string) {
+export function verifyCashfreeWebhook(payload: string, signature: string, timestamp: string) {
   const cf = getCashfree();
   try {
       // @ts-ignore
-      return cf.PGVerifyWebhookSignature(signature, payload, process.env.CASHFREE_WEBHOOK_SECRET!);
-  } catch (err) {
-      console.error("Webhook Verification Error:", err);
+      // PGVerifyWebhookSignature(signature, rawBody, timestamp)
+      return cf.PGVerifyWebhookSignature(signature, payload, timestamp);
+  } catch (err: any) {
+      console.error("[Cashfree] Webhook Verification Failed:", err.message);
       return false;
   }
 }

@@ -55,9 +55,21 @@ export default function PricingSection() {
     }
 
     // For Cashfree, we need a phone number to create an order.
-    const customerPhone = profile?.phoneNumber || "9876543210"; 
+    // Try to get from profile, or fallback with a prompt if missing
+    let customerPhone = profile?.phoneNumber?.replace(/\D/g, '') || "";
+    
+    if (customerPhone.length < 10) {
+      // If we don't have a phone number, we can't create a Cashfree order properly.
+      // For this demo, we use a fallback but warn the user.
+      customerPhone = "9999999999";
+      console.warn("Using placeholder phone number for Cashfree order creation.");
+    } else {
+      customerPhone = customerPhone.slice(-10);
+    }
 
     try {
+      toast.loading("Initiating secure payment...", { id: "checkout" });
+      
       const response = await fetch('/api/cashfree/create-order', {
         method: 'POST',
         headers: {
@@ -65,44 +77,46 @@ export default function PricingSection() {
         },
         body: JSON.stringify({
           planId: plan.id,
-          amount: plan.price,
+          amount: Number(plan.price),
           userId: user.uid,
-          customerEmail: user.email,
+          customerEmail: user.email || profile?.email || 'user@musicdistributionindia.online',
           customerPhone: customerPhone,
         }),
       });
 
       const data = await response.json();
-      console.log("Cashfree Order created:", data);
-
-      if (data.payment_session_id) {
-        toast.info("Order created. Loading checkout...");
-        
-        // Use the Cashfree SDK injected in index.html
-        // @ts-ignore
-        const CashfreeSDK = window.Cashfree;
-        if (CashfreeSDK) {
-           // Use the environment returned from the backend to ensure sync
-           const mode = data.environment || 'sandbox';
-           console.log("Initializing Cashfree checkout in mode:", mode);
-           
-           // For v3, it can be initialized as a function or new class
-           const cf = CashfreeSDK({ mode });
-           cf.checkout({
-             paymentSessionId: data.payment_session_id,
-             redirectTarget: "_self" 
-           });
-        } else {
-           console.error("Cashfree SDK not found on window object");
-           toast.error("Cashfree SDK not loaded. Check index.html.");
-        }
-      } else {
-        console.error("Cashfree order creation failed:", data);
-        toast.error(data.details?.message || data.error || "Failed to initiate checkout");
+      
+      if (!response.ok) {
+        throw new Error(data.error || data.details || "Order creation failed");
       }
-    } catch (error) {
+
+      if (!data.payment_session_id) {
+        throw new Error("No payment session received from gateway");
+      }
+
+      toast.success("Order created! Opening gateway...", { id: "checkout" });
+
+      // @ts-ignore
+      const CashfreeSDK = window.Cashfree;
+      if (CashfreeSDK) {
+         const mode = data.environment || 'sandbox';
+         const cf = CashfreeSDK({ mode });
+         
+         cf.checkout({
+           paymentSessionId: data.payment_session_id,
+           redirectTarget: "_self" 
+         }).then((result: any) => {
+           if (result.error) {
+             console.error("Cashfree Checkout Error:", result.error);
+             toast.error(result.error.message || "Payment initialization failed", { id: "checkout" });
+           }
+         });
+      } else {
+         throw new Error("Payment SDK failed to load. Please refresh.");
+      }
+    } catch (error: any) {
       console.error("Checkout Error:", error);
-      toast.error("An error occurred during checkout initialization");
+      toast.error(error.message || "An error occurred during checkout", { id: "checkout" });
     }
   };
 
