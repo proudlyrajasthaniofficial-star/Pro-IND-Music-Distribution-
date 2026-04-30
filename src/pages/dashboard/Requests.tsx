@@ -95,6 +95,10 @@ export default function Requests() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setRequests(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserRequest)));
       setLoading(false);
+    }, (err) => {
+      console.error("User requests snapshot error:", err);
+      setLoading(false);
+      toast.error("Unable to sync request status. Data may be stale.");
     });
 
     // Fetch releases for dropdown

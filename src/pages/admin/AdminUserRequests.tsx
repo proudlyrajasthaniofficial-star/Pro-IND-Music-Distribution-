@@ -55,6 +55,9 @@ export default function AdminUserRequests() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setRequests(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
       setLoading(false);
+    }, (err) => {
+      console.error("Admin requests snapshot error:", err);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);

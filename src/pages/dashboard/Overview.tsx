@@ -38,6 +38,9 @@ export default function Overview() {
     const qNews = query(collection(db, "system_notifications"), orderBy("createdAt", "desc"), limit(3));
     const unsubNews = onSnapshot(qNews, (snap) => {
       setSystemNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, (err) => {
+      console.error("News snapshot error:", err);
+      setError("Unable to load latest system notifications. Please contact support if this persists.");
     });
 
     if (!user) return;
@@ -52,6 +55,9 @@ export default function Overview() {
     );
     const unsubRecent = onSnapshot(qRecent, (snap) => {
       setRecentReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, (err) => {
+      console.error("Recent releases snapshot error:", err);
+      setError("Synchronization error with music catalog. Retrying...");
     });
 
     // Fetch All Releases for stats (Real-time)
@@ -64,6 +70,9 @@ export default function Overview() {
         pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved').length,
         rejected: allData.filter((r: any) => r.status === 'rejected').length
       });
+    }, (err) => {
+      console.error("All releases stats snapshot error:", err);
+      // Fail silently for dashboard visuals to prevent crash
     });
 
     // Fetch Earnings for Chart
@@ -97,6 +106,10 @@ export default function Overview() {
       }));
 
       setChartData(formattedChart);
+    }, (err) => {
+      console.error("Earnings snapshot error:", err);
+      // Empty chart data on error
+      setChartData([]);
     });
 
     return () => {

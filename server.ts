@@ -119,9 +119,11 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // JSON Body Parser (except for webhooks)
   app.use((req, res, next) => {
-    const path = req.path.toLowerCase().replace(/\/$/, '');
-    const isWebhook = path === "/api/cashfree/webhook";
+    const rawPath = req.path || "";
+    const isWebhook = rawPath.toLowerCase().includes("/api/cashfree/webhook");
+    
     if (isWebhook) {
+      console.log(`⚓ WEBHOOK_ROUTING: ${req.method} ${rawPath}`);
       next();
     } else {
       express.json()(req, res, next);
@@ -327,8 +329,17 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
   // API Catch-all (Before static assets) - EXPLICIT 404
   app.all("/api/*", (req, res) => {
-    console.warn(`[404] No Route Matched: ${req.method} ${req.url}`);
-    res.status(404).json({ error: `IND Distribution API: Endpoint ${req.method} ${req.url} does not exist.` });
+    const rawPath = req.path || req.url;
+    console.warn(`[404] No Route Matched: ${req.method} ${rawPath}`);
+    console.warn(`Headers: ${JSON.stringify(req.headers)}`);
+    res.status(404).json({ 
+      error: `IND Distribution API: Endpoint ${req.method} ${rawPath} does not exist.`,
+      debug: {
+        method: req.method,
+        path: rawPath,
+        timestamp: new Date().toISOString()
+      }
+    });
   });
 
   // Vite middleware for development
@@ -341,9 +352,24 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   } else {
     // Production serving
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
+    console.log(`📦 Serving production build from: ${distPath}`);
+    
+    app.use(express.static(distPath, {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache');
+        }
+      }
+    }));
+
     app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      const indexPath = path.join(distPath, "index.html");
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        console.error(`❌ Index file missing at: ${indexPath}`);
+        res.status(500).send("Application build is missing or incomplete. Please rebuild.");
+      }
     });
   }
 

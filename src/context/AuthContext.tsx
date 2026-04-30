@@ -53,10 +53,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (docSnap.exists()) {
             setProfile(docSnap.data());
           } else {
+            console.log("No profile found for user:", authUser.uid);
             setProfile(null);
           }
-        } catch (err) {
-          console.error("Profile fetch error:", err);
+        } catch (err: any) {
+          console.error("Profile fetch error:", err.code, err.message);
           setProfile(null);
         }
       } else {
