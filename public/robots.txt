@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
+# Block sensitive areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /api/
+Disallow: /private/
+
+# Allow important assets (optional safety)
+Allow: /assets/
+Allow: /images/
+
+# Sitemap
 Sitemap: https://musicdistributionindia.online/sitemap.xml
