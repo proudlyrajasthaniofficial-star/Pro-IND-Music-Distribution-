@@ -133,8 +133,11 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-white/60 font-light max-w-3xl mx-auto mb-16 leading-relaxed backdrop-blur-sm px-4">
-              Experience elite-tier music distribution. Deliver your assets to 250+ platforms with surgical precision, AI intelligence, and unparalleled royalty transparency.
+            <p className="text-xl md:text-2xl text-white/80 font-light max-w-4xl mx-auto mb-16 leading-relaxed backdrop-blur-sm px-4">
+              India #1 Music Distribution Service "Music Distribution India". India #1 Music Distribution service Music Distributon India Company Co. is a digital music aggregator from India. Music Distribution India Company avail individual artists and music producers get their music on iTunes, JioSaavn, Wynk, Gaana, Spotify, Google Play Music, Shazam, other music streaming platforms, and digital music stores. <br /><br />
+              <span className="text-white/60 text-lg md:text-xl block">
+                भारत की #1 संगीत वितरण सेवाएँ संगीत वितरण इंडिया कंपनी कंपनी भारत की एक डिजिटल संगीत एग्रीगेटर है। म्यूजिक डिस्ट्रीब्यूशन इंडिया कंपनी व्यक्तिगत कलाकारों और संगीत निर्माताओं को उनका लाभ देती है
+              </span>
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
