@@ -12,9 +12,9 @@ interface SEOProps {
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = 'IND Distribution | Elite Music Distribution for Indian Artists',
-  description = 'Distribute your music to Spotify, Apple Music, YouTube and 150+ stores. Keep 100% of your rights. Scale your music career with elite-tier technology.',
-  keywords = 'music distribution, indian artists, spotify distribution, youtube content id, music marketing india, digital distribution',
+  title = 'IND Distribution | #1 Music Distribution India | Release & Earn',
+  description = 'Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!',
+  keywords = 'music distribution India, free music distribution India, how to release song in India, Indian music distribution platform, free gaana release India, JioSaavn song release process, Spotify earnings India, upload song on Spotify India, caller tune release India, best music distributor India, release song online India, music distribution for independent artists India, cheap music distribution India, Wynk music upload India, Apple Music India distribution, gaana app song upload, earn money from music India, independent artist India music release, digital music distribution India, music release service India, musicdistributionindia, Musicdistributionindia.in, Music-Distribution-India, musicdistributionindia.com, musicdistributionindia.online',
   image = 'https://musicdistributionindia.in/og-image.jpg',
   url = 'https://musicdistributionindia.in',
   type = 'website',

@@ -36,6 +36,7 @@ const ContentID = lazy(() => import('./pages/dashboard/ContentID'));
 const Reports = lazy(() => import('./pages/dashboard/Reports'));
 const GrowthTools = lazy(() => import('./pages/dashboard/GrowthTools'));
 const Subscription = lazy(() => import('./pages/dashboard/Subscription'));
+const AILab = lazy(() => import('./pages/dashboard/AILab'));
 
 // Legal Pages
 const Terms = lazy(() => import('./pages/legal/Terms'));
@@ -59,6 +60,8 @@ const AdminUserRequests = lazy(() => import('./pages/admin/AdminUserRequests'));
 const AdminNotifications = lazy(() => import('./pages/admin/AdminNotifications'));
 const AdminBroadcasts = lazy(() => import('./pages/admin/AdminBroadcasts'));
 const AdminHistory = lazy(() => import('./pages/admin/AdminHistory'));
+
+import AIChatbot from './components/AIChatbot';
 
 function PrivateRoute({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) {
   const { user, loading, isAdmin } = useAuth();
@@ -168,12 +171,14 @@ function AppContent() {
             <Route path="content-id" element={<ContentID />} />
             <Route path="reports" element={<Reports />} />
             <Route path="growth" element={<GrowthTools />} />
+            <Route path="ai-lab" element={<AILab />} />
             <Route path="subscription" element={<Subscription />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </React.Suspense>
+      <AIChatbot />
     </Router>
   );
 }

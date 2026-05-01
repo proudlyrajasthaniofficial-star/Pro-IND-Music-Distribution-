@@ -62,8 +62,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden selection:bg-electric-blue/30">
       <SEO 
-        title="IND Distribution | Elite Global Music Distribution"
-        description="Join 50k+ global artists. Distribute your music to 250+ stores like Spotify, Apple Music, and Instagram with IND Distribution. Get 24hr releases and 100% transparent royalty management."
+        title="IND Distribution | #1 Music Distribution India | Release & Earn"
+        description="Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!"
       />
       {/* Floating WhatsApp Button */}
       <a 
