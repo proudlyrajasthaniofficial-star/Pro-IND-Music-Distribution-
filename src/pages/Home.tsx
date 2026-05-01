@@ -60,9 +60,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white font-sans overflow-x-hidden selection:bg-electric-blue/30">
+    <div className="min-h-screen bg-white text-slate-950 font-sans overflow-x-hidden selection:bg-brand-blue/10 selection:text-brand-blue">
       <SEO 
-        title="IND Distribution | #1 Music Distribution India | Release & Earn"
+        title="IND Music Distribution India | #1 Music Distribution | Release & Earn"
         description="Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!"
       />
       {/* Floating WhatsApp Button */}
@@ -76,44 +76,48 @@ export default function Home() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between glass-dark mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full border-white/5">
+      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur-xl border-b border-slate-100 mt-0 mx-auto max-w-full left-0 right-0 shadow-sm">
         <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center rotate-12 shadow-lg">
-            <Music className="text-white w-6 h-6 -rotate-12" />
+          <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg shadow-brand-blue/20">
+            <Music className="text-white w-6 h-6" />
           </div>
-          <span className="font-display text-2xl font-bold tracking-tighter">IND<span className="text-electric-blue">.</span></span>
+          <span className="font-display text-2xl font-bold tracking-tighter text-slate-900">IND<span className="text-brand-blue">.</span></span>
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-white/60">
-          <a href="#features" className="hover:text-electric-blue transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-electric-blue transition-colors">Pricing</a>
-          <Link to="/founder-developer" className="hover:text-electric-blue transition-colors">Founder</Link>
-          <Link to="/blog" className="hover:text-electric-blue transition-colors">Blog</Link>
-          <Link to="/contact" className="hover:text-electric-blue transition-colors">Contact</Link>
-          <Link to="/features" className="hover:text-electric-blue transition-colors uppercase">Support</Link>
+        <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-slate-500">
+          <a href="#features" className="hover:text-brand-blue transition-colors">Features</a>
+          <a href="#pricing" className="hover:text-brand-blue transition-colors">Pricing</a>
+          <Link to="/founder-developer" className="hover:text-brand-blue transition-colors">Founder</Link>
+          <Link to="/blog" className="hover:text-brand-blue transition-colors">Blog</Link>
+          <Link to="/contact" className="hover:text-brand-blue transition-colors">Contact</Link>
+          <a href="#features" className="hover:text-brand-blue transition-colors uppercase">Support</a>
         </div>
 
         <div className="flex items-center gap-4">
           <Link 
             to={user ? "/dashboard" : "/auth?mode=login"} 
-            className="text-sm font-medium hover:text-electric-blue transition-colors"
+            className="text-sm font-bold text-slate-600 hover:text-brand-blue transition-colors"
           >
             {user ? "Dashboard" : "Login"}
           </Link>
           <Link 
             to={user ? "/dashboard/upload" : "/auth?mode=signup"} 
-            className="px-6 py-2.5 bg-electric-blue text-[#0D1B2A] rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] transition-all"
+            className="px-6 py-2.5 bg-brand-blue text-white rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-xl hover:shadow-brand-blue/20 transition-all active:scale-95"
           >
             {user ? "Primary Release" : "Start Now"}
           </Link>
         </div>
       </nav>
 
-      {/* Hero Section - Professional & Minimalist */}
+      {/* Hero Section - Professional & Modern Light Style */}
       <section 
-        className="relative w-full min-h-[95vh] flex items-center justify-center px-6 pt-32 pb-20 overflow-hidden"
+        className="relative w-full min-h-[90vh] flex items-center justify-center px-6 pt-40 pb-20 overflow-hidden"
       >
-        <GalaxyBackground />
+        {/* Modern Light Background Elements */}
+        <div className="absolute inset-0 z-0 bg-white">
+          <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-brand-blue/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-neon-purple/5 blur-[100px] rounded-full translate-y-1/3 -translate-x-1/4"></div>
+        </div>
 
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <motion.div
@@ -121,36 +125,36 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 mb-10 shadow-2xl backdrop-blur-md">
-              <div className="w-2 h-2 bg-electric-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(0,212,255,1)]"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Premium Global Infrastructure // 2026 Edition</span>
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-slate-50 border border-slate-100 mb-10 shadow-sm">
+              <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Premium Digital Distribution // 2026 Edition</span>
             </div>
 
-            <h1 className="text-6xl md:text-[9.5rem] font-black font-display tracking-tighter leading-[0.8] uppercase mb-14 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-              <span className="block text-white">THE STANDARD</span>
-              <span className="bg-gradient-to-r from-electric-blue via-indigo-400 via-purple-500 to-pink-500 text-transparent bg-clip-text animate-gradient pb-6 block">
+            <h1 className="text-6xl md:text-[8.5rem] font-black font-display tracking-tighter leading-[0.85] uppercase mb-14">
+              <span className="block text-slate-900 mb-2">THE STANDARD</span>
+              <span className="bg-gradient-to-r from-brand-blue via-indigo-600 via-purple-600 to-pink-500 text-transparent bg-clip-text animate-gradient py-2 block">
                 FOR GLOBAL ARTISTS
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-white/80 font-light max-w-4xl mx-auto mb-16 leading-relaxed backdrop-blur-sm px-4">
-              India #1 Music Distribution Service "Music Distribution India". India #1 Music Distribution service Music Distributon India Company Co. is a digital music aggregator from India. Music Distribution India Company avail individual artists and music producers get their music on iTunes, JioSaavn, Wynk, Gaana, Spotify, Google Play Music, Shazam, other music streaming platforms, and digital music stores. <br /><br />
-              <span className="text-white/60 text-lg md:text-xl block">
-                भारत की #1 संगीत वितरण सेवाएँ संगीत वितरण इंडिया कंपनी कंपनी भारत की एक डिजिटल संगीत एग्रीगेटर है। म्यूजिक डिस्ट्रीब्यूशन इंडिया कंपनी व्यक्तिगत कलाकारों और संगीत निर्माताओं को उनका लाभ देती है
+            <p className="text-xl md:text-2xl text-slate-500 font-medium max-w-4xl mx-auto mb-16 leading-relaxed px-4">
+              IND Music Distribution India is a digital music aggregator from India. We help individual artists and music producers get their music on Spotify, iTunes, JioSaavn, Wynk, Gaana, and 150+ stores globally. <br /><br />
+              <span className="text-slate-400 text-lg md:text-xl block">
+                भारत की नंबर 1 डिजिटल संगीत वितरण सेवा। अपने गानों को दुनिया भर के सभी प्रमुख प्लेटफॉर्म पर रिलीज़ करें और 100% रॉयल्टी प्राप्त करें।
               </span>
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <Link 
                 to={user ? "/dashboard" : "/auth?mode=signup"} 
-                className="group relative w-full sm:w-auto px-16 py-7 bg-white text-[#020617] rounded-full font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95"
+                className="group relative w-full sm:w-auto px-16 py-6 bg-brand-blue text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-brand-blue/20"
               >
                 <span className="relative z-10">{user ? "Enter Dashboard" : "Access Platform"}</span>
-                <div className="absolute inset-0 bg-electric-blue translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <div className="absolute inset-0 bg-slate-900 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </Link>
               <a 
                 href="#features" 
-                className="w-full sm:w-auto px-16 py-7 glass-dark border border-white/10 rounded-full font-black text-xs uppercase tracking-[0.3em] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-16 py-6 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-slate-50 transition-all flex items-center justify-center gap-3 hover:border-brand-blue hover:text-brand-blue"
               >
                 View Features
                 <ChevronRight className="w-4 h-4" />
@@ -214,9 +218,9 @@ export default function Home() {
       <IndianFeatures />
 
       {/* Features - Bento Grid */}
-      <section id="features" className="py-32 px-6 relative overflow-hidden">
+      <section id="features" className="py-32 px-6 relative overflow-hidden bg-white">
         {/* Abstract Background Shapes */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-electric-blue/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-brand-blue/5 blur-[120px] rounded-full pointer-events-none"></div>
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-neon-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto">
@@ -226,18 +230,18 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark border border-white/5 mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 mb-6"
               >
-                <Zap className="w-4 h-4 text-electric-blue" />
-                <span className="text-xs font-black uppercase tracking-widest text-electric-blue">Platform Features</span>
+                <Zap className="w-4 h-4 text-brand-blue" />
+                <span className="text-xs font-black uppercase tracking-widest text-slate-500">Platform Features</span>
               </motion.div>
-              <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] uppercase">
+              <h2 className="font-display text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] uppercase text-slate-900">
                 CRAFTED FOR <br />
-                <span className="bg-clip-text text-transparent bg-linear-to-r from-electric-blue to-neon-purple">INDEPENDENT</span> <br />
+                <span className="bg-clip-text text-transparent bg-linear-to-r from-brand-blue to-neon-purple">INDEPENDENT</span> <br />
                 EXCELLENCE
               </h2>
             </div>
-            <p className="text-white/40 max-w-md text-lg font-light leading-relaxed mb-4 text-left">
+            <p className="text-slate-400 max-w-md text-lg font-medium leading-relaxed mb-4 text-left">
               We've built the most comprehensive toolkit for modern musicians. From pixel-perfect distribution to deep data insights.
             </p>
           </div>
@@ -248,23 +252,23 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="md:col-span-6 lg:col-span-8 group relative overflow-hidden rounded-[4rem] glass-dark p-12 border-white/5 transition-all duration-500 hover:border-white/10"
+              className="md:col-span-6 lg:col-span-8 group relative overflow-hidden rounded-[4rem] bg-slate-50 p-12 border border-slate-100 transition-all duration-500 hover:border-brand-blue/30 hover:shadow-2xl hover:bg-white"
             >
               <div className="flex flex-col h-full justify-between gap-12 text-left">
                 <div>
-                  <div className="w-16 h-16 bg-electric-blue text-[#0D1B2A] rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(0,212,255,0.3)] mb-8 rotate-3 transition-transform group-hover:rotate-12">
+                  <div className="w-16 h-16 bg-brand-blue text-white rounded-3xl flex items-center justify-center shadow-xl shadow-brand-blue/20 mb-8 rotate-3 transition-transform group-hover:rotate-12">
                     <Globe className="w-8 h-8" />
                   </div>
-                  <h3 className="text-4xl font-black font-display mb-4 uppercase">250+ GLOBAL STORES</h3>
-                  <p className="text-white/40 text-lg font-light max-w-md">Your music everywhere. From Spotify and Apple Music to TikTok, Instagram, and regional giants like JioSaavn.</p>
+                  <h3 className="text-4xl font-black font-display mb-4 uppercase text-slate-900">250+ GLOBAL STORES</h3>
+                  <p className="text-slate-500 text-lg font-medium max-w-md">Your music everywhere. From Spotify and Apple Music to TikTok, Instagram, and regional giants like JioSaavn.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {["Spotify", "Apple Music", "TikTok", "Amazon", "Deezer", "Tidal", "Pandora", "Boomplay"].map(s => (
-                    <span key={s} className="px-5 py-2 rounded-full bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-white/60">{s}</span>
+                    <span key={s} className="px-5 py-2 rounded-full bg-white border border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">{s}</span>
                   ))}
                 </div>
               </div>
-              <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
+              <div className="absolute -bottom-10 -right-10 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
                 <Globe className="w-64 h-64 rotate-12" />
               </div>
             </motion.div>
@@ -275,24 +279,24 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="md:col-span-6 lg:col-span-4 rounded-[4rem] bg-white text-[#0D1B2A] p-12 relative overflow-hidden group border-none"
+              className="md:col-span-6 lg:col-span-4 rounded-[4rem] bg-slate-900 text-white p-12 relative overflow-hidden group border-none shadow-2xl"
             >
               <div className="relative z-10 flex flex-col h-full justify-between text-left">
                 <div>
-                  <div className="w-16 h-16 bg-[#0D1B2A] rounded-3xl flex items-center justify-center mb-8">
-                    <BarChart3 className="w-8 h-8 text-electric-blue" />
+                  <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center mb-8">
+                    <BarChart3 className="w-8 h-8 text-brand-blue" />
                   </div>
                   <h3 className="text-4xl font-black font-display mb-4 uppercase">REAL-TIME DATA</h3>
-                  <p className="text-[#0D1B2A]/60 font-medium leading-relaxed uppercase text-xs tracking-tight">Daily trend reports and deep analytics on who's listening and where they are located.</p>
+                  <p className="text-white/60 font-medium leading-relaxed uppercase text-xs tracking-tight">Daily trend reports and deep analytics on who's listening and where they are located.</p>
                 </div>
                 <div className="mt-8 space-y-4">
                   {[45, 80, 60].map((w, i) => (
-                    <div key={i} className="h-2 bg-[#0D1B2A]/5 rounded-full overflow-hidden">
+                    <div key={i} className="h-2 bg-white/5 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         whileInView={{ width: `${w}%` }}
                         transition={{ duration: 1, delay: 0.5 + (i * 0.1) }}
-                        className="h-full bg-linear-to-r from-electric-blue to-neon-purple"
+                        className="h-full bg-linear-to-r from-brand-blue to-neon-purple"
                       />
                     </div>
                   ))}
@@ -306,13 +310,13 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="md:col-span-3 lg:col-span-4 rounded-[4rem] glass-dark p-10 group border-white/5 text-left"
+              className="md:col-span-3 lg:col-span-4 rounded-[4rem] bg-slate-50 p-10 group border border-slate-100 text-left hover:bg-white hover:shadow-2xl transition-all"
             >
-              <div className="w-14 h-14 bg-neon-purple rounded-2xl flex items-center justify-center text-white shadow-lg mb-6 shadow-neon-purple/20">
+              <div className="w-14 h-14 bg-neon-purple/10 rounded-2xl flex items-center justify-center text-neon-purple mb-6">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight">CONTENT ID & RIGHTS</h3>
-              <p className="text-white/40 font-light text-sm leading-relaxed">Official protection for your audio on YouTube, Facebook, and Instagram. Never lose a cent on unauthorized usage.</p>
+              <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight text-slate-900">CONTENT ID & RIGHTS</h3>
+              <p className="text-slate-500 font-medium text-sm leading-relaxed">Official protection for your audio on YouTube, Facebook, and Instagram. Never lose a cent on unauthorized usage.</p>
             </motion.div>
 
             {/* Feature 4: Fast Approval */}
@@ -321,13 +325,13 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="md:col-span-3 lg:col-span-4 rounded-[4rem] glass-dark p-10 group border-white/5 bg-electric-blue/5 text-left"
+              className="md:col-span-3 lg:col-span-4 rounded-[4rem] bg-amber-50 p-10 group border border-amber-100 text-left hover:bg-white hover:shadow-2xl transition-all"
             >
-              <div className="w-14 h-14 bg-soft-orange rounded-2xl flex items-center justify-center text-white shadow-lg mb-6 shadow-soft-orange/20">
+              <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-600 mb-6 font-bold">
                 <Zap className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight">24HR APPROVAL</h3>
-              <p className="text-white/40 font-light text-sm leading-relaxed">Our dedicated review team ensures your release is perfect and approved for delivery within 24 hours.</p>
+              <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight text-amber-900">24HR APPROVAL</h3>
+              <p className="text-amber-700/60 font-medium text-sm leading-relaxed">Our dedicated review team ensures your release is perfect and approved for delivery within 24 hours.</p>
             </motion.div>
 
             {/* Feature 5: Artist Development */}
@@ -336,17 +340,17 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="md:col-span-6 lg:col-span-4 rounded-[4rem] glass-dark p-10 group border-white/5 overflow-hidden relative text-left"
+              className="md:col-span-6 lg:col-span-4 rounded-[4rem] bg-slate-50 p-10 group border border-slate-100 overflow-hidden relative text-left hover:bg-white hover:shadow-2xl transition-all"
             >
               <div className="relative z-10 text-left">
-                 <div className="w-14 h-14 bg-electric-blue text-[#0D1B2A] rounded-2xl flex items-center justify-center shadow-lg shadow-electric-blue/20 mb-6">
-                  <Play className="w-6 h-6 fill-[#0D1B2A]" />
+                 <div className="w-14 h-14 bg-brand-blue/10 text-brand-blue rounded-2xl flex items-center justify-center mb-6">
+                  <Play className="w-6 h-6 fill-brand-blue" />
                 </div>
-                <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight">OAC & VEVO</h3>
-                <p className="text-white/40 font-light text-sm leading-relaxed">Upgrade to an Official Artist Channel on YouTube and get your music videos on Vevo worldwide.</p>
+                <h3 className="text-2xl font-black font-display mb-4 uppercase tracking-tight text-slate-900">OAC & VEVO</h3>
+                <p className="text-slate-500 font-medium text-sm leading-relaxed">Upgrade to an Official Artist Channel on YouTube and get your music videos on Vevo worldwide.</p>
               </div>
-              <div className="absolute bottom-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                <Youtube className="w-20 h-20 text-white" />
+              <div className="absolute bottom-0 right-0 p-4 opacity-[0.05] group-hover:scale-110 transition-transform">
+                <Youtube className="w-20 h-20 text-slate-900" />
               </div>
             </motion.div>
           </div>
@@ -357,8 +361,8 @@ export default function Home() {
       <PricingSection />
 
       {/* Contact Section */}
-      <section id="contact" className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-electric-blue/5 blur-[120px] rounded-full pointer-events-none"></div>
+      <section id="contact" className="py-32 px-6 relative overflow-hidden bg-white">
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-brand-blue/5 blur-[120px] rounded-full pointer-events-none"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-neon-purple/5 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto">
@@ -369,35 +373,35 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="glass-dark p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/5"
+              className="bg-slate-50 p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] border border-slate-100"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-blue/5 border border-electric-blue/10 mb-8">
-                <MessageSquare className="w-3.5 h-3.5 text-electric-blue" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Contact Support</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/5 border border-brand-blue/10 mb-8">
+                <MessageSquare className="w-3.5 h-3.5 text-brand-blue" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-blue">Contact Support</span>
               </div>
               
-              <h2 className="font-display text-4xl md:text-6xl font-black tracking-tighter leading-tight md:leading-[1] mb-8 uppercase text-white text-left">
+              <h2 className="font-display text-4xl md:text-6xl font-black tracking-tighter leading-tight md:leading-[1] mb-8 uppercase text-slate-900 text-left">
                 READY TO <br />
-                <span className="text-electric-blue">CONNECT?</span>
+                <span className="text-brand-blue">CONNECT?</span>
               </h2>
               
-              <p className="text-white/40 text-base font-light leading-relaxed mb-10 text-left uppercase text-xs tracking-widest">
-                Our support team is active **Mon - Sat (10am - 7pm)** to help you with your distribution needs.
+              <p className="text-slate-500 text-base font-medium leading-relaxed mb-10 text-left uppercase text-xs tracking-widest">
+                Our support team is active Mon - Sat (10am - 7pm) to help you with your distribution needs.
               </p>
 
               <div className="space-y-6 mb-10">
                 {[
-                  { icon: Mail, label: "Email Us", value: "musicdistributionindia.in@gmail.com", href: "mailto:musicdistributionindia.in@gmail.com", color: "text-electric-blue" },
+                  { icon: Mail, label: "Email Us", value: "musicdistributionindia.in@gmail.com", href: "mailto:musicdistributionindia.in@gmail.com", color: "text-brand-blue" },
                   { icon: Phone, label: "Official Line", value: "011-69652811", href: "tel:01169652811", color: "text-neon-purple" },
                   { icon: MessageCircle, label: "Direct WhatsApp", value: "+91 7742789827", href: "https://wa.me/917742789827", color: "text-[#25D366]" }
                 ].map((item, i) => (
                   <a key={i} href={item.href} className="flex gap-5 items-center group text-left">
-                    <div className={cn("w-11 h-11 rounded-xl glass-dark border border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-all duration-300 shadow-sm", item.color)}>
+                    <div className={cn("w-11 h-11 rounded-xl bg-white border border-slate-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-all duration-300 shadow-sm", item.color)}>
                       <item.icon className="w-4.5 h-4.5" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-white/20 mb-0.5">{item.label}</p>
-                      <p className="text-base font-bold text-white group-hover:text-electric-blue transition-colors break-all md:break-normal">{item.value}</p>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">{item.label}</p>
+                      <p className="text-base font-bold text-slate-900 group-hover:text-brand-blue transition-colors break-all md:break-normal">{item.value}</p>
                     </div>
                   </a>
                 ))}
@@ -422,7 +426,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="glass-dark p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] relative z-10 border-white/5 shadow-2xl text-left"
+              className="bg-white p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] relative z-10 border border-slate-100 shadow-2xl text-left"
             >
               {formState === 'success' ? (
                 <motion.div 
@@ -430,60 +434,60 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="h-[400px] flex flex-col items-center justify-center text-center p-6"
                 >
-                  <div className="w-20 h-20 bg-electric-blue/10 rounded-full flex items-center justify-center mb-6">
-                    <CheckCircle2 className="w-10 h-10 text-electric-blue" />
+                  <div className="w-20 h-20 bg-brand-blue/10 rounded-full flex items-center justify-center mb-6">
+                    <CheckCircle2 className="w-10 h-10 text-brand-blue" />
                   </div>
-                  <h3 className="text-2xl font-black font-display text-white mb-4 uppercase italic tracking-tight">MESSAGE TRANSMITTED</h3>
-                  <p className="text-white/40 font-medium uppercase text-xs tracking-widest leading-relaxed">Our neural network has received your inquiry. A specialist will touch base shortly.</p>
+                  <h3 className="text-2xl font-black font-display text-slate-900 mb-4 uppercase italic tracking-tight">MESSAGE TRANSMITTED</h3>
+                  <p className="text-slate-500 font-medium uppercase text-xs tracking-widest leading-relaxed">Our network has received your inquiry. A specialist will touch base shortly.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2 italic">Full Name</label>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Full Name</label>
                       <input 
                         required
                         type="text" 
                         placeholder="John Doe" 
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-electric-blue focus:bg-white/10 outline-none transition-all font-medium text-white"
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-brand-blue focus:bg-white outline-none transition-all font-medium text-slate-900"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2 italic">Email Address</label>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Email Address</label>
                       <input 
                         required
                         type="email" 
                         placeholder="john@example.com" 
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-electric-blue focus:bg-white/10 outline-none transition-all font-medium text-white"
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-brand-blue focus:bg-white outline-none transition-all font-medium text-slate-900"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2 italic">Subject Domain</label>
-                      <select className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-electric-blue focus:bg-white/10 outline-none transition-all font-medium text-white appearance-none">
-                        <option className="bg-[#0D1B2A]">Account Support</option>
-                        <option className="bg-[#0D1B2A]">Distribution Query</option>
-                        <option className="bg-[#0D1B2A]">Royalties & Payments</option>
-                        <option className="bg-[#0D1B2A]">Marketing Services</option>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Subject Domain</label>
+                      <select className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-brand-blue focus:bg-white outline-none transition-all font-medium text-slate-900 appearance-none">
+                        <option>Account Support</option>
+                        <option>Distribution Query</option>
+                        <option>Royalties & Payments</option>
+                        <option>Marketing Services</option>
                       </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2 italic">Vocalize Message</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Vocalize Message</label>
                     <textarea 
                       required
                       rows={4} 
                       placeholder="How can we help you?" 
-                      className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-electric-blue focus:bg-white/10 outline-none transition-all font-medium text-white resize-none"
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-brand-blue focus:bg-white outline-none transition-all font-medium text-slate-900 resize-none"
                     ></textarea>
                   </div>
                   <button 
                     disabled={formState === 'loading'}
                     type="submit" 
-                    className="w-full py-6 bg-electric-blue text-[#0D1B2A] rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:shadow-[0_0_30px_rgba(0,212,255,0.4)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                    className="w-full py-6 bg-brand-blue text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:shadow-2xl hover:shadow-brand-blue/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                   >
                     {formState === 'loading' ? (
                       <>
-                        <LoadingSpinner size="sm" className="!border-white/20 !border-t-white" />
+                        <LoadingSpinner size="sm" className="!border-brand-blue/20 !border-t-brand-blue" />
                         Synchronizing...
                       </>
                     ) : (

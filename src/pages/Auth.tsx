@@ -140,10 +140,10 @@ export default function Auth() {
           <Link to="/" className="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center rotate-12 shadow-xl mb-6">
             <Music className="text-white w-8 h-8 -rotate-12" />
           </Link>
-          <h1 className="font-display text-4xl font-bold tracking-tighter text-center">
+          <h1 className="font-display text-4xl font-bold tracking-tighter text-center text-slate-900 uppercase">
             {mode === "login" ? "WELCOME BACK" : "CREATE ACCOUNT"}
           </h1>
-          <p className="text-brand-dark/50 text-sm mt-2">The future of distribution awaits you.</p>
+          <p className="text-slate-500 text-sm mt-2 font-medium">The future of distribution awaits you.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -155,7 +155,7 @@ export default function Auth() {
                 exit={{ opacity: 0, x: 20 }}
                 className="space-y-2"
               >
-                <label className="text-xs font-bold uppercase tracking-widest text-brand-dark/40 ml-4">Full Name</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-4">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/20" />
                   <input 
@@ -172,7 +172,7 @@ export default function Auth() {
           </AnimatePresence>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-brand-dark/40 ml-4">Email Address</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-4">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/20" />
               <input 
@@ -187,7 +187,7 @@ export default function Auth() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-brand-dark/40 ml-4">Password</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-4">Password</label>
             <div className="relative">
               <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/20" />
               <input 
@@ -215,7 +215,7 @@ export default function Auth() {
 
         <div className="mt-8 flex items-center gap-4">
           <div className="flex-1 h-[1px] bg-brand-dark/5"></div>
-          <span className="text-xs uppercase tracking-widest text-brand-dark/20 font-bold">Or continue with</span>
+          <span className="text-xs uppercase tracking-widest text-slate-400 font-bold">Or continue with</span>
           <div className="flex-1 h-[1px] bg-brand-dark/5"></div>
         </div>
 
@@ -229,11 +229,11 @@ export default function Auth() {
           <span className="text-sm font-medium">Google Account</span>
         </button>
 
-        <p className="text-center text-sm mt-8 text-brand-dark/40">
+        <p className="text-center text-sm mt-8 text-slate-500 font-medium">
           {mode === "login" ? "New to IND?" : "Already have an account?"}
           <Link 
             to={mode === "login" ? "/auth?mode=signup" : "/auth?mode=login"}
-            className="text-brand-blue font-bold ml-1 hover:underline"
+            className="text-brand-blue font-black ml-1 hover:underline"
           >
             {mode === "login" ? "Create Account" : "Sign In"}
           </Link>

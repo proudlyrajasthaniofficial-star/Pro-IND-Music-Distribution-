@@ -19,17 +19,14 @@ const PublicNavbar = () => {
 
   return (
     <nav className={cn(
-      "fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between mt-4 mx-auto max-w-7xl left-0 right-0 rounded-full border border-white/5 backdrop-blur-md transition-all duration-300",
-      isTransparent ? "bg-black/20" : "bg-white/80 border-slate-200 shadow-sm"
+      "fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur-xl border-b border-slate-100 transition-all duration-300 shadow-sm",
+      isTransparent ? "max-w-full mt-0 rounded-none border-x-0" : "max-w-7xl mt-4 rounded-full border shadow-lg"
     )}>
       <Link to="/" className="flex items-center gap-2 group">
         <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
           <Music className="text-white w-5 h-5" />
         </div>
-        <span className={cn(
-          "font-display font-bold tracking-tighter text-xl",
-          isTransparent ? "text-white" : "text-slate-900"
-        )}>
+        <span className="font-display font-bold tracking-tighter text-xl text-slate-900">
           IND<span className="text-brand-blue">.</span>
         </span>
       </Link>
@@ -40,10 +37,7 @@ const PublicNavbar = () => {
             <a 
               key={link.label}
               href={link.to} 
-              className={cn(
-                "text-[10px] font-black uppercase tracking-widest transition-colors",
-                isTransparent ? "text-white/60 hover:text-brand-blue" : "text-slate-500 hover:text-brand-blue"
-              )}
+              className="text-[10px] font-black uppercase tracking-widest transition-colors text-slate-500 hover:text-brand-blue"
             >
               {link.label}
             </a>
@@ -51,10 +45,7 @@ const PublicNavbar = () => {
             <Link 
               key={link.label}
               to={link.to} 
-              className={cn(
-                "text-[10px] font-black uppercase tracking-widest transition-colors",
-                isTransparent ? "text-white/60 hover:text-brand-blue" : "text-slate-500 hover:text-brand-blue"
-              )}
+              className="text-[10px] font-black uppercase tracking-widest transition-colors text-slate-500 hover:text-brand-blue"
             >
               {link.label}
             </Link>
@@ -65,10 +56,7 @@ const PublicNavbar = () => {
       <div className="flex items-center gap-4">
         <Link 
           to={user ? "/dashboard" : "/auth?mode=login"} 
-          className={cn(
-            "text-sm font-medium transition-colors",
-            isTransparent ? "text-white hover:text-brand-blue" : "text-slate-600 hover:text-brand-blue"
-          )}
+          className="text-sm font-bold text-slate-600 hover:text-brand-blue transition-colors"
         >
           {user ? "Dashboard" : "Login"}
         </Link>

@@ -58,7 +58,7 @@ const BlogPost = () => {
                   {post.category}
                 </span>
                 <div className="w-1 h-1 bg-slate-200 rounded-full" />
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   {post.date}
                 </span>
               </div>
@@ -71,7 +71,7 @@ const BlogPost = () => {
                 </div>
                 <div>
                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 leading-none mb-1">SK Ji</p>
-                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Founder & Developer</p>
+                   <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">Founder & Developer</p>
                 </div>
               </div>
             </motion.div>

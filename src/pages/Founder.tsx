@@ -128,13 +128,13 @@ const Founder = () => {
             transition={{ duration: 0.8 }}
             className="space-y-12"
           >
-            <div className="glass p-12 rounded-[4rem] relative overflow-hidden group hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
+            <div className="bg-slate-50 p-12 rounded-[4rem] relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-slate-100">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-purple/5 blur-3xl -z-10 group-hover:bg-brand-purple/10 transition-colors" />
               
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="text-xs font-black text-brand-blue uppercase tracking-[0.3em]">The Architect</p>
-                  <h2 className="text-6xl md:text-7xl font-display font-black tracking-tighter animate-text-shift">
+                  <h2 className="text-6xl md:text-7xl font-display font-black tracking-tighter text-slate-900 uppercase">
                     SK Ji
                   </h2>
                 </div>
@@ -184,13 +184,13 @@ const Founder = () => {
 
                  <div className="flex gap-4">
                    {[
-                     { icon: Instagram, color: "hover:text-pink-500" },
-                     { icon: Youtube, color: "hover:text-red-500" },
-                     { icon: Globe, color: "hover:text-brand-blue" }
+                     { icon: Instagram, color: "hover:text-pink-500 hover:bg-pink-50" },
+                     { icon: Youtube, color: "hover:text-red-500 hover:bg-red-50" },
+                     { icon: Globe, color: "hover:text-brand-blue hover:bg-blue-50" }
                    ].map((social, i) => (
                      <button 
                        key={i} 
-                       className={`w-20 h-20 glass rounded-3xl flex items-center justify-center ${social.color} transition-all hover:-translate-y-2 hover:shadow-2xl`}
+                       className={`w-20 h-20 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center ${social.color} transition-all hover:-translate-y-2 hover:shadow-xl`}
                      >
                        <social.icon className="w-6 h-6" />
                      </button>

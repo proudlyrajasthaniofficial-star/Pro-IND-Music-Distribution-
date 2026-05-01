@@ -58,7 +58,7 @@ const BlogList = () => {
                 </div>
                 
                 <div className="p-10 flex-1 flex flex-col">
-                  <div className="flex items-center gap-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">
+                  <div className="flex items-center gap-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">
                     <div className="flex items-center gap-2">
                        <Clock size={12} /> {post.date}
                     </div>

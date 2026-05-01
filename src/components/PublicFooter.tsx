@@ -15,30 +15,30 @@ import { cn } from '../lib/utils';
 
 const PublicFooter = () => {
   return (
-    <footer className="relative py-32 px-6 bg-slate-950 border-t border-white/5 overflow-hidden">
-      {/* Modern 3D Gradient Backgrounds */}
-      <div className="absolute top-0 left-1/4 w-[40rem] h-[40rem] bg-indigo-600/10 blur-[160px] rounded-full pointer-events-none animate-pulse"></div>
-      <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-pink-600/10 blur-[140px] rounded-full pointer-events-none"></div>
+    <footer className="relative py-32 px-6 bg-slate-50 border-t border-slate-200 overflow-hidden text-left">
+      {/* Subtle Gradient Backgrounds */}
+      <div className="absolute top-0 left-1/4 w-[40rem] h-[40rem] bg-brand-blue/5 blur-[160px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-neon-purple/5 blur-[140px] rounded-full pointer-events-none"></div>
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24 pb-24 border-b border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24 pb-24 border-b border-slate-200">
           <div className="col-span-1 lg:col-span-2 space-y-12">
             <Link to="/" className="flex items-center gap-4 group">
-              <div className="w-16 h-16 bg-linear-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center rotate-3 group-hover:rotate-12 transition-all duration-500 shadow-2xl shadow-indigo-500/20">
-                <Music className="text-white w-8 h-8 -rotate-3 group-hover:-rotate-12 transition-all duration-500" />
+              <div className="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center shadow-xl shadow-brand-blue/20">
+                <Music className="text-white w-8 h-8" />
               </div>
               <div className="flex flex-col">
-                <span className="font-display text-4xl font-black tracking-tighter text-white uppercase italic leading-none bg-linear-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                <span className="font-display text-4xl font-black tracking-tighter text-slate-900 uppercase leading-none">
                   IND Distribution
                 </span>
-                <span className="text-[11px] font-black tracking-[0.4em] text-indigo-400 uppercase mt-2 italic flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping"></span>
+                <span className="text-[11px] font-black tracking-[0.4em] text-brand-blue uppercase mt-2 italic flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse"></span>
                   Protocol v2.6 // 2026
                 </span>
               </div>
             </Link>
-            <p className="text-slate-400 max-w-md text-sm font-medium leading-relaxed italic opacity-80 text-left">
-              Music Distribution India Upload your music, we deliver your music on JioSaavn, Wynk Music, Gaana, Resso, Spotify and more 150+ music platforms. <br /><br />
+            <p className="text-slate-500 max-w-md text-sm font-medium leading-relaxed italic opacity-80">
+              IND Music Distribution India. Upload your music, we deliver your music on JioSaavn, Wynk Music, Gaana, Resso, Spotify and more 150+ music platforms. <br /><br />
               म्यूजिक डिस्ट्रीब्यूशन इंडिया पर अपना संगीत अपलोड करें, हम आपका संगीत JioSaavn, Wynk Music, Gaana, Resso, Spotify और अधिक 150+ संगीत प्लेटफार्मों पर वितरित करते हैं।
             </p>
             <div className="flex gap-4">
@@ -79,7 +79,7 @@ const PublicFooter = () => {
                 <li key={idx}>
                   <Link to={link.to} className="group flex items-center gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-indigo-500/0 group-hover:bg-indigo-500 transition-all scale-0 group-hover:scale-100"></div>
-                    <span className="text-sm font-bold text-slate-400 group-hover:text-white transition-all uppercase tracking-widest group-hover:translate-x-1 duration-300">
+                    <span className="text-sm font-bold text-slate-500 group-hover:text-brand-blue transition-all uppercase tracking-widest group-hover:translate-x-1 duration-300">
                       {link.label}
                     </span>
                   </Link>
@@ -133,7 +133,7 @@ const PublicFooter = () => {
                 <Cpu className="w-4 h-4 text-pink-400" />
                 <span className="text-pink-400 font-bold tracking-tighter">CPU_LOAD: 12%</span>
               </div>
-              <p className="font-bold">© 2026 IND Distribution // ARTIST_AUTH: <span className="text-white">SK JI</span></p>
+              <p className="font-bold">© 2026 IND Distribution // ARTIST_AUTH: <span className="text-brand-blue">SK JI</span></p>
             </div>
             
             <div className="flex items-center gap-6 backdrop-blur-xl bg-white/5 p-2 rounded-[1.5rem] border border-white/10 shadow-2xl">

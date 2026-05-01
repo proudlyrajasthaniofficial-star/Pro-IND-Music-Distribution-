@@ -156,7 +156,7 @@ export default function DashboardLayout() {
               </div>
               <div className="flex flex-col">
                 <span className="font-display text-2xl font-black tracking-tighter uppercase leading-none">IND<span className="text-brand-blue">.</span></span>
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mt-1">Nexus-G1</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mt-1">Nexus-G1</span>
               </div>
             </Link>
             <button 
@@ -179,12 +179,12 @@ export default function DashboardLayout() {
                     "flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all duration-500 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden",
                     isActive 
                       ? "bg-slate-950 text-white shadow-[0_20px_40px_-15px_rgba(15,23,42,0.3)] active-nav" 
-                      : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   )}
                 >
                   <item.icon className={cn(
                     "w-5 h-5 transition-transform duration-500 group-hover:scale-110", 
-                    isActive ? "text-brand-blue" : "text-slate-300"
+                    isActive ? "text-brand-blue" : "text-slate-400"
                   )} />
                   {item.label}
                   {isActive && (
@@ -230,7 +230,7 @@ export default function DashboardLayout() {
                  <p className="text-xs font-black truncate text-slate-800 uppercase tracking-tight">{profile?.displayName}</p>
                  <div className="flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-widest font-black">Authorized</span>
+                    <span className="text-[9px] text-emerald-600 uppercase tracking-widest font-black">Authorized</span>
                  </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 mr-2 group-hover:translate-x-1 transition-transform" />
@@ -271,7 +271,7 @@ export default function DashboardLayout() {
               <Search className="w-4 h-4 text-slate-300" />
               <input 
                 placeholder="Search global metadata or assets..."
-                className="bg-transparent border-none focus:ring-0 text-xs font-bold w-full placeholder:text-slate-200"
+                className="bg-transparent border-none focus:ring-0 text-xs font-bold w-full placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function DashboardLayout() {
                </div>
                <div className="flex flex-col ml-2">
                   <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none">Collaborators</span>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase mt-1">Synced & Online</span>
+                  <span className="text-[9px] font-bold text-slate-500 uppercase mt-1">Synced & Online</span>
                </div>
             </div>
 
