@@ -11,6 +11,7 @@ import * as userCtrl from "./controllers/userController.ts";
 import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
 import * as reqCtrl from "./controllers/requestController.ts";
+import * as aiCtrl from "./controllers/aiController.ts";
 import * as cashfreeService from "./services/cashfreeService.ts";
 import { admin, adminDb } from "./services/firebaseAdmin.ts";
 
@@ -326,6 +327,13 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   // Request Endpoints
   app.post("/api/requests/submit", reqCtrl.submitRequest);
   app.post("/api/requests/status-update", reqCtrl.updateRequestStatus);
+
+  // AI Proxy Endpoints
+  app.post("/api/ai/metadata", aiCtrl.proxyGenerateMetadata);
+  app.post("/api/ai/socials", aiCtrl.proxyGenerateSocialPosts);
+  app.post("/api/ai/bio", aiCtrl.proxyGenerateBio);
+  app.post("/api/ai/chat", aiCtrl.proxyChat);
+  app.post("/api/ai/audit", aiCtrl.proxyAnalyzeMetadata);
 
   // API Catch-all (Before static assets) - EXPLICIT 404
   app.all("/api/*", (req, res) => {
