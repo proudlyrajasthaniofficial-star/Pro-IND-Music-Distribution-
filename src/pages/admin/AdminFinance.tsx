@@ -5,6 +5,7 @@ import { Wallet, TrendingUp, ArrowUpRight, ArrowDownLeft, FileText, Plus, Search
 import { formatCurrency, cn } from "../../lib/utils";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function AdminFinance() {
   const [stats, setStats] = useState({
@@ -60,7 +61,7 @@ export default function AdminFinance() {
       const userData = uSnap.docs[0]?.data();
       
       if (!userData || (userData.walletBalance || 0) < w.amount) {
-        alert("Integrity Failure: User balance insufficient for liquidation.");
+        toast.error("Integrity Failure: User balance insufficient for liquidation.");
         return;
       }
 
@@ -78,10 +79,10 @@ export default function AdminFinance() {
         createdAt: new Date().toISOString()
       });
 
-      alert("Liquidity successfully disbursed.");
+      toast.success("Liquidity successfully disbursed.");
       window.location.reload();
     } catch (err) {
-      alert("Transmission Error");
+      toast.error("Transmission Error");
     }
   };
 
@@ -96,7 +97,7 @@ export default function AdminFinance() {
       const userData = uSnap.docs[0]?.data();
       
       if (!userData) {
-        alert("Target Identity Not Found");
+        toast.error("Target Identity Not Found");
         return;
       }
 
@@ -116,11 +117,11 @@ export default function AdminFinance() {
         createdAt: new Date().toISOString()
       });
 
-      alert("Royalties successfully credited.");
+      toast.success("Royalties successfully credited.");
       setShowUpload(false);
       window.location.reload();
     } catch (err) {
-      alert("Credit Failure");
+      toast.error("Credit Failure");
     }
   };
 

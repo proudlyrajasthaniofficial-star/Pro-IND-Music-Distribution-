@@ -52,6 +52,7 @@ export default function MyReleases() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -203,22 +204,30 @@ export default function MyReleases() {
                              </Link>
                            )}
                            {release.status === 'live' && (
-                             <button 
-                               onClick={async () => {
-                                 if (window.confirm("Are you sure you want to request a takedown for this release?")) {
+                             deletingId === release.id ? (
+                               <button 
+                                 onClick={async () => {
                                    try {
                                      await updateDoc(doc(db, "releases", release.id), { status: "takedown_requested" });
                                      setReleases(prev => prev.map(r => r.id === release.id ? { ...r, status: "takedown_requested" } : r));
                                      toast.success("Takedown protocol initiated.");
+                                     setDeletingId(null);
                                    } catch (err) {
                                      toast.error("Failed to initiate takedown.");
                                    }
-                                 }
-                               }}
-                               className="flex-1 py-3 bg-rose-500/80 backdrop-blur-md text-white rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-rose-600 transition-all"
-                             >
-                               Takedown
-                             </button>
+                                 }}
+                                 className="flex-1 py-3 bg-red-600 backdrop-blur-md text-white rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-red-700 transition-all cursor-pointer"
+                               >
+                                 CONFIRM TAKEDOWN
+                               </button>
+                             ) : (
+                               <button 
+                                 onClick={() => setDeletingId(release.id)}
+                                 className="flex-1 py-3 bg-rose-500/80 backdrop-blur-md text-white rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-rose-600 transition-all cursor-pointer"
+                               >
+                                 Takedown
+                               </button>
+                             )
                            )}
                         </div>
                      </div>

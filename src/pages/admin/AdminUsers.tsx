@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { collection, getDocs, query, orderBy, updateDoc, doc, where } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, updateDoc, doc, where, deleteDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { 
   Users, 
@@ -11,9 +11,11 @@ import {
   Wallet, 
   Mail,
   Disc,
-  ArrowUpRight 
+  ArrowUpRight,
+  Trash2 
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
@@ -35,13 +37,19 @@ export default function AdminUsers() {
     try {
       await updateDoc(doc(db, "users", userId), { status: nextStatus });
       setUsers(users.map(u => u.id === userId ? { ...u, status: nextStatus } : u));
+      if (selectedUser?.id === userId) {
+        setSelectedUser({ ...selectedUser, status: nextStatus });
+      }
+      toast.success(`User status updated to ${nextStatus.toUpperCase()}`);
     } catch (err) {
-      alert("Failed to update status");
+      console.error(err);
+      toast.error("Failed to update status");
     }
   };
 
   const [adjustingBalance, setAdjustingBalance] = useState<any>(null);
   const [newBalance, setNewBalance] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const updateBalance = async () => {
     if (!adjustingBalance) return;
@@ -51,10 +59,27 @@ export default function AdminUsers() {
     try {
       await updateDoc(doc(db, "users", adjustingBalance.id), { walletBalance: bal });
       setUsers(users.map(u => u.id === adjustingBalance.id ? { ...u, walletBalance: bal } : u));
+      if (selectedUser?.id === adjustingBalance.id) {
+        setSelectedUser({ ...selectedUser, walletBalance: bal });
+      }
       setAdjustingBalance(null);
-      alert("Treasury balance updated.");
+      toast.success("Treasury balance updated.");
     } catch (err) {
-      alert("Adjustment failed.");
+      toast.error("Adjustment failed.");
+    }
+  };
+
+  const deleteUser = async (userId: string, email: string) => {
+    setDeletingId(null);
+    const tId = toast.loading(`Removing user ${email}...`);
+    try {
+      await deleteDoc(doc(db, "users", userId));
+      setUsers(users.filter(u => u.id !== userId));
+      setSelectedUser(null);
+      toast.success("User deleted", { id: tId });
+    } catch (err: any) {
+      console.error("User deletion failed:", err);
+      toast.error(`Failed: ${err.code || err.message}`, { id: tId });
     }
   };
 
@@ -234,16 +259,41 @@ export default function AdminUsers() {
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Total Releases</p>
                     <h3 className="text-3xl font-black text-white font-display">{userReleases.length}</h3>
                  </div>
-                 <div className="bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-800 flex items-center justify-center">
+                 <div className="bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-800 flex flex-col gap-4">
                     <button 
                       onClick={() => toggleStatus(selectedUser.id, selectedUser.status)}
                       className={cn(
                         "w-full py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg",
-                        selectedUser.status === 'active' ? "bg-rose-500 text-white shadow-rose-900/20" : "bg-emerald-500 text-white shadow-emerald-900/20"
+                        selectedUser.status === 'active' ? "bg-rose-500/20 text-rose-500 border border-rose-500/30" : "bg-emerald-500 text-white shadow-emerald-900/20"
                       )}
                     >
                       {selectedUser.status === 'active' ? 'Suspend Account' : 'Reactivate Account'}
                     </button>
+                    {deletingId === selectedUser.id ? (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          deleteUser(selectedUser.id, selectedUser.email);
+                        }}
+                        className="w-full py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-rose-900/20 flex items-center justify-center gap-2 relative z-10"
+                      >
+                        Confirm Permanent Delete
+                      </button>
+                    ) : (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDeletingId(selectedUser.id);
+                        }}
+                        className="w-full py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-rose-900/20 flex items-center justify-center gap-2 relative z-10"
+                      >
+                        <Trash2 className="w-4 h-4" /> Permanent Delete
+                      </button>
+                    )}
                  </div>
               </div>
 

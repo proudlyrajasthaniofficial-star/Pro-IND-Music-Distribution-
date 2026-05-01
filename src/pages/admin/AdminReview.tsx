@@ -74,13 +74,15 @@ export default function AdminReview() {
       await updateDoc(doc(db, "releases", releaseId!), { [updateKey]: url });
       setRelease((prev: any) => ({ ...prev, [updateKey]: url }));
     } catch (err) {
-      alert("Media transmission failed during override.");
+      toast.error("Media transmission failed during override.");
     } finally {
       setReplacingMedia(null);
     }
   };
 
-   useEffect(() => {
+   const [takedownConfirm, setTakedownConfirm] = useState(false);
+
+  useEffect(() => {
     const fetchRelease = async () => {
       if (!releaseId) return;
       const d = await getDoc(doc(db, "releases", releaseId));
@@ -152,7 +154,7 @@ export default function AdminReview() {
       const result = await analyzeReleaseMetadata(formData);
       setAiResult(result);
     } catch (err) {
-      alert("AI Analysis failed. Check console for logs.");
+      toast.error("AI Analysis failed. Check console for logs.");
     } finally {
       setAiChecking(false);
     }
@@ -236,17 +238,26 @@ export default function AdminReview() {
               </button>
             )}
             {release.status === 'takedown_requested' && (
-              <button 
-                onClick={() => {
-                  if (window.confirm("Confirm completion of takedown?")) {
+              takedownConfirm ? (
+                <button 
+                  onClick={() => {
                     handleUpdate("completed");
-                  }
-                }}
-                disabled={saving}
-                className="flex-1 lg:flex-none px-6 md:px-8 py-2.5 md:py-3 bg-emerald-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/40 hover:bg-emerald-500 transition-all uppercase tracking-widest"
-              >
-                 <Check className="w-4 h-4 md:w-5 md:h-5" /> COMPLETE TAKEDOWN
-              </button>
+                    setTakedownConfirm(false);
+                  }}
+                  disabled={saving}
+                  className="flex-1 lg:flex-none px-6 md:px-8 py-2.5 md:py-3 bg-red-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-900/40 hover:bg-red-500 transition-all uppercase tracking-widest cursor-pointer"
+                >
+                  <Check className="w-4 h-4 md:w-5 md:h-5" /> CONFIRM COMPLETION
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setTakedownConfirm(true)}
+                  disabled={saving}
+                  className="flex-1 lg:flex-none px-6 md:px-8 py-2.5 md:py-3 bg-emerald-600 text-white rounded-xl md:rounded-2xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/40 hover:bg-emerald-500 transition-all uppercase tracking-widest cursor-pointer"
+                >
+                   <Check className="w-4 h-4 md:w-5 md:h-5" /> COMPLETE TAKEDOWN
+                </button>
+              )
             )}
          </div>
       </div>

@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
-import { Mic2, Search, MoreVertical, Globe, Smartphone, CheckCircle, ShieldCheck } from "lucide-react";
+import { Mic2, Search, MoreVertical, Globe, Smartphone, CheckCircle, ShieldCheck, Trash2 } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 export default function AdminArtists() {
   const [artists, setArtists] = useState<any[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const deleteArtist = async (id: string, name: string) => {
+    setDeletingId(null);
+    const tId = toast.loading(`Removing artist "${name}"...`);
+    try {
+      await deleteDoc(doc(db, "artists", id));
+      setArtists(prev => prev.filter(a => a.id !== id));
+      toast.success("Artist record removed", { id: tId });
+    } catch (err: any) {
+      console.error("Artist deletion failed:", err);
+      toast.error(`Failed: ${err.code || err.message}`, { id: tId });
+    }
+  };
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -40,9 +55,37 @@ export default function AdminArtists() {
                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-[1.5rem] md:rounded-[2rem] bg-slate-800 flex items-center justify-center border-4 border-slate-900 group-hover:rotate-6 transition-transform shadow-2xl">
                     <Mic2 className="w-8 h-8 md:w-10 md:h-10 text-brand-purple" />
                  </div>
-                 <button className="p-3 text-slate-600 hover:text-white transition-colors">
-                    <MoreVertical className="w-5 h-5" />
-                 </button>
+                 <div className="flex gap-2">
+                    {deletingId === artist.id ? (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          deleteArtist(artist.id, artist.name);
+                        }}
+                        className="px-4 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all relative z-10"
+                      >
+                        Confirm
+                      </button>
+                    ) : (
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDeletingId(artist.id);
+                        }}
+                        className="p-3 text-rose-500 hover:text-white hover:bg-rose-500/20 rounded-xl transition-all relative z-10"
+                        title="Permanent Delete"
+                      >
+                         <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                    <button className="p-3 text-slate-600 hover:text-white transition-colors">
+                       <MoreVertical className="w-5 h-5" />
+                    </button>
+                 </div>
               </div>
               <div className="space-y-2 mb-8">
                  <h3 className="text-2xl font-black font-display text-white uppercase tracking-tight flex items-center gap-2">

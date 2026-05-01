@@ -1,13 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 0. Global Safety Net
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
+    
     // -------------------------------------------------------------------------
-    // Phase 3: Primitive Definitions & Helpers
+    // HELPERS
     // -------------------------------------------------------------------------
     
     function isSignedIn() {
@@ -18,167 +14,109 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
-    }
-
-    function incoming() {
-      return request.resource.data;
-    }
-
-    function existing() {
-      return resource.data;
-    }
-
-    // Hardcoded master admins from AuthContext.tsx logic
+    // MASTER ADMIN BYPASS
+    // These users have TOTAL authority over the database.
     function isMasterAdmin() {
       return isSignedIn() && (
-        request.auth.token.email in ["musicdistributionindia.in@gmail.com", "summyskji@gmail.com"] &&
-        request.auth.token.email_verified == true
+        request.auth.token.email == "musicdistributionindia.in@gmail.com" || 
+        request.auth.token.email == "summyskji@gmail.com"
       );
     }
 
+    // Role-based Admin check (lookup in users collection)
     function isAdmin() {
-      return isMasterAdmin() || (isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'artist') == 'admin');
+      return isMasterAdmin() || (
+        isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'artist') == 'admin'
+      );
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // -------------------------------------------------------------------------
+    // GLOBAL BYPASS - Evaluated first for efficiency
+    // -------------------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if isMasterAdmin();
     }
 
     // -------------------------------------------------------------------------
-    // Validation Helpers (The Blueprint)
+    // COLLECTION SPECIFIC RULES
     // -------------------------------------------------------------------------
-
-    function isValidUser(data) {
-      return data.keys().hasAll(['uid', 'email', 'role']) &&
-             data.uid is string && data.uid.size() <= 128 &&
-             data.email is string && data.email.size() <= 256 &&
-             data.role in ['artist', 'admin'];
-    }
-
-    function isValidRelease(data) {
-      return data.keys().hasAll(['userId', 'title', 'artist', 'status', 'createdAt']) &&
-             data.userId == request.auth.uid &&
-             data.title is string && data.title.size() <= 200 &&
-             data.artist is string && data.artist.size() <= 200 &&
-             data.status in ['pending', 'approved', 'live', 'rejected'];
-    }
-
-    function isValidTransaction(data) {
-      return data.keys().hasAll(['userId', 'amount', 'type', 'createdAt']) &&
-             data.userId == request.auth.uid &&
-             data.amount is number &&
-             data.type in ['earning', 'withdrawal', 'subscription'];
-    }
-
-    // -------------------------------------------------------------------------
-    // match blocks
-    // -------------------------------------------------------------------------
-
-    match /system/{statusId} {
-      allow read: if true; // Public health check
-    }
-
-    match /system_notifications/{notifId} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
-    }
 
     match /users/{userId} {
-      // Pillar 8: Explicit check against userId
       allow get: if isOwner(userId) || isAdmin();
-      allow list: if isAdmin(); // Only admins can list all users
-      
-      allow create: if isOwner(userId) && isValidUser(incoming()) && incoming().role == 'artist';
-      allow update: if (isOwner(userId) || isAdmin()) && (
-        // Allow updating specific fields like planId or walletBalance
-        incoming().diff(existing()).affectedKeys().hasOnly(['planId', 'displayName', 'artistName', 'walletBalance', 'lastPaymentId', 'subscriptionStatus', 'updatedAt'])
-      );
-    }
-
-    match /plans/{planId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    match /subscriptions/{subId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow write: if isAdmin(); // Usually created by system/admin via webhook or portal
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && incoming().role == 'artist';
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /releases/{releaseId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && isValidRelease(incoming());
-      allow update: if isSignedIn() && (
-        (isOwner(existing().userId) && existing().status == 'pending' && isValidRelease(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'artist', 'coverUrl', 'audioUrl'])) ||
-        isAdmin()
-      );
-      allow delete: if isAdmin(); // Restrict deletions to admin
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /artists/{artistId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /labels/{labelId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
     }
 
     match /transactions/{txId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isMasterAdmin(); // Transactions should be server-side mostly
       allow write: if isAdmin();
     }
 
-    match /user_notifications/{notifId} {
+    match /system_notifications/{nId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /user_notifications/{nId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow create, delete: if isAdmin();
-    }
-
-    match /artists/{artistId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
-      allow delete: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
-    }
-
-    match /labels/{labelId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
-      allow delete: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
-    }
-
-    match /user_requests/{requestId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
     }
 
     match /withdrawals/{wId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
-    }
-
-    match /oac_requests/{oacId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow create: if isSignedIn();
       allow update, delete: if isAdmin();
     }
 
-    match /content_id_requests/{cidId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+    match /oac_requests/{id} {
+      allow read, create: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow update, delete: if isAdmin();
     }
 
-    match /support_tickets/{ticketId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isSignedIn() && (isOwner(existing().userId) || isAdmin());
+    match /content_id_requests/{id} {
+      allow read, create: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    match /support_tickets/{id} {
+      allow read, create: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
     }
 
-    match /request_logs/{logId} {
-      allow read: if isAdmin();
-      allow create: if isAdmin();
-      allow update, delete: if false;
+    match /plans/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
-    match /royalty_reports/{reportId} {
+    match /royalty_reports/{id} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow write: if isAdmin();
     }

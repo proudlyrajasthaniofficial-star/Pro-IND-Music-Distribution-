@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 
 const STATUS_FILTERS = [
   { id: 'all', label: 'All Requests' },
@@ -64,7 +65,7 @@ export default function AdminWithdrawals() {
         const userData = uSnap.docs[0]?.data();
 
         if (!userData || (userData.walletBalance || 0) < withdrawal.amount) {
-           alert("Insufficient funds in user treasury for this liquidation.");
+           toast.error("Insufficient funds in user treasury for this liquidation.");
            setProcessing(false);
            return;
         }
@@ -93,10 +94,10 @@ export default function AdminWithdrawals() {
 
       setSelectedWithdrawal(null);
       fetchWithdrawals();
-      alert(`Withdrawal signal ${status} successfully.`);
+      toast.success(`Withdrawal signal ${status} successfully.`);
     } catch (err) {
       console.error(err);
-      alert("Transmission Failure.");
+      toast.error("Transmission Failure.");
     } finally {
       setProcessing(false);
     }

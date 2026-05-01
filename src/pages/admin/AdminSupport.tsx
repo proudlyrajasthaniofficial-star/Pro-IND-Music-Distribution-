@@ -4,6 +4,7 @@ import { db } from "../../lib/firebase";
 import { MessageSquare, Search, Clock, CheckCircle2, AlertCircle, Mail, User, ArrowRight } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export default function AdminSupport() {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -25,8 +26,9 @@ export default function AdminSupport() {
     try {
       await updateDoc(doc(db, "support_tickets", id), { status });
       setTickets(tickets.map(t => t.id === id ? { ...t, status } : t));
+      toast.success(`Ticket marked as ${status}`);
     } catch (err) {
-      alert("Status update failed.");
+      toast.error("Status update failed.");
     }
   };
 

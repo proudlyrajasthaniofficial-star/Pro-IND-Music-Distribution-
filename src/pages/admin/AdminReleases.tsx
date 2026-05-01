@@ -1,26 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
-import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 export default function AdminReleases() {
   const [releases, setReleases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const deleteRelease = async (id: string, title: string) => {
+    setDeletingId(null);
+    const tId = toast.loading(`Permanently removing "${title}"...`);
+    try {
+      await deleteDoc(doc(db, "releases", id));
+      setReleases(prev => prev.filter(r => r.id !== id));
+      toast.success("Release deleted successfully", { id: tId });
+    } catch (err: any) {
+      console.error("Deletion failed:", err);
+      toast.error(`Deletion failed: ${err.code || err.message || "Unknown error"}`, { id: tId });
+    }
+  };
 
   useEffect(() => {
     const fetchReleases = async () => {
-      const q = query(collection(db, "releases"), orderBy("createdAt", "desc"));
-      const snap = await getDocs(q);
-      setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setLoading(false);
+      try {
+        const q = query(collection(db, "releases"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error("Error fetching releases:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchReleases();
   }, []);
 
   const filtered = releases.filter(r => filter === "all" || r.status === filter);
+
+  if (loading) {
+     return <div className="py-40 text-center animate-pulse font-black text-xs uppercase tracking-widest text-slate-500">Initializing Global Data Stream...</div>;
+  }
 
   return (
     <div className="space-y-10">
@@ -32,12 +56,12 @@ export default function AdminReleases() {
         <div className="flex gap-2 md:gap-4 overflow-x-auto pb-2 scrollbar-hide py-1 max-w-full">
            {["all", "pending", "action_required", "approved", "in_progress", "live", "takedown_requested", "completed", "rejected"].map(f => (
              <button 
-               key={f}
-               onClick={() => setFilter(f)}
-               className={cn(
-                 "px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                 filter === f ? "bg-brand-purple text-white shadow-xl shadow-purple-900/40" : "bg-slate-800 text-slate-500 hover:text-white"
-               )}
+                key={f}
+                onClick={() => setFilter(f)}
+                className={cn(
+                  "px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                  filter === f ? "bg-brand-purple text-white shadow-xl shadow-purple-900/40" : "bg-slate-800 text-slate-500 hover:text-white"
+                )}
              >
                {f.replace(/_/g, " ").toUpperCase()}
              </button>
@@ -52,15 +76,14 @@ export default function AdminReleases() {
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                   <th className="px-12 py-8">Asset</th>
                   <th className="px-6 py-8">Primary Details</th>
-                  <th className="px-6 py-8">Technical Credits</th>
                   <th className="px-6 py-8">Status</th>
                   <th className="px-6 py-8">Identifiers</th>
-                  <th className="px-12 py-8 text-right">Action</th>
+                  <th className="px-12 py-8 text-right">Actions</th>
                </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
                {filtered.map((r, i) => (
-                 <tr key={i} className="group hover:bg-slate-800/50 transition-colors">
+                 <tr key={r.id} className="group hover:bg-slate-800/50 transition-colors">
                     <td className="px-12 py-8">
                        <div className="flex items-center gap-6">
                           <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
@@ -75,16 +98,6 @@ export default function AdminReleases() {
                     <td className="px-6 py-8 text-sm">
                        <p className="font-bold text-white uppercase text-xs truncate max-w-[150px]">{r.artist || r.singerName}</p>
                        <p className="text-slate-500 mt-1 text-[10px] font-medium truncate max-w-[150px]">{r.labelName || r.label || "Independent"}</p>
-                       <div className="flex gap-2 mt-2">
-                          <span className="px-2 py-0.5 bg-slate-800 text-slate-400 text-[8px] font-black rounded uppercase">{r.language}</span>
-                          <span className="px-2 py-0.5 bg-slate-800 text-slate-400 text-[8px] font-black rounded uppercase">{r.primaryGenre}</span>
-                       </div>
-                    </td>
-                    <td className="px-6 py-8 text-[10px] font-medium text-slate-400 space-y-1">
-                       <p className="truncate max-w-[150px]"><span className="text-slate-600 font-bold uppercase mr-1">Artist:</span> {r.artist || r.singerName}</p>
-                       <p className="truncate max-w-[150px]"><span className="text-slate-600 font-bold uppercase mr-1">Lyricist:</span> {r.lyricist}</p>
-                       <p className="truncate max-w-[150px]"><span className="text-slate-600 font-bold uppercase mr-1">Composer:</span> {r.composer}</p>
-                       <p className="truncate max-w-[150px]"><span className="text-slate-600 font-bold uppercase mr-1">Producer:</span> {r.producer}</p>
                     </td>
                     <td className="px-6 py-8">
                        <span className={cn(
@@ -98,17 +111,50 @@ export default function AdminReleases() {
                           {r.status?.toUpperCase()}
                        </span>
                     </td>
-                    <td className="px-6 py-8 font-mono text-xs text-slate-500">
+                    <td className="px-6 py-8 font-mono text-xs text-slate-500 text-left">
                        <p>ISRC: {r.isrc || "---"}</p>
                        <p>UPC: {r.upc || "---"}</p>
                     </td>
                     <td className="px-12 py-8 text-right">
-                       <Link to={`/admin/review/${r.id}`} className="p-3 bg-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-brand-purple transition-all inline-flex">
-                          <ArrowRight className="w-5 h-5" />
-                       </Link>
+                       <div className="flex items-center justify-end gap-3">
+                          <Link to={`/admin/review/${r.id}`} className="p-3 bg-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-brand-purple transition-all inline-flex">
+                             <ArrowRight className="w-5 h-5" />
+                          </Link>
+                          {deletingId === r.id ? (
+                            <button 
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                deleteRelease(r.id, r.title || r.songName);
+                              }}
+                              className="px-4 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all inline-flex cursor-pointer relative z-10"
+                            >
+                              Confirm
+                            </button>
+                          ) : (
+                            <button 
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setDeletingId(r.id);
+                              }}
+                              className="p-3 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all inline-flex cursor-pointer relative z-10"
+                              title="Permanent Delete"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          )}
+                       </div>
                     </td>
                  </tr>
                ))}
+               {filtered.length === 0 && (
+                 <tr>
+                    <td colSpan={5} className="px-12 py-24 text-center text-slate-500 font-bold uppercase tracking-widest">No matching releases discovered in this sector.</td>
+                 </tr>
+               )}
             </tbody>
          </table>
       </div>

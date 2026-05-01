@@ -231,7 +231,7 @@ export default function GalaxyBackground() {
       />
       
       {/* Overlay for grid/texture and Live Milky Way */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay overflow-hidden pointer-events-none">
         {/* Milky Way Band - Enhanced with 3D depth feel */}
         <motion.div
           animate={{
