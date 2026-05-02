@@ -46,30 +46,19 @@ export default function Overview() {
     if (!user) return;
     setError(null);
 
-    // Fetch Recent Releases (Real-time)
-    const qRecent = query(
-      collection(db, "releases"), 
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc"),
-      limit(4)
-    );
-    const unsubRecent = onSnapshot(qRecent, (snap) => {
-      setRecentReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    }, (err) => {
-      console.error("Recent releases snapshot error:", err);
-      setError("Synchronization error with music catalog. Retrying...");
-    });
-
     // Fetch All Releases for stats (Real-time)
     const qAll = query(collection(db, "releases"), where("userId", "==", user.uid));
     const unsubAll = onSnapshot(qAll, (snap) => {
-      const allData = snap.docs.map(d => d.data());
+      const allData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       setStats({
         total: allData.length,
         live: allData.filter((r: any) => r.status === 'live').length,
         pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved').length,
         rejected: allData.filter((r: any) => r.status === 'rejected').length
       });
+      // Derive recent
+      const sorted = [...allData].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+      setRecentReleases(sorted.slice(0, 4));
     }, (err) => {
       console.error("All releases stats snapshot error:", err);
       // Fail silently for dashboard visuals to prevent crash
@@ -78,9 +67,7 @@ export default function Overview() {
     // Fetch Earnings for Chart
     const qEarnings = query(
       collection(db, "transactions"),
-      where("userId", "==", user.uid),
-      where("type", "==", "earning"),
-      orderBy("createdAt", "asc")
+      where("userId", "==", user.uid)
     );
     const unsubEarnings = onSnapshot(qEarnings, (snap) => {
       const earningsByDay: Record<string, number> = {};
@@ -92,8 +79,8 @@ export default function Overview() {
 
       last7Days.forEach(day => earningsByDay[day] = 0);
 
-      snap.docs.forEach(doc => {
-        const data = doc.data();
+      const allEarnings = snap.docs.map(d => d.data()).filter(d => d.type === 'earning');
+      allEarnings.forEach(data => {
         const date = new Date(data.createdAt).toLocaleDateString('en-US', { weekday: 'short' });
         if (earningsByDay[date] !== undefined) {
           earningsByDay[date] += data.amount;
@@ -114,7 +101,6 @@ export default function Overview() {
 
     return () => {
       unsubNews();
-      unsubRecent();
       unsubAll();
       unsubEarnings();
     };

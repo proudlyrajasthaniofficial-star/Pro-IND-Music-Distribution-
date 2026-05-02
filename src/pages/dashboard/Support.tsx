@@ -19,9 +19,12 @@ export default function Support() {
   const fetchTickets = async () => {
     if (!user) return;
     try {
-      const q = query(collection(db, "support_tickets"), where("userId", "==", user.uid), orderBy("createdAt", "desc"));
+      const q = query(collection(db, "support_tickets"), where("userId", "==", user.uid));
       const snap = await getDocs(q);
-      setTickets(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const sorted = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
+      setTickets(sorted);
     } catch (err) {
       console.error("Support fetch error:", err);
     } finally {

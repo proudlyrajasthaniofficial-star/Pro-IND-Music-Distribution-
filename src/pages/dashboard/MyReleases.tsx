@@ -60,12 +60,14 @@ export default function MyReleases() {
     setLoading(true);
     const q = query(
       collection(db, "releases"), 
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc")
+      where("userId", "==", user.uid)
     );
 
     const unsubscribe = onSnapshot(q, (snap) => {
-      setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const sorted = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
+      setReleases(sorted);
       setLoading(false);
     }, (err) => {
       console.error("Releases snapshot error:", err);

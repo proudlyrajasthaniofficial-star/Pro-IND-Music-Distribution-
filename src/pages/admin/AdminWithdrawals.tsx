@@ -38,12 +38,15 @@ export default function AdminWithdrawals() {
 
   const fetchWithdrawals = async () => {
     setLoading(true);
-    let q = query(collection(db, "withdrawals"), orderBy("createdAt", "desc"));
+    let q = query(collection(db, "withdrawals"));
     if (filter !== "all") {
-      q = query(collection(db, "withdrawals"), where("status", "==", filter), orderBy("createdAt", "desc"));
+      q = query(collection(db, "withdrawals"), where("status", "==", filter));
     }
     const snap = await getDocs(q);
-    setWithdrawals(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    const sorted = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+       return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+    });
+    setWithdrawals(sorted);
     setLoading(false);
   };
 

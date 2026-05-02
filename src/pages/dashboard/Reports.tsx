@@ -27,8 +27,10 @@ export default function Reports() {
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
-      const snap = await getDocs(query(collection(db, "royalty_reports"), where("userId", "==", user.uid), orderBy("period", "desc")));
-      const reportData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const snap = await getDocs(query(collection(db, "royalty_reports"), where("userId", "==", user.uid)));
+      const reportData = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         return (b.period || "").localeCompare(a.period || "");
+      });
       setReports(reportData);
 
       // Simple chart data from reports

@@ -35,8 +35,13 @@ export default function OACRequest() {
     const aSnap = await getDocs(query(collection(db, "artists"), where("userId", "==", user.uid)));
     setArtists(aSnap.docs.map(d => ({ id: d.id, ...d.data() })));
 
-    const qSnap = await getDocs(query(collection(db, "oac_requests"), where("userId", "==", user.uid), orderBy("createdAt", "desc")));
-    setRequests(qSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+    const qSnap = await getDocs(query(collection(db, "oac_requests"), where("userId", "==", user.uid)));
+    const sortedDocs = qSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+       return dateB - dateA;
+    });
+    setRequests(sortedDocs);
     
     setLoading(false);
   };

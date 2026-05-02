@@ -44,12 +44,12 @@ export default function WalletPage() {
       try {
         const wQ = query(
           collection(db, "withdrawals"), 
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc"),
-          limit(20)
+          where("userId", "==", user.uid)
         );
         const wSnap = await getDocs(wQ);
-        setWithdrawals(wSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setWithdrawals(wSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }).slice(0, 20));
       } catch (e: any) {
         console.error("Error fetching withdrawals:", e);
       }
@@ -58,12 +58,12 @@ export default function WalletPage() {
       try {
         const tQ = query(
           collection(db, "transactions"),
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc"),
-          limit(10)
+          where("userId", "==", user.uid)
         );
         const tSnap = await getDocs(tQ);
-        setTransactions(tSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setTransactions(tSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }).slice(0, 10));
       } catch (e: any) {
          console.error("Error fetching transactions:", e);
       }

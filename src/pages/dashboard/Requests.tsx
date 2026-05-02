@@ -88,12 +88,16 @@ export default function Requests() {
 
     const q = query(
       collection(db, "user_requests"),
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc")
+      where("userId", "==", user.uid)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setRequests(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserRequest)));
+      const sorted = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserRequest)).sort((a: any, b: any) => {
+        let dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+        let dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+        return dateB - dateA;
+      });
+      setRequests(sorted);
       setLoading(false);
     }, (err) => {
       console.error("User requests snapshot error:", err);
@@ -517,6 +521,7 @@ export default function Requests() {
                       </div>
 
                       <button 
+                        type="submit"
                         disabled={formLoading}
                         className="w-full py-6 bg-slate-950 text-white rounded-[2.5rem] font-black text-xs uppercase tracking-[.4em] shadow-2xl hover:shadow-brand-blue/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                       >

@@ -93,11 +93,13 @@ export default function AdminUsers() {
     try {
       const q = query(
         collection(db, "releases"),
-        where("userId", "==", user.id),
-        orderBy("createdAt", "desc")
+        where("userId", "==", user.id)
       );
       const snap = await getDocs(q);
-      setUserReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const sorted = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
+      setUserReleases(sorted);
     } catch (err) {
       console.error("Error fetching user releases:", err);
     } finally {
