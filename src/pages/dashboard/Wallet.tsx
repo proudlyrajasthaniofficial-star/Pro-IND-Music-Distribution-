@@ -33,7 +33,11 @@ export default function WalletPage() {
   const [submitting, setSubmitting] = useState(false);
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState("Bank Transfer");
-  const [details, setDetails] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
+  const [upiId, setUpiId] = useState("");
   const [showForm, setShowForm] = useState(false);
 
   const fetchData = async () => {
@@ -87,6 +91,21 @@ export default function WalletPage() {
       return;
     }
 
+    let submitDetails = "";
+    if (method === "Bank Transfer") {
+       if (!bankName || !accountName || !accountNumber || !ifscCode) {
+          toast.error("Please fill all bank details");
+          return;
+       }
+       submitDetails = `Bank: ${bankName}\nName: ${accountName}\nA/C: ${accountNumber}\nIFSC: ${ifscCode}`;
+    } else {
+       if (!upiId) {
+          toast.error("Please enter your UPI ID");
+          return;
+       }
+       submitDetails = `UPI: ${upiId}`;
+    }
+
     setSubmitting(true);
     try {
       await addDoc(collection(db, "withdrawals"), {
@@ -94,7 +113,7 @@ export default function WalletPage() {
         userName: profile?.displayName || "Artist",
         amount: withdrawAmount,
         method,
-        details,
+        details: submitDetails,
         status: "pending",
         createdAt: new Date().toISOString()
       });
@@ -107,7 +126,11 @@ export default function WalletPage() {
       });
 
       setAmount("");
-      setDetails("");
+      setBankName("");
+      setAccountName("");
+      setAccountNumber("");
+      setIfscCode("");
+      setUpiId("");
       setShowForm(false);
       fetchData();
       toast.success("Withdrawal request initiated. Expected processing: 3-5 business rotations.");
@@ -357,16 +380,20 @@ export default function WalletPage() {
                            </div>
                         </div>
 
-                        <div className="space-y-2 text-left">
+                        <div className="space-y-4 text-left">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Account Metadata</label>
-                           <textarea 
-                              required
-                              rows={4}
-                              value={details}
-                              onChange={e => setDetails(e.target.value)}
-                              placeholder={method === "Bank Transfer" ? "Account Name, Number, IFSC Code..." : "UPI ID / VPA ..."}
-                              className="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all shadow-inner leading-relaxed"
-                           />
+                           {method === "Bank Transfer" ? (
+                              <div className="space-y-3">
+                                 <input type="text" value={bankName} onChange={e => setBankName(e.target.value)} required placeholder="Bank Name" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={accountName} onChange={e => setAccountName(e.target.value)} required placeholder="Account Holder Name" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={accountNumber} onChange={e => setAccountNumber(e.target.value)} required placeholder="Account Number" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={ifscCode} onChange={e => setIfscCode(e.target.value)} required placeholder="IFSC Code" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                              </div>
+                           ) : (
+                              <div className="space-y-3">
+                                 <input type="text" value={upiId} onChange={e => setUpiId(e.target.value)} required placeholder="Enter UPI ID (e.g., name@ybl)" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                              </div>
+                           )}
                         </div>
 
                         <button 

@@ -144,7 +144,7 @@ export default function PricingSection() {
       price: billingCycle === 'yearly' ? 999 : 99,
       popular: true,
       highlight: "MOST POPULAR",
-      customGradient: "bg-linear-to-r from-blue-600 to-purple-600",
+      customGradient: "bg-gradient-to-r from-brand-blue to-purple-600",
       tag: "Best for Beginners",
       features: [
         "Up to 5 Song Releases",
@@ -235,18 +235,18 @@ export default function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 relative overflow-hidden bg-white text-[#111]">
+    <section id="pricing" className="py-32 px-6 relative overflow-hidden bg-[#0a0a0b] text-white">
       {/* Background Animated Waves/Gradients */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
         <motion.div 
           animate={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-[20%] -right-[10%] w-[70rem] h-[70rem] bg-indigo-50/50 blur-[120px] rounded-full" 
+          className="absolute -top-[20%] -right-[10%] w-[70rem] h-[70rem] bg-brand-blue/10 blur-[150px] rounded-full" 
         />
         <motion.div 
           animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 0] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-[20%] -left-[10%] w-[60rem] h-[60rem] bg-purple-50/50 blur-[120px] rounded-full" 
+          className="absolute -bottom-[20%] -left-[10%] w-[60rem] h-[60rem] bg-neon-purple/10 blur-[150px] rounded-full" 
         />
       </div>
 
@@ -256,10 +256,10 @@ export default function PricingSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200 mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md"
           >
-            <Star className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">1000+ Indian Artists Trust Us</span>
+            <Star className="w-3.5 h-3.5 text-brand-blue fill-brand-blue drop-shadow-[0_0_10px_rgba(37,99,235,0.8)]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">1000+ Indian Artists Trust Us</span>
           </motion.div>
           
           <motion.h2 
@@ -270,7 +270,7 @@ export default function PricingSection() {
             className="font-display text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase mb-8"
           >
             Simple, Transparent Pricing <br />
-            <span className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 text-transparent bg-clip-text">for Indian Artists</span>
+            <span className="bg-gradient-to-r from-brand-blue via-purple-400 to-pink-500 text-transparent bg-clip-text animate-gradient drop-shadow-xl inline-block mt-2">for Indian Artists</span>
           </motion.h2>
           
           <motion.p 
@@ -285,18 +285,18 @@ export default function PricingSection() {
 
           {/* Billing Toggle */}
           <div className="flex items-center justify-center gap-4 mb-16">
-            <span className={cn("text-sm font-bold uppercase tracking-widest transition-colors", billingCycle === 'monthly' ? "text-[#111]" : "text-slate-400")}>Monthly</span>
+            <span className={cn("text-sm font-bold uppercase tracking-widest transition-colors", billingCycle === 'monthly' ? "text-white drop-shadow-md" : "text-slate-500")}>Monthly</span>
             <button 
               onClick={() => setBillingCycle(prev => prev === 'monthly' ? 'yearly' : 'monthly')}
-              className="w-16 h-8 bg-slate-100 rounded-full p-1 relative flex items-center transition-colors"
+              className="w-16 h-8 bg-white/10 rounded-full p-1 relative flex items-center transition-colors border border-white/20"
             >
               <motion.div 
                 animate={{ x: billingCycle === 'yearly' ? 32 : 0 }}
-                className="w-6 h-6 bg-white rounded-full shadow-lg border border-slate-200"
+                className="w-6 h-6 bg-gradient-to-r from-brand-blue to-purple-500 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)] border border-white/20"
               />
             </button>
-            <span className={cn("text-sm font-bold uppercase tracking-widest transition-colors", billingCycle === 'yearly' ? "text-[#111]" : "text-slate-400")}>
-              Yearly <span className="ml-1 text-[10px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-black">SAVE 20%</span>
+            <span className={cn("text-sm font-bold uppercase tracking-widest transition-colors", billingCycle === 'yearly' ? "text-white drop-shadow-md" : "text-slate-500")}>
+              Yearly <span className="ml-1 text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded-full font-black shadow-[0_0_10px_rgba(16,185,129,0.2)]">SAVE 20%</span>
             </span>
           </div>
         </div>
@@ -319,35 +319,35 @@ export default function PricingSection() {
               }}
               style={{ perspective: 2000 }}
               className={cn(
-                "relative group flex flex-col transition-all duration-500",
+                "relative group flex flex-col transition-all duration-500 backdrop-blur-3xl",
                 plan.popular 
-                  ? "bg-white p-[2px] rounded-[3.2rem] z-10" 
-                  : "bg-[#FAFAFA]/80 backdrop-blur-xl border border-slate-100 rounded-[3rem] p-10 hover:shadow-2xl hover:bg-white"
+                  ? "bg-[#0a0a0b] p-[2px] rounded-[3.2rem] z-10 shadow-[0_0_50px_rgba(37,99,235,0.15)] hover:shadow-[0_0_80px_rgba(37,99,235,0.3)]" 
+                  : "bg-white/[0.02] border border-white/10 rounded-[3rem] p-10 hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] hover:bg-white/[0.04]"
               )}
             >
               {/* Glowing Border for Popular Plan */}
               {plan.popular && (
-                <div className={cn("absolute -inset-1 rounded-[3.2rem] blur-lg opacity-40 animate-pulse group-hover:opacity-100 transition-opacity", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")} />
+                <div className={cn("absolute -inset-1 rounded-[3.2rem] blur-lg opacity-60 animate-pulse group-hover:opacity-100 transition-opacity", (plan as any).customGradient || "bg-gradient-to-r from-brand-blue via-purple-600 to-indigo-500")} />
               )}
               
               <div className={cn(
-                "relative flex-1 flex flex-col h-full bg-white",
-                plan.popular ? "rounded-[3rem] p-10" : ""
+                "relative flex-1 flex flex-col h-full",
+                plan.popular ? "bg-[#0d0d0f] rounded-[3rem] p-10" : "bg-transparent"
               )}>
                 {plan.popular && (
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl z-20 whitespace-nowrap">
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-brand-blue to-purple-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(37,99,235,0.5)] z-20 whitespace-nowrap border border-white/10">
                     {plan.highlight}
                   </div>
                 )}
                 {plan.tag && !plan.popular && (
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{plan.tag}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">{plan.tag}</div>
                 )}
 
-                <h3 className="text-2xl font-black font-display uppercase tracking-tight mb-2 text-slate-900">{plan.name}</h3>
+                <h3 className="text-2xl font-black font-display uppercase tracking-tight mb-2 text-white">{plan.name}</h3>
                 
                 <div className="flex items-baseline mb-8">
-                  <span className="text-4xl font-black text-slate-900">₹{plan.price}{(plan as any).priceSuffix || ""}</span>
-                  <span className="text-[10px] font-black text-slate-400 ml-1.5 uppercase tracking-widest">
+                  <span className="text-4xl font-black text-white">₹{plan.price}{(plan as any).priceSuffix || ""}</span>
+                  <span className="text-[10px] font-black text-slate-500 ml-1.5 uppercase tracking-widest">
                     / {(plan as any).lifetime ? 'Lifetime' : (billingCycle === 'yearly' ? 'Year' : 'Month')}
                   </span>
                 </div>
@@ -355,10 +355,10 @@ export default function PricingSection() {
                 <ul className="space-y-4 mb-10 flex-1">
                   {plan.features.map(f => (
                     <li key={f} className="flex gap-3 items-start group/item relative">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5 transition-transform group-hover/item:scale-125" />
+                      <CheckCircle2 className="w-4 h-4 text-brand-blue shrink-0 mt-0.5 transition-transform group-hover/item:scale-125 drop-shadow-[0_0_8px_rgba(37,99,235,0.6)]" />
                       <span 
                         title={`Included: ${f}`}
-                        className="text-sm font-medium text-slate-600 leading-tight cursor-help border-b border-transparent hover:border-slate-200"
+                        className="text-sm font-medium text-slate-300 leading-tight cursor-help border-b border-transparent hover:border-white/20 transition-colors"
                       >
                         {f}
                       </span>
@@ -369,19 +369,15 @@ export default function PricingSection() {
                 <button 
                   onClick={() => handleBuyNow(plan)}
                   className={cn(
-                    "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl",
+                    "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl hover:shadow-2xl hover:scale-[1.02]",
                     plan.popular 
-                      ? cn("text-white hover:scale-[1.02]", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")
-                      : "bg-white border border-slate-200 text-slate-800 hover:border-indigo-600 hover:text-indigo-600"
+                      ? cn("text-white shadow-[0_0_30px_rgba(37,99,235,0.3)]", (plan as any).customGradient || "bg-gradient-to-r from-brand-blue via-purple-600 to-indigo-500")
+                      : "bg-white/5 border border-white/10 text-white hover:border-brand-blue hover:bg-brand-blue/10"
                   )}
                 >
                   <span className="relative z-10">{plan.cta}</span>
                   {plan.popular && (
                     <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/btn:opacity-100 transition-opacity blur-xl rounded-full" />
-                  )}
-                  {/* Glow Pulse for Button */}
-                  {plan.popular && (
-                    <div className={cn("absolute -inset-1 rounded-2xl blur-lg opacity-30 group-hover/btn:opacity-60 transition-opacity pointer-events-none", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")} />
                   )}
                 </button>
               </div>
@@ -391,7 +387,7 @@ export default function PricingSection() {
 
         {/* Add-ons Section */}
         <div className="text-center">
-          <h3 className="text-3xl font-black font-display uppercase tracking-tight mb-12">Boost Your Reach</h3>
+          <h3 className="text-3xl font-black font-display uppercase tracking-tight mb-12 text-white">Boost Your Reach</h3>
           <div className="flex flex-wrap justify-center gap-4">
             {ADDONS.map((addon, i) => (
               <motion.div
@@ -401,9 +397,9 @@ export default function PricingSection() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5, scale: 1.05 }}
-                className="bg-white border border-slate-100 p-6 rounded-3xl shadow-lg shadow-slate-100/50 flex flex-col items-center gap-3 min-w-[180px] group transition-all hover:border-indigo-200"
+                className="bg-white/[0.02] border border-white/10 p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-3 min-w-[180px] group transition-all hover:bg-white/[0.05] hover:border-brand-blue/50 backdrop-blur-3xl"
               >
-                <div className="w-12 h-12 bg-slate-50 text-indigo-600 rounded-2xl flex items-center justify-center transition-colors group-hover:bg-indigo-50">
+                <div className="w-12 h-12 bg-brand-blue/10 border border-brand-blue/20 text-brand-blue rounded-2xl flex items-center justify-center transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)] group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(37,99,235,0.4)]">
                   {addon.icon === 'Youtube' && <Youtube className="w-6 h-6" />}
                   {addon.icon === 'Phone' && <Phone className="w-6 h-6" />}
                   {addon.icon === 'Zap' && <Zap className="w-6 h-6" />}
@@ -413,8 +409,8 @@ export default function PricingSection() {
                   {addon.icon === 'Hash' && <Hash className="w-6 h-6" />}
                   {addon.icon === 'ExternalLink' && <ExternalLink className="w-6 h-6" />}
                 </div>
-                <p className="text-xs font-black uppercase tracking-widest text-slate-500">{addon.name}</p>
-                <p className="text-lg font-black text-indigo-600">{addon.price}</p>
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-300 transition-colors">{addon.name}</p>
+                <p className="text-lg font-black text-white group-hover:text-brand-blue drop-shadow-md transition-colors">{addon.price}</p>
               </motion.div>
             ))}
           </div>
@@ -427,7 +423,7 @@ export default function PricingSection() {
           viewport={{ once: true }}
           className="mt-32 text-center"
         >
-          <p className="text-2xl md:text-4xl font-display font-black tracking-tight uppercase leading-tight italic bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 text-transparent bg-clip-text max-w-4xl mx-auto">
+          <p className="text-2xl md:text-4xl font-display font-black tracking-tight uppercase leading-tight italic bg-gradient-to-r from-brand-blue via-purple-400 to-pink-500 text-transparent bg-clip-text max-w-4xl mx-auto drop-shadow-xl animate-gradient">
             “Gaana banana talent hai… <br className="hidden md:block" />
             usko duniya tak pahuchana system hai — aur wo system yahi hai.”
           </p>
@@ -438,7 +434,7 @@ export default function PricingSection() {
           {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-indigo-600/10 rounded-full"
+              className="absolute w-2 h-2 bg-brand-blue/30 rounded-full blur-[2px]"
               animate={{
                 y: [0, -100, 0],
                 x: [0, 50, 0],

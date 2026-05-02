@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { PLANS } from "../../constants/plans";
 import { 
@@ -17,15 +17,41 @@ import {
 } from "lucide-react";
 import { FadeIn } from "../../components/ui/FadeIn";
 import { cn } from "../../lib/utils";
-import { motion } from "motion/react";
 import { toast } from "sonner";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 export default function Subscription() {
   const { user, profile } = useAuth();
+  const [billingHistory, setBillingHistory] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const currentPlanId = profile?.planId || 'free';
   const currentPlan = PLANS.find(p => p.id === currentPlanId) || PLANS[0];
   
+  useEffect(() => {
+    const fetchBillingHistory = async () => {
+      if (!user) return;
+      try {
+        const q = query(
+          collection(db, "transactions"),
+          where("userId", "==", user.uid)
+        );
+        const snap = await getDocs(q);
+        const allTx = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const billingTx = allTx
+          .filter((t: any) => t.type === 'subscription' || t.type === 'payment')
+          .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+        setBillingHistory(billingTx);
+      } catch (error) {
+        console.error("Error fetching billing history:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBillingHistory();
+  }, [user]);
+
   const handleUpgrade = (planId: string) => {
     if (planId === currentPlanId) {
       toast.info("You are already on this plan!");
@@ -165,6 +191,67 @@ export default function Subscription() {
                     <Globe className="w-6 h-6" />
                  </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Methods & Billing History */}
+        <div className="grid lg:grid-cols-2 gap-10">
+          {/* Payment Methods */}
+          <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-black font-display uppercase tracking-tight">Payment Methods</h3>
+            </div>
+            
+            <div className="space-y-4">
+               {/* No Payment Methods */}
+               <div className="p-8 border border-slate-200 border-dashed rounded-2xl flex flex-col items-center justify-center text-center">
+                  <ShieldCheck className="w-8 h-8 text-slate-300 mb-3" />
+                  <p className="text-sm font-bold text-slate-800 mb-1">No Payment Methods Found</p>
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400">Add a card to your account</p>
+               </div>
+
+               <button disabled className="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 hover:text-brand-blue hover:border-brand-blue transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-slate-500 disabled:hover:border-slate-200">
+                 + Add New Payment Method
+               </button>
+            </div>
+          </div>
+
+          {/* Billing History */}
+          <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center">
+                <Clock className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-black font-display uppercase tracking-tight">Billing History</h3>
+            </div>
+            
+            <div className="space-y-4">
+               {loading ? (
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Loading history...</p>
+               ) : billingHistory.length > 0 ? (
+                 billingHistory.map((item, idx) => (
+                   <div key={idx} className="flex items-center justify-between pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                      <div>
+                         <p className="text-sm font-black uppercase tracking-tight text-slate-800 mb-1">{new Date(item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">#{item.id.slice(-6).toUpperCase()}</p>
+                      </div>
+                      <div className="text-right">
+                         <p className="text-sm font-black text-brand-blue mb-1">₹{item.amount}</p>
+                         <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-[8px] font-black uppercase tracking-widest rounded-full">{item.status || "Paid"}</span>
+                      </div>
+                   </div>
+                 ))
+               ) : (
+                  <div className="p-8 border border-slate-200 border-dashed rounded-2xl flex flex-col items-center justify-center text-center">
+                     <Clock className="w-8 h-8 text-slate-300 mb-3" />
+                     <p className="text-sm font-bold text-slate-800 mb-1">No Billing History</p>
+                     <p className="text-[10px] uppercase tracking-widest text-slate-400">Transactions will appear here</p>
+                  </div>
+               )}
             </div>
           </div>
         </div>
