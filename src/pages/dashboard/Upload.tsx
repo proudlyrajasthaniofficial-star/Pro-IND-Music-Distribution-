@@ -165,7 +165,8 @@ export default function Upload() {
     fetchData();
   }, [user]);
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, trigger } = useForm({
+    mode: "onChange",
     resolver: zodResolver(schema),
     defaultValues: {
       releaseType: "Single",
@@ -525,7 +526,8 @@ export default function Upload() {
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:gap-y-8">
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Song Name *</label>
-                         <input {...register("songName")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 transition-all shadow-sm" placeholder="Track Title" />
+                         <input {...register("songName")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 transition-all shadow-sm", errors.songName && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Track Title" />
+                         {errors.songName?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.songName.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <div className="flex items-center justify-between px-2 md:px-4">
@@ -536,11 +538,12 @@ export default function Upload() {
                          </div>
                          <div className="relative">
                             <Mic2 className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                            <select {...register("singerName")} className="w-full p-4 md:p-5 pl-16 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm">
+                            <select {...register("singerName")} className={cn("w-full p-4 md:p-5 pl-16 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm", errors.singerName && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")}>
                                <option value="">Select Artist</option>
                                {userArtists.map(a => <option key={a.id} value={a.name}>{a.name}</option>)}
                             </select>
                          </div>
+                         {errors.singerName?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.singerName.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Secondary Artist / Featuring (Optional)</label>
@@ -558,13 +561,15 @@ export default function Upload() {
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Language *</label>
-                         <select {...register("language")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm">
+                         <select {...register("language")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm", errors.language && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")}>
                             {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
                          </select>
+                         {errors.language?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.language.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Lyricist Name *</label>
-                         <input {...register("lyricist")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Lyricist / Writer Name" />
+                         <input {...register("lyricist")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.lyricist && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Lyricist / Writer Name" />
+                         {errors.lyricist?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.lyricist.message as string}</p>}
                       </div>
                       <div className="md:col-span-2 space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Master Lyrics (Optional)</label>
@@ -572,11 +577,13 @@ export default function Upload() {
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Composer *</label>
-                         <input {...register("composer")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Original Composer" />
+                         <input {...register("composer")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.composer && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Original Composer" />
+                         {errors.composer?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.composer.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Music *</label>
-                         <input {...register("producer")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Music Produced By" />
+                         <input {...register("producer")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.producer && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Music Produced By" />
+                         {errors.producer?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.producer.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Copyright Holder *</label>
@@ -584,8 +591,9 @@ export default function Upload() {
                             <select {...register("copyrightYear")} className="w-24 md:w-32 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm">
                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                             </select>
-                            <input {...register("copyrightHolder")} className="flex-1 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Name" />
+                            <input {...register("copyrightHolder")} className={cn("flex-1 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.copyrightHolder && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Name" />
                          </div>
+                         {errors.copyrightHolder?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.copyrightHolder.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Publisher *</label>
@@ -593,8 +601,9 @@ export default function Upload() {
                             <select {...register("publisherYear")} className="w-24 md:w-32 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm">
                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                             </select>
-                            <input {...register("publisherHolder")} className="flex-1 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Name" />
+                            <input {...register("publisherHolder")} className={cn("flex-1 p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.publisherHolder && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Name" />
                          </div>
+                         {errors.publisherHolder?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.publisherHolder.message as string}</p>}
                       </div>
 
                       <div className="space-y-4">
@@ -602,40 +611,46 @@ export default function Upload() {
                             <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400">Primary Genre</label>
                             <button type="button" className="text-[9px] font-black uppercase text-brand-purple flex items-center gap-1.5 hover:scale-105 transition-transform"><Zap className="w-3 h-3 fill-brand-purple" /> Auto Suggest (AI)</button>
                          </div>
-                         <select {...register("primaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
+                         <select {...register("primaryGenre")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors", errors.primaryGenre && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")}>
                             {Object.keys(INDIAN_GENRES).map(category => (
                                <option key={category} value={category}>{category}</option>
                             ))}
                          </select>
+                         {errors.primaryGenre?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.primaryGenre.message as string}</p>}
                       </div>
                       <div className="space-y-4">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-4">Secondary Genre</label>
-                         <select {...register("secondaryGenre")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors">
+                         <select {...register("secondaryGenre")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold appearance-none shadow-sm cursor-pointer hover:bg-slate-100 transition-colors", errors.secondaryGenre && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")}>
                             {Object.entries(INDIAN_GENRES).map(([category, subgenres]) => (
                                <optgroup key={category} label={category}>
                                   {subgenres.map(g => <option key={g} value={g}>{g}</option>)}
                                </optgroup>
                             ))}
                          </select>
+                         {errors.secondaryGenre?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.secondaryGenre.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">ISRC (Optional)</label>
-                         <input {...register("isrc")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold tracking-widest text-brand-blue shadow-sm" placeholder="IN-XXX-00-00000" />
+                         <input {...register("isrc")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold tracking-widest text-brand-blue shadow-sm", errors.isrc && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="IN-XXX-00-00000" />
+                         {errors.isrc?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.isrc.message as string}</p>}
                       </div>
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">UPC (Optional)</label>
-                         <input {...register("upc")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold tracking-widest text-brand-blue shadow-sm" placeholder="190000000000" />
+                         <input {...register("upc")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold tracking-widest text-brand-blue shadow-sm", errors.upc && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="190000000000" />
+                         {errors.upc?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.upc.message as string}</p>}
                       </div>
                       <div className="md:col-span-2 mt-4 pt-4 border-t border-slate-100">
                          <h4 className="text-sm md:text-base font-black font-display uppercase text-slate-800 mb-4">Caller Tunes Section</h4>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:gap-y-8">
                             <div className="space-y-2 md:space-y-3">
                                <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Callertune Name (Optional)</label>
-                               <input {...register("callertuneName")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Title for Jio/Airtel" />
+                               <input {...register("callertuneName")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm", errors.callertuneName && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="Title for Jio/Airtel" />
+                               {errors.callertuneName?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4 mt-1">{errors.callertuneName.message as string}</p>}
                             </div>
                             <div className="space-y-2 md:space-y-3">
                                <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Callertune Time Cut (Optional)</label>
-                               <input {...register("callertuneTimeCut")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold text-brand-blue shadow-sm" placeholder="e.g. 01:15 - 01:45" />
+                               <input {...register("callertuneTimeCut")} className={cn("w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold text-brand-blue shadow-sm", errors.callertuneTimeCut && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} placeholder="e.g. 01:15 - 01:45" />
+                               {errors.callertuneTimeCut?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4 mt-1">{errors.callertuneTimeCut.message as string}</p>}
                             </div>
                          </div>
                       </div>
@@ -660,12 +675,14 @@ export default function Upload() {
                          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-4">Release Date *</label>
                          <div className="relative">
                             <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                            <input {...register("releaseDate")} type="date" min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} className="w-full p-5 pl-16 bg-slate-50 border-none rounded-3xl text-sm font-bold" />
+                            <input {...register("releaseDate")} type="date" min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} className={cn("w-full p-5 pl-16 bg-slate-50 border-none rounded-3xl text-sm font-bold", errors.releaseDate && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} />
                          </div>
+                         {errors.releaseDate?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.releaseDate.message as string}</p>}
                       </div>
                       <div className="space-y-3 text-left">
                          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-4">Time (Optional)</label>
-                         <input {...register("releaseTime")} type="time" className="w-full p-5 bg-slate-50 border-none rounded-3xl text-sm font-bold" />
+                         <input {...register("releaseTime")} type="time" className={cn("w-full p-5 bg-slate-50 border-none rounded-3xl text-sm font-bold", errors.releaseTime && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")} />
+                         {errors.releaseTime?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.releaseTime.message as string}</p>}
                       </div>
                    </div>
                    <div className="pt-12 flex justify-center gap-6">
@@ -698,11 +715,12 @@ export default function Upload() {
                       </div>
                       <div className="space-y-3">
                          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-4">Select Label *</label>
-                         <select {...register("labelName")} className="w-full p-6 bg-slate-50 border-none rounded-3xl text-sm font-bold appearance-none">
+                         <select {...register("labelName")} className={cn("w-full p-6 bg-slate-50 border-none rounded-3xl text-sm font-bold appearance-none", errors.labelName && "bg-rose-50 ring-2 ring-rose-500 text-rose-900")}>
                             <option value="">Select Label</option>
                             <option value="IND Records">IND Records (System Default)</option>
                             {userLabels.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
                          </select>
+                         {errors.labelName?.message && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest ml-4">{errors.labelName.message as string}</p>}
                       </div>
                       <div className="pt-8 flex justify-center gap-6">
                         <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500">Back</button>

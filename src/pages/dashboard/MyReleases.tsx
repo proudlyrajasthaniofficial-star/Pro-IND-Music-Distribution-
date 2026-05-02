@@ -52,6 +52,7 @@ export default function MyReleases() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "az" | "za">("newest");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -83,6 +84,20 @@ export default function MyReleases() {
     const matchesSearch = r.title?.toLowerCase().includes(search.toLowerCase()) || 
                           r.artist?.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
+  }).sort((a, b) => {
+    if (sortOrder === "newest") {
+      return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+    }
+    if (sortOrder === "oldest") {
+      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+    }
+    if (sortOrder === "az") {
+      return (a.title || "").localeCompare(b.title || "");
+    }
+    if (sortOrder === "za") {
+      return (b.title || "").localeCompare(a.title || "");
+    }
+    return 0;
   });
 
   const downloadFile = async (url: string, filename: string) => {
@@ -129,20 +144,38 @@ export default function MyReleases() {
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide py-2">
-         {STATUSES.map((s) => (
-            <button 
-              key={s.id}
-              onClick={() => setFilter(s.id)}
-              className={cn(
-                "px-6 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap",
-                filter === s.id ? "bg-brand-blue text-white shadow-2xl shadow-blue-500/30 -translate-y-1" : "bg-white text-slate-400 border border-slate-100 hover:bg-slate-50"
-              )}
-            >
-               {s.label}
-            </button>
-         ))}
+      {/* Filter and Sort Area */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* Filter Tabs */}
+        <div className="flex gap-3 md:gap-4 overflow-x-auto pb-2 w-full max-w-full scrollbar-hide">
+           {STATUSES.map((s) => (
+              <button 
+                key={s.id}
+                onClick={() => setFilter(s.id)}
+                className={cn(
+                  "px-6 md:px-8 py-2.5 md:py-3.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap",
+                  filter === s.id ? "bg-brand-blue text-white shadow-2xl shadow-blue-500/30 -translate-y-1" : "bg-white text-slate-400 border border-slate-100 hover:bg-slate-50"
+                )}
+              >
+                 {s.label}
+              </button>
+           ))}
+        </div>
+
+        {/* Sort Dropdown */}
+        <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
+           <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Sort By:</label>
+           <select 
+             value={sortOrder}
+             onChange={(e) => setSortOrder(e.target.value as any)}
+             className="px-4 py-2.5 md:py-3.5 bg-white border border-slate-100 rounded-full text-[10px] font-black uppercase tracking-[0.1em] text-slate-600 appearance-none shadow-sm cursor-pointer hover:bg-slate-50 min-w-[120px] focus:ring-0 focus:outline-none"
+           >
+             <option value="newest">Newest First</option>
+             <option value="oldest">Oldest First</option>
+             <option value="az">A-Z</option>
+             <option value="za">Z-A</option>
+           </select>
+        </div>
       </div>
 
       {/* Releases Grid */}
