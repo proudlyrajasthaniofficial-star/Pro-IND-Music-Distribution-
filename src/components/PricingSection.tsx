@@ -139,6 +139,26 @@ export default function PricingSection() {
       color: "slate"
     },
     {
+      name: "Starter Pro Plan",
+      id: "starter-pro",
+      price: billingCycle === 'yearly' ? 999 : 99,
+      popular: true,
+      highlight: "MOST POPULAR",
+      customGradient: "bg-linear-to-r from-blue-600 to-purple-600",
+      tag: "Best for Beginners",
+      features: [
+        "Up to 5 Song Releases",
+        "80% Royalty Earnings",
+        "Basic Distribution",
+        "Standard Delivery (5-7 days)",
+        "Basic Artist Dashboard",
+        "Track Status Monitoring",
+        "Email Support"
+      ],
+      cta: "Get Started",
+      color: "blue"
+    },
+    {
       name: "Artist Plan",
       id: "artist",
       price: billingCycle === 'yearly' ? 1499 : 199,
@@ -161,8 +181,6 @@ export default function PricingSection() {
       name: "Pro Artist",
       id: "pro",
       price: billingCycle === 'yearly' ? 2499 : 349,
-      popular: true,
-      highlight: "🔥 High Conversion",
       tag: "Serious Artists",
       features: [
         "Everything in Artist Plan",
@@ -284,7 +302,7 @@ export default function PricingSection() {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-32 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32 items-stretch">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -309,7 +327,7 @@ export default function PricingSection() {
             >
               {/* Glowing Border for Popular Plan */}
               {plan.popular && (
-                <div className="absolute -inset-1 bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 rounded-[3.2rem] blur-lg opacity-40 animate-pulse group-hover:opacity-100 transition-opacity" />
+                <div className={cn("absolute -inset-1 rounded-[3.2rem] blur-lg opacity-40 animate-pulse group-hover:opacity-100 transition-opacity", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")} />
               )}
               
               <div className={cn(
@@ -353,7 +371,7 @@ export default function PricingSection() {
                   className={cn(
                     "w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] text-center transition-all duration-500 relative overflow-hidden group/btn shadow-xl",
                     plan.popular 
-                      ? "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 text-white hover:scale-[1.02]" 
+                      ? cn("text-white hover:scale-[1.02]", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")
                       : "bg-white border border-slate-200 text-slate-800 hover:border-indigo-600 hover:text-indigo-600"
                   )}
                 >
@@ -363,7 +381,7 @@ export default function PricingSection() {
                   )}
                   {/* Glow Pulse for Button */}
                   {plan.popular && (
-                    <div className="absolute -inset-1 bg-linear-to-r from-blue-600 via-purple-600 to-pink-500 rounded-2xl blur-lg opacity-30 group-hover/btn:opacity-60 transition-opacity pointer-events-none" />
+                    <div className={cn("absolute -inset-1 rounded-2xl blur-lg opacity-30 group-hover/btn:opacity-60 transition-opacity pointer-events-none", (plan as any).customGradient || "bg-linear-to-r from-blue-600 via-purple-600 to-pink-500")} />
                   )}
                 </button>
               </div>
