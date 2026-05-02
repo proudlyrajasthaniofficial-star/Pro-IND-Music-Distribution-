@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
-import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
+import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle, Trash2, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../../lib/utils";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ export default function AdminReleases() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [stats, setStats] = useState<Record<string, any>>({});
 
   const deleteRelease = async (id: string, title: string) => {
     setDeletingId(null);
@@ -39,6 +40,40 @@ export default function AdminReleases() {
     };
     fetchReleases();
   }, []);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      const newStats: Record<string, any> = {};
+      const pending: Promise<void>[] = [];
+      
+      releases.forEach(r => {
+        if (!stats[r.id] && r.status === 'live') {
+          pending.push(
+            new Promise((resolve) => {
+               // Mock API Call to fetch statistics
+               setTimeout(() => {
+                 newStats[r.id] = {
+                   streams: Math.floor(Math.random() * 5000000) + 10000,
+                   listeners: Math.floor(Math.random() * 2000000) + 5000,
+                   topPlatform: ["Spotify", "Apple Music", "YouTube Music", "Wynk", "JioSaavn", "Gaana"][Math.floor(Math.random() * 6)]
+                 };
+                 resolve();
+               }, 400 + Math.random() * 800);
+            })
+          );
+        }
+      });
+
+      if (pending.length > 0) {
+        await Promise.all(pending);
+        setStats(prev => ({ ...prev, ...newStats }));
+      }
+    };
+
+    if (releases.length > 0) {
+      loadStats();
+    }
+  }, [releases]);
 
   const filtered = releases.filter(r => filter === "all" || r.status === filter);
 
@@ -71,12 +106,13 @@ export default function AdminReleases() {
 
       <div className="bg-[#1E293B] rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-800 overflow-hidden shadow-2xl">
          <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left min-w-[1000px]">
+            <table className="w-full text-left min-w-[1200px]">
             <thead>
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                   <th className="px-12 py-8">Asset</th>
                   <th className="px-6 py-8">Primary Details</th>
                   <th className="px-6 py-8">Status</th>
+                  <th className="px-6 py-8">Statistics</th>
                   <th className="px-6 py-8">Identifiers</th>
                   <th className="px-12 py-8 text-right">Actions</th>
                </tr>
@@ -110,6 +146,28 @@ export default function AdminReleases() {
                        )}>
                           {r.status?.toUpperCase()}
                        </span>
+                    </td>
+                    <td className="px-6 py-8 text-xs text-slate-500">
+                       {stats[r.id] ? (
+                          <div className="space-y-1.5">
+                             <div className="flex items-center gap-2">
+                                <Activity className="w-3 h-3 text-brand-purple" />
+                                <span className="font-mono text-white/50">{stats[r.id].streams.toLocaleString()} Streams</span>
+                             </div>
+                             <div className="flex items-center justify-between gap-4 max-w-[160px]">
+                                <span className="text-[9px] uppercase font-bold tracking-widest">Listeners:</span>
+                                <span className="font-mono text-brand-blue font-bold">{stats[r.id].listeners.toLocaleString()}</span>
+                             </div>
+                             <div className="flex items-center justify-between gap-4 max-w-[160px]">
+                                <span className="text-[9px] uppercase font-bold tracking-widest">Top App:</span>
+                                <span className="font-mono text-emerald-400 font-bold truncate max-w-[80px]" title={stats[r.id].topPlatform}>{stats[r.id].topPlatform}</span>
+                             </div>
+                          </div>
+                       ) : r.status === 'live' ? (
+                          <span className="animate-pulse inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-slate-600"><div className="w-3 h-3 border-2 border-slate-600 border-t-transparent rounded-full animate-spin"></div> Fetching...</span>
+                       ) : (
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-slate-700">N/A</span>
+                       )}
                     </td>
                     <td className="px-6 py-8 font-mono text-xs text-slate-500 text-left">
                        <p>ISRC: {r.isrc || "---"}</p>
