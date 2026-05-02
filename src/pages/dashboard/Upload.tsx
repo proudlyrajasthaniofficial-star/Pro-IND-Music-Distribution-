@@ -35,6 +35,7 @@ const schema = z.object({
   releaseType: z.enum(["Single", "Album", "EP"]),
   songName: z.string().min(1, "Song Name is required"),
   singerName: z.string().min(1, "Singer Name is required"),
+  featuringArtist: z.string().optional(),
   lyricist: z.string().min(1, "Lyricist Name is required"),
   instagramId: z.string().optional(),
   lyrics: z.string().optional(),
@@ -52,6 +53,8 @@ const schema = z.object({
   releaseDate: z.string().min(1, "Release Date is required"),
   releaseTime: z.string().optional(),
   labelName: z.string().min(1, "Label is required"),
+  callertuneName: z.string().optional(),
+  callertuneTimeCut: z.string().optional(),
 });
 
 const STEPS = [
@@ -168,6 +171,7 @@ export default function Upload() {
       releaseType: "Single",
       songName: "",
       singerName: "",
+      featuringArtist: "",
       lyricist: "",
       instagramId: "",
       lyrics: "",
@@ -184,7 +188,9 @@ export default function Upload() {
       upc: "",
       releaseDate: "",
       releaseTime: "00:00",
-      labelName: ""
+      labelName: "",
+      callertuneName: "",
+      callertuneTimeCut: ""
     }
   });
 
@@ -537,6 +543,13 @@ export default function Upload() {
                          </div>
                       </div>
                       <div className="space-y-2 md:space-y-3">
+                         <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Secondary Artist / Featuring (Optional)</label>
+                         <div className="relative">
+                            <UserPlus className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                            <input {...register("featuringArtist")} className="w-full p-4 md:p-5 pl-16 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Type artist name" />
+                         </div>
+                      </div>
+                      <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Instagram ID (Optional)</label>
                          <div className="relative">
                             <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 font-black">@</span>
@@ -612,6 +625,19 @@ export default function Upload() {
                       <div className="space-y-2 md:space-y-3">
                          <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">UPC (Optional)</label>
                          <input {...register("upc")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold tracking-widest text-brand-blue shadow-sm" placeholder="190000000000" />
+                      </div>
+                      <div className="md:col-span-2 mt-4 pt-4 border-t border-slate-100">
+                         <h4 className="text-sm md:text-base font-black font-display uppercase text-slate-800 mb-4">Caller Tunes Section</h4>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:gap-y-8">
+                            <div className="space-y-2 md:space-y-3">
+                               <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Callertune Name (Optional)</label>
+                               <input {...register("callertuneName")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-bold shadow-sm" placeholder="Title for Jio/Airtel" />
+                            </div>
+                            <div className="space-y-2 md:space-y-3">
+                               <label className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest md:tracking-[0.2em] text-slate-400 ml-2 md:ml-4">Callertune Time Cut (Optional)</label>
+                               <input {...register("callertuneTimeCut")} className="w-full p-4 md:p-5 bg-slate-50 border-none rounded-2xl md:rounded-3xl text-sm font-mono font-bold text-brand-blue shadow-sm" placeholder="e.g. 01:15 - 01:45" />
+                            </div>
+                         </div>
                       </div>
                    </div>
                    <div className="flex justify-end pt-12">
@@ -708,12 +734,19 @@ export default function Upload() {
                          </div>
                       </div>
                       {(audioFile || existingAudioUrl) && (
-                        <div className="mt-8 p-6 bg-slate-900 rounded-3xl flex items-center justify-between shadow-2xl">
-                           <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white"><Music className="w-5 h-5" /></div>
-                              <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                        <div className="mt-8 space-y-4">
+                           <div className="p-6 bg-slate-900 rounded-3xl flex items-center justify-between shadow-2xl">
+                              <div className="flex items-center gap-4">
+                                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white"><Music className="w-5 h-5" /></div>
+                                 <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                              </div>
+                              <button type="button" onClick={() => { setAudioFile(null); setExistingAudioUrl(null); setAudioPreviewUrl(null); }} className="text-white/40 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
                            </div>
-                           {(audioFile || existingAudioUrl) && <button type="button" onClick={() => { setAudioFile(null); setExistingAudioUrl(null); }} className="text-white/40 hover:text-white transition-colors"><X className="w-5 h-5" /></button>}
+                           {audioPreviewUrl && (
+                             <div className="bg-slate-50 p-4 rounded-3xl shadow-sm border border-slate-100">
+                               <audio controls src={audioPreviewUrl} className="w-full h-12" />
+                             </div>
+                           )}
                         </div>
                       )}
                       <div className="pt-12 flex justify-center gap-6">
@@ -830,6 +863,12 @@ export default function Upload() {
                          {coverPreviewUrl && <img src={coverPreviewUrl} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
                       </div>
                    </div>
+                   {audioPreviewUrl && (
+                      <div className="w-full bg-slate-50 p-4 rounded-3xl shadow-sm border border-slate-100">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2 px-2">Master Audio Preview</p>
+                         <audio controls src={audioPreviewUrl} className="w-full h-12" />
+                      </div>
+                   )}
 
                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                       <div className="space-y-8">
@@ -838,6 +877,7 @@ export default function Upload() {
                             <div className="bg-slate-50 p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] space-y-4">
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Title</p><p className="font-black text-slate-800 text-sm">{watchAll.songName}</p></div>
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Singer</p><p className="font-bold text-slate-600 text-sm">{watchAll.singerName}</p></div>
+                               {watchAll.featuringArtist && <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Featuring Artist</p><p className="font-bold text-slate-600 text-sm">{watchAll.featuringArtist}</p></div>}
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Label</p><p className="font-bold text-slate-600 text-sm">{watchAll.labelName}</p></div>
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Instagram</p><p className="font-bold text-slate-600 text-sm">@{watchAll.instagramId || "None"}</p></div>
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Language</p><p className="font-bold text-slate-600 text-sm">{watchAll.language}</p></div>
@@ -863,6 +903,12 @@ export default function Upload() {
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Secondary Genre</p><p className="font-bold text-slate-600 text-sm">{watchAll.secondaryGenre}</p></div>
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">ISRC</p><p className="font-mono font-bold text-brand-blue text-[11px] truncate">{watchAll.isrc || "Auto-Generate"}</p></div>
                                <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">UPC</p><p className="font-mono font-bold text-brand-blue text-[11px] truncate">{watchAll.upc || "Auto-Generate"}</p></div>
+                               {(watchAll.callertuneName || watchAll.callertuneTimeCut) && (
+                                 <div className="pt-2 border-t border-slate-200">
+                                   {watchAll.callertuneName && <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 mt-2">Callertune</p><p className="font-bold text-slate-600 text-sm">{watchAll.callertuneName}</p></div>}
+                                   {watchAll.callertuneTimeCut && <div><p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 mt-2">Time Cut</p><p className="font-mono font-bold text-brand-blue text-[11px]">{watchAll.callertuneTimeCut}</p></div>}
+                                 </div>
+                               )}
                             </div>
                          </div>
                       </div>
