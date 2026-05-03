@@ -95,11 +95,12 @@ export default function Labels() {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "labels", id));
-      toast.success("Label deleted successfully.");
-    } catch (err: any) {
-      toast.error("Deletion failed: " + (err.message || "Security constraint"));
+    if (confirm("Are you sure?")) {
+      try {
+        await deleteDoc(doc(db, "labels", id));
+      } catch (err: any) {
+        toast.error("Deletion failed: " + (err.message || "Security constraint"));
+      }
     }
   };
 

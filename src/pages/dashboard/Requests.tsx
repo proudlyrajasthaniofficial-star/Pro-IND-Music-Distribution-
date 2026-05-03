@@ -163,30 +163,12 @@ export default function Requests() {
         return (
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Song Name</label>
-              <input 
-                required
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
-                placeholder="Enter song name..."
-                onChange={(e) => setFormData({...formData, songName: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Singer Name</label>
-              <input 
-                required
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
-                placeholder="Enter singer name..."
-                onChange={(e) => setFormData({...formData, singerName: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Singer Instagram Profile Link</label>
+              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Instagram Profile Link</label>
               <input 
                 required
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
                 placeholder="https://instagram.com/artistname"
-                onChange={(e) => setFormData({...formData, singerInstagramLink: e.target.value})}
+                onChange={(e) => setFormData({...formData, instagramLink: e.target.value})}
               />
             </div>
             <div>
@@ -232,106 +214,6 @@ export default function Requests() {
                 placeholder="Why do you want this change?"
                 onChange={(e) => setFormData({...formData, reason: e.target.value})}
               ></textarea>
-            </div>
-          </div>
-        );
-      case 'content_id_issue':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Song Name</label>
-              <input 
-                required
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
-                placeholder="Enter song name..."
-                onChange={(e) => setFormData({...formData, songName: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Singer / Artist Name</label>
-              <input 
-                required
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
-                placeholder="Enter singer name..."
-                onChange={(e) => setFormData({...formData, singerName: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Link to Song / Video</label>
-              <input 
-                required
-                type="url"
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
-                placeholder="https://youtube.com/..."
-                onChange={(e) => setFormData({...formData, songLink: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Issue Details</label>
-              <textarea 
-                required
-                className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-24"
-                placeholder="Describe the Content ID issue (e.g. fake claim, missing claim)..."
-                onChange={(e) => setFormData({...formData, issueDetails: e.target.value})}
-              ></textarea>
-            </div>
-          </div>
-        );
-      case 'profile_correction':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Artist Name</label>
-              <input required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" placeholder="Your Artist Name" onChange={(e) => setFormData({...formData, artistName: e.target.value})} />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Platform Links (Spotify/Apple)</label>
-              <textarea required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-20" placeholder="https://open.spotify.com/artist/..." onChange={(e) => setFormData({...formData, platformLinks: e.target.value})}></textarea>
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">What needs correction?</label>
-              <textarea required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-24" placeholder="Wrong image, wrong biography..." onChange={(e) => setFormData({...formData, correctionDetails: e.target.value})}></textarea>
-            </div>
-          </div>
-        );
-      case 'takedown':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Song/Album Name</label>
-              <input required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" placeholder="Name of the release to takedown" onChange={(e) => setFormData({...formData, releaseName: e.target.value})} />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Link to Release (Spotify/YouTube)</label>
-              <input required type="url" className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" placeholder="https://..." onChange={(e) => setFormData({...formData, releaseLink: e.target.value})} />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Reason for Takedown</label>
-              <textarea required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-24" placeholder="Copyright issue, change of distributor..." onChange={(e) => setFormData({...formData, takedownReason: e.target.value})}></textarea>
-            </div>
-          </div>
-        );
-      case 'platform_manage':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Action</label>
-              <select className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" onChange={(e) => setFormData({...formData, actionType: e.target.value})}>
-                 <option value="add">Add to a Platform</option>
-                 <option value="remove">Remove from a Platform</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Platform Name</label>
-              <input required className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" placeholder="e.g. TikTok, Spotify, Apple Music" onChange={(e) => setFormData({...formData, platformName: e.target.value})} />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Link to Song/Artist</label>
-              <input required type="url" className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold" placeholder="https://..." onChange={(e) => setFormData({...formData, referenceLink: e.target.value})} />
-            </div>
-            <div>
-              <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Additional Info</label>
-              <textarea className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-20" placeholder="Optional details..." onChange={(e) => setFormData({...formData, additionalInfo: e.target.value})}></textarea>
             </div>
           </div>
         );

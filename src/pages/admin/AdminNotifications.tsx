@@ -4,7 +4,6 @@ import { db } from "../../lib/firebase";
 import { Bell, Send, Trash2, Clock, Globe, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../../lib/utils";
-import { toast } from "sonner";
 
 export default function AdminNotifications() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -40,22 +39,20 @@ export default function AdminNotifications() {
       setTitle("");
       setMessage("");
       fetchNotifications();
-      toast.success("Notification sent!");
     } catch (err) {
-      toast.error("Failed to deploy notification.");
+      alert("Failed to deploy notification.");
     } finally {
       setIsSending(false);
     }
   };
 
   const deleteNotification = async (id: string) => {
-    // window.confirm removed to support iframe execution
+    if (!confirm("Deactivate this transmission?")) return;
     try {
       await deleteDoc(doc(db, "system_notifications", id));
       setNotifications(notifications.filter(n => n.id !== id));
-      toast.success("Notification deactivated.");
     } catch (err) {
-      toast.error("Deletion failure.");
+      alert("Deletion failure.");
     }
   };
 
@@ -167,11 +164,10 @@ export default function AdminNotifications() {
                            </div>
                         </div>
                         <button 
-                          type="button"
                           onClick={() => deleteNotification(n.id)}
-                          className="p-3 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-full transition-colors cursor-pointer relative z-20 focus:outline-none"
+                          className="p-2 text-slate-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
                         >
-                           <Trash2 className="w-5 h-5 pointer-events-none" />
+                           <Trash2 className="w-4 h-4" />
                         </button>
                      </div>
                      <p className="text-xs text-slate-400 font-medium leading-relaxed">{n.message}</p>

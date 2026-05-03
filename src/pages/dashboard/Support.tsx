@@ -156,12 +156,6 @@ export default function Support() {
                         <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-widest">{t.type}</p>
                      </div>
                      <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2 italic">"{t.message}"</p>
-                     {t.adminReply && (
-                       <div className="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-100/50 relative">
-                          <p className="text-[10px] font-black uppercase text-brand-blue mb-2 flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse"></div> Admin Response</p>
-                          <p className="text-xs text-slate-700 font-medium leading-relaxed">{t.adminReply}</p>
-                       </div>
-                     )}
                   </motion.div>
                ))}
                {tickets.length === 0 && (
