@@ -164,11 +164,12 @@ export default function AdminBroadcasts() {
                         <div className="flex items-center gap-3">
                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
                            <button 
+                             type="button"
                              onClick={() => handleDelete(n.id)}
-                             className="text-slate-500 hover:text-rose-500 transition-colors p-1"
+                             className="text-slate-500 hover:text-rose-500 transition-colors p-2 rounded-full hover:bg-rose-500/10 cursor-pointer relative z-20 focus:outline-none"
                              title="Delete Notification"
                            >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 pointer-events-none" />
                            </button>
                         </div>
                      </div>

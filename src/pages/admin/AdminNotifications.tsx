@@ -167,10 +167,11 @@ export default function AdminNotifications() {
                            </div>
                         </div>
                         <button 
+                          type="button"
                           onClick={() => deleteNotification(n.id)}
-                          className="p-2 text-slate-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                          className="p-3 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-full transition-colors cursor-pointer relative z-20 focus:outline-none"
                         >
-                           <Trash2 className="w-4 h-4" />
+                           <Trash2 className="w-5 h-5 pointer-events-none" />
                         </button>
                      </div>
                      <p className="text-xs text-slate-400 font-medium leading-relaxed">{n.message}</p>
