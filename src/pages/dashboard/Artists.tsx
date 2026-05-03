@@ -97,12 +97,11 @@ export default function Artists() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure? This will remove the artist profile from your catalog.")) {
-      try {
-        await deleteDoc(doc(db, "artists", id));
-      } catch (err: any) {
-        toast.error("Deletion failed: " + (err.message || "Security constraint"));
-      }
+    try {
+      await deleteDoc(doc(db, "artists", id));
+      toast.success("Artist profile deleted.");
+    } catch (err: any) {
+      toast.error("Deletion failed: " + (err.message || "Security constraint"));
     }
   };
 
