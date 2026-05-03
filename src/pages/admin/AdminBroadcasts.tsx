@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, limit, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { 
   Bell, 
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 
 export default function AdminBroadcasts() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -50,13 +51,25 @@ export default function AdminBroadcasts() {
       setTitle("");
       setMessage("");
       fetchNotifications();
-      alert("Broadcast transmitted to all active users.");
+      toast.success("Broadcast transmitted to all active users.");
     } catch (err) {
-      alert("Transmission Failure.");
+      toast.error("Transmission Failure.");
     } finally {
       setSubmitting(false);
     }
   };
+
+   const handleDelete = async (id: string) => {
+     // Removed window.confirm because it is blocked in iframe
+     try {
+       await deleteDoc(doc(db, "system_notifications", id));
+       toast.success("Notification deleted.");
+       fetchNotifications();
+     } catch (err) {
+       console.error("Failed to delete notification", err);
+       toast.error("Failed to delete notification.");
+     }
+   };
 
   return (
     <div className="space-y-12 pb-24">
@@ -148,7 +161,16 @@ export default function AdminBroadcasts() {
                            n.type === 'urgent' ? "bg-rose-500/10 border-rose-500/20 text-rose-500" : 
                            n.type === 'warning' ? "bg-amber-500/10 border-amber-500/20 text-amber-500" : "bg-blue-500/10 border-blue-500/20 text-blue-500"
                         )}>{n.type}</span>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-3">
+                           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
+                           <button 
+                             onClick={() => handleDelete(n.id)}
+                             className="text-slate-500 hover:text-rose-500 transition-colors p-1"
+                             title="Delete Notification"
+                           >
+                              <Trash2 className="w-4 h-4" />
+                           </button>
+                        </div>
                      </div>
                      <div>
                         <h4 className="font-bold text-white uppercase text-xs tracking-tight group-hover:text-brand-blue transition-colors line-clamp-1">{n.title}</h4>

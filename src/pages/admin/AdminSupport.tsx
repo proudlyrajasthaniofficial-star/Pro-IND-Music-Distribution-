@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, updateDoc, doc, where } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, updateDoc, doc, where, getDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
-import { MessageSquare, Search, Clock, CheckCircle2, AlertCircle, Mail, User, ArrowRight } from "lucide-react";
+import { MessageSquare, Search, Clock, CheckCircle2, AlertCircle, Mail, User, ArrowRight, CornerDownRight } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
+import { sendEmailNotification } from "../../lib/email";
 
 export default function AdminSupport() {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [replyTicket, setReplyTicket] = useState<any | null>(null);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [submittingReply, setSubmittingReply] = useState(false);
 
   const fetchTickets = async () => {
     const q = query(collection(db, "support_tickets"), orderBy("createdAt", "desc"));
@@ -21,6 +25,44 @@ export default function AdminSupport() {
   useEffect(() => {
     fetchTickets();
   }, []);
+
+  const submitReply = async () => {
+     if (!replyTicket || !replyMessage.trim()) return;
+     setSubmittingReply(true);
+     try {
+       await updateDoc(doc(db, "support_tickets", replyTicket.id), { 
+         adminReply: replyMessage,
+         status: "resolved",
+         repliedAt: new Date().toISOString()
+       });
+       
+       if (replyTicket.userEmail) {
+          await sendEmailNotification(
+             replyTicket.userEmail, 
+             `Support Reply: ${replyTicket.subject}`,
+             `<div style="font-family: sans-serif; padding: 20px;">
+                <h2>Support Ticket Update</h2>
+                <p>Hello ${replyTicket.userName || 'Artist'},</p>
+                <p>Our support team has replied to your ticket "<strong>${replyTicket.subject}</strong>":</p>
+                <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <p style="margin:0; font-family: monospace;">${replyMessage}</p>
+                </div>
+                <p>Status has been marked as <strong>RESOLVED</strong>.</p>
+                <a href="https://yourplatform.com/dashboard/support" style="background: #0066ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View in Dashboard</a>
+             </div>`
+          );
+       }
+       
+       toast.success("Reply dispatched & ticket resolved.");
+       setReplyMessage("");
+       setReplyTicket(null);
+       fetchTickets();
+     } catch (err) {
+       toast.error("Failed to send reply");
+     } finally {
+       setSubmittingReply(false);
+     }
+  };
 
   const updateTicketStatus = async (id: string, status: string) => {
     try {
@@ -111,6 +153,13 @@ export default function AdminSupport() {
                            <td className="px-12 py-8 text-right">
                               <div className="flex items-center justify-end gap-3">
                                  <button 
+                                   onClick={() => setReplyTicket(t)}
+                                   className="w-10 h-10 bg-brand-blue/10 text-brand-blue rounded-xl flex items-center justify-center hover:bg-brand-blue transition-all hover:text-white"
+                                   title="Reply to Ticket"
+                                 >
+                                    <CornerDownRight className="w-4 h-4" />
+                                 </button>
+                                 <button 
                                    onClick={() => updateTicketStatus(t.id, "resolved")}
                                    className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center hover:bg-emerald-500 transition-all hover:text-white"
                                  >
@@ -122,9 +171,6 @@ export default function AdminSupport() {
                                  >
                                     <Clock className="w-5 h-5" />
                                  </button>
-                                 <a href={`mailto:${t.userEmail}`} className="p-3 text-slate-600 hover:text-brand-blue transition-colors">
-                                    <Mail className="w-5 h-5" />
-                                 </a>
                               </div>
                            </td>
                         </tr>
@@ -144,6 +190,56 @@ export default function AdminSupport() {
             </div>
          </div>
       </div>
+
+      <AnimatePresence>
+        {replyTicket && (
+           <motion.div 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+           >
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-[#1E293B] border border-slate-700 w-full max-w-lg rounded-[2.5rem] p-10 relative overflow-hidden"
+              >
+                 <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">Reply to Support</h2>
+                 <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-6">Subject: {replyTicket.subject}</p>
+                 
+                 <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 mb-6 max-h-32 overflow-y-auto custom-scrollbar">
+                    <p className="text-xs text-slate-300 italic">"{replyTicket.message}"</p>
+                 </div>
+
+                 <textarea 
+                    value={replyMessage}
+                    onChange={e => setReplyMessage(e.target.value)}
+                    placeholder="Write your response... This will automatically email the artist and mark the ticket as resolved."
+                    className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm font-bold text-white mb-6 h-32 focus:border-brand-blue transition-colors outline-none resize-none"
+                 />
+                 
+                 <div className="flex justify-end gap-3">
+                    <button 
+                       onClick={() => setReplyTicket(null)}
+                       disabled={submittingReply}
+                       className="px-6 py-3 font-bold text-xs text-slate-400 hover:text-white uppercase tracking-widest transition-colors"
+                    >
+                       Cancel
+                    </button>
+                    <button 
+                       onClick={submitReply}
+                       disabled={submittingReply || !replyMessage.trim()}
+                       className="bg-brand-blue text-white px-8 py-3 rounded-full font-bold text-[10px] uppercase tracking-widest shadow-xl shadow-blue-500/20 disabled:opacity-50 transition-colors hover:bg-blue-600"
+                    >
+                       {submittingReply ? "Dispatching..." : "Send Reply & Resolve"}
+                    </button>
+                 </div>
+              </motion.div>
+           </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

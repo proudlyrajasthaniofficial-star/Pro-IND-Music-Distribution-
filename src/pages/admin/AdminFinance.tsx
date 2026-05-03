@@ -54,7 +54,7 @@ export default function AdminFinance() {
   }, []);
 
   const approveWithdrawal = async (w: any) => {
-    if (!confirm(`Approve liquidation of ${formatCurrency(w.amount)}?`)) return;
+    // window.confirm removed to support iframe execution
     try {
       const uRef = doc(db, "users", w.userId);
       const uSnap = await getDocs(query(collection(db, "users"), where("__name__", "==", w.userId)));

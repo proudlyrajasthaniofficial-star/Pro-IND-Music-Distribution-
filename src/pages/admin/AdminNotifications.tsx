@@ -4,6 +4,7 @@ import { db } from "../../lib/firebase";
 import { Bell, Send, Trash2, Clock, Globe, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 export default function AdminNotifications() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -39,20 +40,22 @@ export default function AdminNotifications() {
       setTitle("");
       setMessage("");
       fetchNotifications();
+      toast.success("Notification sent!");
     } catch (err) {
-      alert("Failed to deploy notification.");
+      toast.error("Failed to deploy notification.");
     } finally {
       setIsSending(false);
     }
   };
 
   const deleteNotification = async (id: string) => {
-    if (!confirm("Deactivate this transmission?")) return;
+    // window.confirm removed to support iframe execution
     try {
       await deleteDoc(doc(db, "system_notifications", id));
       setNotifications(notifications.filter(n => n.id !== id));
+      toast.success("Notification deactivated.");
     } catch (err) {
-      alert("Deletion failure.");
+      toast.error("Deletion failure.");
     }
   };
 

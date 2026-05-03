@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, where, doc, updateDoc, addDoc, limit } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, where, doc, updateDoc, addDoc, limit, getDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { 
   History, 
@@ -20,6 +20,7 @@ import {
 import { formatCurrency, cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
+import { sendEmailNotification } from "../../lib/email";
 
 const STATUS_FILTERS = [
   { id: 'all', label: 'All Requests' },
@@ -56,7 +57,7 @@ export default function AdminWithdrawals() {
 
   const handleAction = async (withdrawal: any, status: 'approved' | 'rejected') => {
     if (!withdrawal || !status) return;
-    if (!confirm(`Confirm ${status} for ₹${withdrawal.amount}?`)) return;
+    // window.confirm removed to support iframe execution
 
     setProcessing(true);
     try {
@@ -94,6 +95,43 @@ export default function AdminWithdrawals() {
         status, 
         processedAt: new Date().toISOString() 
       });
+
+      // Send Email Notification
+      try {
+         const userDocRef = doc(db, "users", withdrawal.userId);
+         const userDocSnap = await getDoc(userDocRef);
+         if (userDocSnap.exists()) {
+             const userData = userDocSnap.data();
+             if (userData.email) {
+                 const emailSubject = status === 'approved' 
+                    ? `Payment Sent: ${formatCurrency(withdrawal.amount)} withdrawal approved 💸` 
+                    : `Update on your withdrawal request for ${formatCurrency(withdrawal.amount)}`;
+                 
+                 let emailHtml = `
+                    <div style="font-family: sans-serif; padding: 20px; color: #1e293b;">
+                       <h2 style="color: #0f172a;">Hello ${userData.displayName || 'Artist'},</h2>
+                       <p>Your withdrawal request for <strong>${formatCurrency(withdrawal.amount)}</strong> has been <strong>${status.toUpperCase()}</strong>.</p>
+                 `;
+
+                 if (status === 'approved') {
+                    emailHtml += `<p>The funds have been dispatched using the provided payment method (${withdrawal.method}). Please allow up to 3-5 business days for the funds to reflect in your account.</p>`;
+                 } else {
+                    emailHtml += `<p>Unfortunately, we could not process your withdrawal at this time. Please contact support if you believe this is an error or try again.</p>`;
+                 }
+
+                 emailHtml += `
+                       <br/>
+                       <a href="https://yourplatform.com/dashboard/wallet" style="background: #0066FF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">View Wallet</a>
+                       <p style="margin-top: 40px; font-size: 12px; color: #64748b;">This is an automated message from the Distribution Network.</p>
+                    </div>
+                 `;
+
+                 await sendEmailNotification(userData.email, emailSubject, emailHtml);
+             }
+         }
+      } catch (emailErr) {
+         console.error("Email dispatch failed:", emailErr);
+      }
 
       setSelectedWithdrawal(null);
       fetchWithdrawals();

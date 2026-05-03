@@ -22,11 +22,12 @@ import {
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
-import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { motion, AnimatePresence } from "motion/react";
 import { FadeIn } from "../../components/ui/FadeIn";
 import { PLANS } from "../../constants/plans";
 import { Skeleton } from "../../components/ui/Skeleton";
+import AnalyticsMap from "../../components/AnalyticsMap";
 
 export default function Overview() {
   const { user, profile, isAdmin } = useAuth();
@@ -365,7 +366,7 @@ export default function Overview() {
                 </div>
              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                <div className="bg-white p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 h-[380px] flex flex-col">
                   <div className="mb-6 flex justify-between items-center text-left">
                      <div>
@@ -385,7 +386,7 @@ export default function Overview() {
                         />
                         <Bar dataKey="streams" radius={[0, 8, 8, 0]} animationDuration={1500}>
                           {platformData.map((entry, index) => (
-                            <cell key={`cell-${index}`} fill={entry.color} />
+                            <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Bar>
                       </BarChart>
@@ -393,7 +394,12 @@ export default function Overview() {
                   </div>
                </div>
 
-               <div className="bg-white p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+               <div className="h-[380px]">
+                 <AnalyticsMap />
+               </div>
+             </div>
+
+             <div className="bg-white p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                   <h4 className="font-black font-display text-lg tracking-tight uppercase mb-6 text-left">Pipeline Status</h4>
                   <div className="flex flex-col gap-4">
                     {[
@@ -471,7 +477,6 @@ export default function Overview() {
               </div>
            </div>
         </div>
-      </div>
     </FadeIn>
   );
 }

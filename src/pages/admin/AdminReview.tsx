@@ -29,6 +29,7 @@ import { uploadToCloudinary } from "../../lib/cloudinary";
 import { analyzeReleaseMetadata, MetadataCheckResult } from "../../services/geminiService";
 
 import { triggerNotification } from "../../lib/notifications";
+import { sendEmailNotification } from "../../lib/email";
 
 export default function AdminReview() {
   const { releaseId } = useParams();
@@ -135,6 +136,37 @@ export default function AdminReview() {
           status: newStatus,
           reason: rejectionReason
         });
+
+        if (userData.email) {
+           const emailSubject = newStatus === 'live' 
+             ? `Your Release "${release.title || release.songName}" is now LIVE! 🎉` 
+             : newStatus === 'rejected' 
+               ? `Action Required: Your Release "${release.title || release.songName}" was Rejected`
+               : `Update on your Release "${release.title || release.songName}" [${newStatus.toUpperCase()}]`;
+
+           let emailHtml = `
+             <div style="font-family: sans-serif; padding: 20px; color: #1e293b;">
+               <h2 style="color: #0f172a;">Hello ${userData.displayName || 'Artist'},</h2>
+               <p>There is an update on your release <strong>${release.title || release.songName}</strong>.</p>
+               <p><strong>Status:</strong> <span style="text-transform: uppercase;">${newStatus.replace(/_/g, " ")}</span></p>
+           `;
+
+           if (newStatus === 'rejected') {
+             emailHtml += `<p><strong>Reason:</strong> ${rejectionReason || "Please review our guidelines and fix the issues."}</p>`;
+             emailHtml += `<p>Please log in to your dashboard to submit corrections.</p>`;
+           } else if (newStatus === 'live') {
+             emailHtml += `<p>Your music has been successfully processed and is currently being distributed to platforms worldwide.</p>`;
+           }
+
+           emailHtml += `
+               <br/>
+               <a href="https://yourplatform.com/dashboard" style="background: #0066FF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Go to Dashboard</a>
+               <p style="margin-top: 40px; font-size: 12px; color: #64748b;">This is an automated message from the Distribution Network.</p>
+             </div>
+           `;
+
+           await sendEmailNotification(userData.email, emailSubject, emailHtml);
+        }
       }
 
       toast.success(`Protocol updated: ${newStatus.toUpperCase()}`);

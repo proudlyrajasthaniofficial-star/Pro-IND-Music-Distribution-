@@ -37,8 +37,7 @@ export default function AdminOAC() {
             <thead>
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
                   <th className="px-12 py-8">Artist Entity</th>
-                  <th className="px-6 py-8">Channel Details</th>
-                  <th className="px-6 py-8">Topic Channel</th>
+                  <th className="px-6 py-8">Channel Links</th>
                   <th className="px-6 py-8">Status</th>
                   <th className="px-12 py-8 text-right">Review</th>
                </tr>
@@ -47,16 +46,33 @@ export default function AdminOAC() {
                {requests.map((r, i) => (
                  <tr key={i} className="group hover:bg-slate-800/50 transition-colors">
                     <td className="px-12 py-8">
-                       <p className="font-bold text-white uppercase text-sm tracking-tight">{r.artistName}</p>
-                       <p className="text-[10px] text-slate-500 uppercase mt-1">UID: {r.userId.slice(0, 8)}</p>
+                       <p className="font-bold text-white uppercase text-sm tracking-tight">{r.artistName || "Unknown Artist"}</p>
+                       <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">User: {r.userName || "Unknown"}</p>
+                       <p className="text-[10px] text-slate-600 uppercase mt-1">UID: {r.userId?.slice(0, 8)}</p>
                     </td>
-                    <td className="px-6 py-8">
-                       <a href={r.channelUrl} target="_blank" className="flex items-center gap-2 text-brand-blue hover:underline text-xs font-bold uppercase tracking-widest">
-                          View Channel <ExternalLink className="w-3 h-3" />
-                       </a>
-                    </td>
-                    <td className="px-6 py-8">
-                       <p className="text-xs text-slate-400 font-medium truncate max-w-[200px]">{r.topicUrl || "---"}</p>
+                    <td className="px-6 py-8 space-y-2">
+                       <div className="flex items-center gap-2">
+                         <span className="text-[9px] font-black uppercase text-slate-500 w-16">Primary</span>
+                         <a href={r.channelUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-brand-blue hover:underline text-[11px] font-bold uppercase tracking-widest truncate max-w-[200px]">
+                            View Channel <ExternalLink className="w-3 h-3" />
+                         </a>
+                       </div>
+                       {r.topicUrl && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-[9px] font-black uppercase text-slate-500 w-16">Topic</span>
+                           <a href={r.topicUrl.startsWith('http') ? r.topicUrl : `https://${r.topicUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-emerald-400 hover:underline text-[11px] font-bold uppercase tracking-widest truncate max-w-[200px]">
+                              View Topic <ExternalLink className="w-3 h-3" />
+                           </a>
+                         </div>
+                       )}
+                       {r.vevoUrl && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-[9px] font-black uppercase text-slate-500 w-16">VEVO</span>
+                           <a href={r.vevoUrl.startsWith('http') ? r.vevoUrl : `https://${r.vevoUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-rose-400 hover:underline text-[11px] font-bold uppercase tracking-widest truncate max-w-[200px]">
+                              View VEVO <ExternalLink className="w-3 h-3" />
+                           </a>
+                         </div>
+                       )}
                     </td>
                     <td className="px-6 py-8">
                        <span className={cn(

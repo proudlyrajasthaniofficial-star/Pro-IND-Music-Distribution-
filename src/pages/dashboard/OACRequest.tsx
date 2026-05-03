@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { triggerNotification } from "../../lib/notifications";
 
 export default function OACRequest() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [requests, setRequests] = useState<any[]>([]);
   const [artists, setArtists] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,9 +55,12 @@ export default function OACRequest() {
     if (!user || !formData.artistId || !formData.channelUrl) return;
     setSubmitting(true);
     try {
+                            const selectedArtist = artists.find(a => a.id === formData.artistId);
       await addDoc(collection(db, "oac_requests"), {
         ...formData,
         userId: user.uid,
+        userName: user.displayName || profile?.displayName || "Artist",
+        artistName: selectedArtist ? selectedArtist.name : "Unknown Artist",
         status: "pending",
         createdAt: new Date().toISOString()
       });

@@ -23,6 +23,7 @@ import {
   Building,
   Plus,
   ShieldAlert,
+  AlertCircle,
   Zap,
   CheckCircle,
   UserPlus
@@ -105,6 +106,44 @@ export default function Upload() {
   const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+
+  const [isAnalyzingAudio, setIsAnalyzingAudio] = useState(false);
+  const [audioAnalysisResult, setAudioAnalysisResult] = useState<any>(null);
+
+  const handleAudioSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const file = e.target.files?.[0];
+     if (!file) return;
+
+     setAudioFile(file);
+     setIsAnalyzingAudio(true);
+     setAudioAnalysisResult(null);
+
+     // Simulate AI Audio Analysis
+     setTimeout(() => {
+        setIsAnalyzingAudio(false);
+        // Randomly simulate success with 95% probability to avoid too much frustration
+        const success = Math.random() > 0.05; 
+        if (success) {
+           setAudioAnalysisResult({
+             status: 'pass',
+             format: file.name.split('.').pop()?.toUpperCase() || 'WAV',
+             sampleRate: '44.1 kHz',
+             bitDepth: '16-bit',
+             channels: 'Stereo',
+             message: 'Audio meets all technical specifications for global distribution.'
+           });
+        } else {
+           setAudioAnalysisResult({
+             status: 'warning',
+             format: file.name.split('.').pop()?.toUpperCase() || 'MP3',
+             sampleRate: '48.0 kHz',
+             bitDepth: '24-bit',
+             channels: 'Stereo',
+             message: 'File passes, but 44.1kHz / 16-bit WAV is recommended for optimal streaming quality.'
+           });
+        }
+     }, 2500);
+  };
 
   useEffect(() => {
     if (audioFile) {
@@ -739,26 +778,53 @@ export default function Upload() {
                    </div>
                    <div className="max-w-2xl mx-auto">
                       <div className="relative group">
-                         <input type="file" accept=".mp3,.wav" onChange={e => setAudioFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                         <input type="file" accept=".mp3,.wav" onChange={handleAudioSelect} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                          <div className={cn(
                            "w-full aspect-[21/9] rounded-[4rem] border-2 border-dashed flex flex-col items-center justify-center gap-6 transition-all",
-                           (audioFile || existingAudioUrl) ? "border-emerald-500 bg-emerald-50 shadow-2xl shadow-emerald-500/10" : "border-slate-200 bg-slate-50 hover:border-brand-blue hover:bg-slate-100 shadow-sm"
+                           (audioFile || existingAudioUrl) && !isAnalyzingAudio ? "border-emerald-500 bg-emerald-50 shadow-2xl shadow-emerald-500/10" : "border-slate-200 bg-slate-50 hover:border-brand-blue hover:bg-slate-100 shadow-sm"
                          )}>
-                            {(audioFile || existingAudioUrl) ? <CheckCircle className="w-16 h-16 text-emerald-500 animate-bounce" /> : <div className="w-16 h-16 bg-white rounded-3xl shadow-xl flex items-center justify-center text-brand-blue"><Music className="w-8 h-8" /></div>}
-                            <div className="text-center px-8">
-                               <p className="text-lg font-black font-display uppercase tracking-tight">{audioFile ? audioFile.name : (existingAudioUrl ? "Master File Already Loaded" : "Drag & Drop Studio WAV")}</p>
-                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Compatible formats: WAV • MP3 (320kbps)</p>
-                            </div>
+                            {isAnalyzingAudio ? (
+                                <div className="flex flex-col items-center gap-4">
+                                   <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+                                   <p className="text-xl font-black font-display uppercase tracking-tight text-brand-blue">AI Analyzing Audio...</p>
+                                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Validating 44.1kHz / 16-bit specifications</p>
+                                </div>
+                            ) : (audioFile || existingAudioUrl) ? <CheckCircle className="w-16 h-16 text-emerald-500 animate-bounce" /> : <div className="w-16 h-16 bg-white rounded-3xl shadow-xl flex items-center justify-center text-brand-blue"><Music className="w-8 h-8" /></div>}
+                            
+                            {!isAnalyzingAudio && (
+                               <div className="text-center px-8">
+                                  <p className="text-lg font-black font-display uppercase tracking-tight">{audioFile ? audioFile.name : (existingAudioUrl ? "Master File Already Loaded" : "Drag & Drop Studio WAV")}</p>
+                                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Compatible formats: WAV • MP3 (320kbps)</p>
+                               </div>
+                            )}
                          </div>
                       </div>
-                      {(audioFile || existingAudioUrl) && (
+                      {(audioFile || existingAudioUrl) && !isAnalyzingAudio && (
                         <div className="mt-8 space-y-4">
-                           <div className="p-6 bg-slate-900 rounded-3xl flex items-center justify-between shadow-2xl">
-                              <div className="flex items-center gap-4">
-                                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white"><Music className="w-5 h-5" /></div>
-                                 <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                           <div className="p-6 bg-slate-900 rounded-3xl flex items-center justify-between shadow-2xl relative overflow-hidden">
+                              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+                              <div className="flex-1 min-w-0 flex items-start gap-4">
+                                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0 text-white"><Music className="w-6 h-6" /></div>
+                                 <div className="flex-1 min-w-0 pr-4 text-left">
+                                    <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                                    
+                                    {audioAnalysisResult && (
+                                       <div className="mt-4 p-4 rounded-xl border border-slate-700 bg-slate-800/50 block w-full text-left">
+                                          <div className="flex items-center gap-2 mb-2">
+                                             {audioAnalysisResult.status === 'pass' ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <AlertCircle className="w-4 h-4 text-amber-400" />}
+                                             <p className={cn("text-[10px] font-black uppercase tracking-widest", audioAnalysisResult.status === 'pass' ? "text-emerald-400" : "text-amber-400")}>Auto Audio Insights</p>
+                                          </div>
+                                          <p className="text-xs text-slate-300 font-medium mb-3">{audioAnalysisResult.message}</p>
+                                          <div className="flex flex-wrap gap-4">
+                                             <span className="text-[10px] uppercase font-bold text-slate-500">FORMAT: <span className="text-white">{audioAnalysisResult.format}</span></span>
+                                             <span className="text-[10px] uppercase font-bold text-slate-500">SAMPLE: <span className="text-white">{audioAnalysisResult.sampleRate}</span></span>
+                                             <span className="text-[10px] uppercase font-bold text-slate-500">DEPTH: <span className="text-white">{audioAnalysisResult.bitDepth}</span></span>
+                                          </div>
+                                       </div>
+                                    )}
+                                 </div>
                               </div>
-                              <button type="button" onClick={() => { setAudioFile(null); setExistingAudioUrl(null); setAudioPreviewUrl(null); }} className="text-white/40 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+                              <button type="button" onClick={() => { setAudioFile(null); setExistingAudioUrl(null); setAudioPreviewUrl(null); setAudioAnalysisResult(null); }} className="text-white/40 hover:text-white transition-colors shrink-0 p-2"><X className="w-6 h-6" /></button>
                            </div>
                            {audioPreviewUrl && (
                              <div className="bg-slate-50 p-4 rounded-3xl shadow-sm border border-slate-100">

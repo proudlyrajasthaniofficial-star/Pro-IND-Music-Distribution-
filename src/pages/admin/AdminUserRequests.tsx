@@ -182,17 +182,24 @@ export default function AdminUserRequests() {
                                 <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-brand-blue group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                                    <MessageSquare className="w-6 h-6" />
                                 </div>
-                                <div className="max-w-[200px]">
-                                   <p className="text-sm font-black text-white uppercase tracking-tight line-clamp-1">{r.ticketId}</p>
-                                   <div className="flex items-center gap-2 mt-1 Opacity-40">
-                                      <User className="w-3 h-3" />
-                                      <span className="text-[9px] font-bold text-slate-400 truncate">{r.userName}</span>
+                                <div className="max-w-[250px]">
+                                   <p className="text-sm font-black text-white uppercase tracking-tight line-clamp-1">{r.ticketId} {r.data?.songName ? `- ${r.data.songName}` : ''}</p>
+                                   <div className="flex items-center gap-3 mt-1 opacity-60">
+                                      <span className="flex items-center gap-1 text-[9px] font-bold text-slate-300 truncate">
+                                         <User className="w-3 h-3" />
+                                         {r.userName}
+                                      </span>
+                                      {r.data?.singerName && (
+                                         <span className="text-[9px] font-bold text-slate-400 truncate border-l border-slate-700 pl-3">
+                                            Singer: {r.data.singerName}
+                                         </span>
+                                      )}
                                    </div>
                                 </div>
                              </div>
                           </td>
                           <td className="px-6 py-8 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                             {r.type.replace('_', ' ')}
+                             {r.type === 'instagram_linking' ? 'Instagram Profile Link Request' : r.type.replace(/_/g, ' ')}
                           </td>
                           <td className="px-6 py-8">
                              <div className="flex justify-center">
@@ -302,14 +309,22 @@ export default function AdminUserRequests() {
                             <h3 className="text-xs font-black text-white uppercase tracking-widest">Data Specifications</h3>
                         </div>
                         <div className="bg-white/5 p-8 rounded-[2.5rem] space-y-4 border border-white/5 font-mono">
-                            {Object.entries(selectedRequest.data || {}).map(([key, val]) => (
-                                val && (
-                                    <div key={key} className="flex justify-between border-b border-white/5 pb-3">
-                                        <span className="text-[10px] text-slate-500 uppercase font-black">{key}</span>
-                                        <span className="text-[11px] text-emerald-400 font-bold">{String(val)}</span>
+                            {Object.entries(selectedRequest.data || {}).map(([key, val]) => {
+                                if (!val) return null;
+                                const isUrl = typeof val === 'string' && val.startsWith('http');
+                                return (
+                                    <div key={key} className="flex justify-between border-b border-white/5 pb-3 gap-4">
+                                        <span className="text-[10px] text-slate-500 uppercase font-black shrink-0">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                        {isUrl ? (
+                                            <a href={val as string} target="_blank" rel="noreferrer" className="text-[11px] text-brand-blue hover:underline font-bold text-right truncate">
+                                               {val as string}
+                                            </a>
+                                        ) : (
+                                            <span className="text-[11px] text-emerald-400 font-bold text-right break-words">{String(val)}</span>
+                                        )}
                                     </div>
                                 )
-                            ))}
+                            })}
                         </div>
                     </div>
 
