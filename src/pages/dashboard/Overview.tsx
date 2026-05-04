@@ -22,11 +22,13 @@ import {
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
-import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { motion, AnimatePresence } from "motion/react";
 import { FadeIn } from "../../components/ui/FadeIn";
 import { PLANS } from "../../constants/plans";
 import { Skeleton } from "../../components/ui/Skeleton";
+
+import GlobeBox from "../../components/Globe";
 
 export default function Overview() {
   const { user, profile, isAdmin } = useAuth();
@@ -287,6 +289,52 @@ export default function Overview() {
              </div>
           </div>
         </div>
+        
+        {/* Global Reach 3D Section */}
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.98 }}
+           animate={{ opacity: 1, scale: 1 }}
+           className="relative bg-slate-900 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl group border border-slate-800"
+        >
+           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0066FF_0%,transparent_100%)] blur-3xl"></div>
+           </div>
+           
+           <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+              <div className="flex-1 text-left space-y-6">
+                 <div className="space-y-2">
+                    <h3 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white uppercase italic">Global Listener <span className="text-brand-blue">Reach</span></h3>
+                    <p className="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-[0.2em]">Real-time spatial data ingestion from 200+ territories</p>
+                 </div>
+                 
+                 <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { label: "Top Region", val: "United States", trend: "+8.2%" },
+                      { label: "Rising", val: "India / Brazil", trend: "+14.5%" },
+                      { label: "Active nodes", val: "142 Cities", trend: "Live" },
+                      { label: "Avg Latency", val: "42ms", trend: "Stable" }
+                    ].map((stat, i) => (
+                      <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
+                         <p className="text-[8px] font-black uppercase tracking-widest text-slate-500 mb-1">{stat.label}</p>
+                         <div className="flex items-center justify-between">
+                            <p className="text-xs font-bold text-white uppercase">{stat.val}</p>
+                            <span className="text-[8px] font-black text-emerald-400">{stat.trend}</span>
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+                 
+                 <button className="px-8 py-3 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-white/5">
+                    Detailed Mapping
+                 </button>
+              </div>
+              
+              <div className="w-full lg:w-[450px] aspect-square relative">
+                 <div className="absolute inset-0 bg-brand-blue/20 blur-[120px] rounded-full scale-75 animate-pulse"></div>
+                 {/* <GlobeBox /> */}
+              </div>
+           </div>
+        </motion.div>
 
         {/* 3D Quick Actions */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -385,7 +433,7 @@ export default function Overview() {
                         />
                         <Bar dataKey="streams" radius={[0, 8, 8, 0]} animationDuration={1500}>
                           {platformData.map((entry, index) => (
-                            <cell key={`cell-${index}`} fill={entry.color} />
+                            <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Bar>
                       </BarChart>

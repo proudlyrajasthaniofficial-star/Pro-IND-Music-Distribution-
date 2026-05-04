@@ -26,22 +26,39 @@ export default function OACRequest() {
   const [artists, setArtists] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [formData, setFormData] = useState({ artistId: "", channelUrl: "", topicUrl: "", vevoUrl: "" });
+  const [formData, setFormData] = useState({ 
+    artistId: "", 
+    channelUrl: "", 
+    topicUrl: "", 
+    vevoUrl: "",
+    subject: "YouTube OAC Request",
+    instagramLink: "",
+    releaseId: ""
+  });
+  const [myReleases, setMyReleases] = useState<any[]>([]);
 
   const fetchData = async () => {
     if (!user) return;
     setLoading(true);
     
-    const aSnap = await getDocs(query(collection(db, "artists"), where("userId", "==", user.uid)));
-    setArtists(aSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+    try {
+      const aSnap = await getDocs(query(collection(db, "artists"), where("userId", "==", user.uid)));
+      setArtists(aSnap.docs.map(d => ({ id: d.id, ...d.data() })));
 
-    const qSnap = await getDocs(query(collection(db, "oac_requests"), where("userId", "==", user.uid)));
-    const sortedDocs = qSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
-       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-       return dateB - dateA;
-    });
-    setRequests(sortedDocs);
+      const qSnap = await getDocs(query(collection(db, "oac_requests"), where("userId", "==", user.uid)));
+      const sortedDocs = qSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+         return dateB - dateA;
+      });
+      setRequests(sortedDocs);
+
+      const rq = query(collection(db, "releases"), where("userId", "==", user.uid));
+      const rSnap = await getDocs(rq);
+      setMyReleases(rSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) {
+      console.error("Error fetching OAC data:", err);
+    }
     
     setLoading(false);
   };
@@ -55,9 +72,13 @@ export default function OACRequest() {
     if (!user || !formData.artistId || !formData.channelUrl) return;
     setSubmitting(true);
     try {
+      const selectedRelease = myReleases.find(r => r.id === formData.releaseId);
       await addDoc(collection(db, "oac_requests"), {
         ...formData,
         userId: user.uid,
+        userEmail: user.email,
+        userName: user.displayName || "Artist",
+        releaseTitle: selectedRelease?.title || "",
         status: "pending",
         createdAt: new Date().toISOString()
       });
@@ -69,7 +90,15 @@ export default function OACRequest() {
         type: "YouTube Official Artist Channel (OAC)"
       });
 
-      setFormData({ artistId: "", channelUrl: "", topicUrl: "", vevoUrl: "" });
+      setFormData({ 
+        artistId: "", 
+        channelUrl: "", 
+        topicUrl: "", 
+        vevoUrl: "",
+        subject: "YouTube OAC Request",
+        instagramLink: "",
+        releaseId: ""
+      });
       fetchData();
       toast.success("OAC upgrade request submitted.");
     } catch (err) {

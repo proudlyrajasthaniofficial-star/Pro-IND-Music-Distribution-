@@ -100,6 +100,39 @@ export default function Upload() {
   const [existingRelease, setExistingRelease] = useState<any>(null);
   
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioValidation, setAudioValidation] = useState<{ valid: boolean; error?: string } | null>(null);
+
+  const validateAudio = (file: File) => {
+    if (!file.name.toLowerCase().endsWith(".wav")) {
+       setAudioValidation({ valid: true }); // Skip for non-wav mp3
+       return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const buffer = e.target?.result as ArrayBuffer;
+      if (buffer.byteLength < 44) {
+        setAudioValidation({ valid: false, error: "Invalid WAV file structure." });
+        return;
+      }
+      const view = new DataView(buffer);
+      
+      // Sample Rate: Offset 24, 4 bytes, Little Endian
+      const sampleRate = view.getUint32(24, true);
+      // Bits Per Sample: Offset 34, 2 bytes, Little Endian
+      const bitsPerSample = view.getUint16(34, true);
+
+      if (sampleRate !== 44100 && sampleRate !== 48000) {
+        setAudioValidation({ valid: false, error: `Invalid Sample Rate: ${sampleRate}Hz. Standard is 44100Hz.` });
+      } else if (bitsPerSample !== 16 && bitsPerSample !== 24) {
+        setAudioValidation({ valid: false, error: `Invalid Bit Depth: ${bitsPerSample}-bit. Standard is 16-bit.` });
+      } else {
+        setAudioValidation({ valid: true });
+        toast.success(`Audio Verified: ${sampleRate}Hz / ${bitsPerSample}-bit WAV detected.`);
+      }
+    };
+    reader.readAsArrayBuffer(file.slice(0, 44));
+  };
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [existingAudioUrl, setExistingAudioUrl] = useState<string | null>(null);
   const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null);
@@ -739,7 +772,16 @@ export default function Upload() {
                    </div>
                    <div className="max-w-2xl mx-auto">
                       <div className="relative group">
-                         <input type="file" accept=".mp3,.wav" onChange={e => setAudioFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                         <input 
+                              type="file" 
+                              accept=".mp3,.wav" 
+                              onChange={e => {
+                                 const file = e.target.files?.[0] || null;
+                                 setAudioFile(file);
+                                 if (file) validateAudio(file);
+                              }} 
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                         />
                          <div className={cn(
                            "w-full aspect-[21/9] rounded-[4rem] border-2 border-dashed flex flex-col items-center justify-center gap-6 transition-all",
                            (audioFile || existingAudioUrl) ? "border-emerald-500 bg-emerald-50 shadow-2xl shadow-emerald-500/10" : "border-slate-200 bg-slate-50 hover:border-brand-blue hover:bg-slate-100 shadow-sm"
@@ -747,6 +789,12 @@ export default function Upload() {
                             {(audioFile || existingAudioUrl) ? <CheckCircle className="w-16 h-16 text-emerald-500 animate-bounce" /> : <div className="w-16 h-16 bg-white rounded-3xl shadow-xl flex items-center justify-center text-brand-blue"><Music className="w-8 h-8" /></div>}
                             <div className="text-center px-8">
                                <p className="text-lg font-black font-display uppercase tracking-tight">{audioFile ? audioFile.name : (existingAudioUrl ? "Master File Already Loaded" : "Drag & Drop Studio WAV")}</p>
+                               {audioValidation?.error && (
+                                 <div className="mt-4 px-4 py-2 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-2 justify-center">
+                                    <ShieldAlert className="w-4 h-4 text-rose-500" />
+                                    <span className="text-[10px] font-bold text-rose-600 uppercase tracking-widest">{audioValidation.error}</span>
+                                 </div>
+                               )}
                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Compatible formats: WAV • MP3 (320kbps)</p>
                             </div>
                          </div>
@@ -769,7 +817,14 @@ export default function Upload() {
                       )}
                       <div className="pt-12 flex justify-center gap-6">
                         <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500">Back</button>
-                        <button type="button" disabled={!audioFile && !existingAudioUrl} onClick={nextStep} className="btn-premium btn-glow py-5 px-12 disabled:opacity-50">Continue</button>
+                        <button 
+                           type="button" 
+                           disabled={(!audioFile && !existingAudioUrl) || (audioFile && audioValidation?.valid === false)} 
+                           onClick={nextStep} 
+                           className="btn-premium btn-glow py-5 px-12 disabled:opacity-50"
+                        >
+                           {audioValidation?.valid === false ? "Fix Audio Error" : "Continue"}
+                        </button>
                       </div>
                    </div>
                 </motion.div>

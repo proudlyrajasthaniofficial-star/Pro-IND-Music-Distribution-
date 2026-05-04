@@ -280,7 +280,7 @@ export default function AdminUserRequests() {
                     </button>
                  </div>
 
-                 <div className="flex-1 overflow-y-auto p-10 space-y-12 scrollbar-hide">
+                  <div className="flex-1 overflow-y-auto p-10 space-y-12 scrollbar-hide">
                     {/* User Specs */}
                     <div className="grid grid-cols-2 gap-4">
                         <div className="bg-slate-900/50 p-6 rounded-[2rem] border border-white/5">
@@ -295,18 +295,38 @@ export default function AdminUserRequests() {
                         </div>
                     </div>
 
+                    {/* Request Summary */}
+                    <div className="bg-slate-900/50 p-8 rounded-[2.5rem] border border-white/5">
+                        <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest block mb-3">Topic & Context</span>
+                        <h3 className="text-xl font-black text-white uppercase mb-4 leading-tight">
+                            {selectedRequest.subject || "No Subject Provided"}
+                        </h3>
+                        <div className="flex flex-wrap gap-3">
+                            <div className="px-3 py-1 bg-white/5 rounded-full flex items-center gap-2">
+                                <Zap className="w-3 h-3 text-brand-blue" />
+                                <span className="text-[9px] font-black uppercase text-slate-300">{selectedRequest.type.replace('_', ' ')}</span>
+                            </div>
+                            {selectedRequest.releaseTitle && (
+                                <div className="px-3 py-1 bg-brand-blue/10 rounded-full flex items-center gap-2">
+                                    <MessageSquare className="w-3 h-3 text-brand-blue" />
+                                    <span className="text-[9px] font-black uppercase text-brand-blue">Release: {selectedRequest.releaseTitle}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Data Specs */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
                             <Info className="w-4 h-4 text-brand-blue" />
-                            <h3 className="text-xs font-black text-white uppercase tracking-widest">Data Specifications</h3>
+                            <h3 className="text-xs font-black text-white uppercase tracking-widest">Payload Details</h3>
                         </div>
                         <div className="bg-white/5 p-8 rounded-[2.5rem] space-y-4 border border-white/5 font-mono">
                             {Object.entries(selectedRequest.data || {}).map(([key, val]) => (
-                                val && (
-                                    <div key={key} className="flex justify-between border-b border-white/5 pb-3">
-                                        <span className="text-[10px] text-slate-500 uppercase font-black">{key}</span>
-                                        <span className="text-[11px] text-emerald-400 font-bold">{String(val)}</span>
+                                val && key !== 'subject' && key !== 'priority' && key !== 'releaseId' && (
+                                    <div key={key} className="flex flex-col border-b border-white/5 pb-3">
+                                        <span className="text-[9px] text-slate-500 uppercase font-black mb-1">{key.replace(/([A-Z])/g, ' $1')}</span>
+                                        <span className="text-[11px] text-emerald-400 font-bold whitespace-pre-wrap">{String(val)}</span>
                                     </div>
                                 )
                             ))}

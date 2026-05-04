@@ -36,9 +36,10 @@ export default function AdminOAC() {
          <table className="w-full text-left">
             <thead>
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                  <th className="px-12 py-8">Artist Entity</th>
+                  <th className="px-12 py-8">Topic / Subject</th>
+                  <th className="px-6 py-8">Requester</th>
                   <th className="px-6 py-8">Channel Details</th>
-                  <th className="px-6 py-8">Topic Channel</th>
+                  <th className="px-6 py-8">Context Song</th>
                   <th className="px-6 py-8">Status</th>
                   <th className="px-12 py-8 text-right">Review</th>
                </tr>
@@ -47,17 +48,36 @@ export default function AdminOAC() {
                {requests.map((r, i) => (
                  <tr key={i} className="group hover:bg-slate-800/50 transition-colors">
                     <td className="px-12 py-8">
-                       <p className="font-bold text-white uppercase text-sm tracking-tight">{r.artistName}</p>
-                       <p className="text-[10px] text-slate-500 uppercase mt-1">UID: {r.userId.slice(0, 8)}</p>
+                       <p className="font-bold text-white uppercase text-sm tracking-tight">{r.subject || "OAC Upgrade"}</p>
+                       <p className="text-[10px] text-slate-500 uppercase mt-1">Artist: {r.artistName}</p>
                     </td>
-                    <td className="px-6 py-8">
-                       <a href={r.channelUrl} target="_blank" className="flex items-center gap-2 text-brand-blue hover:underline text-xs font-bold uppercase tracking-widest">
-                          View Channel <ExternalLink className="w-3 h-3" />
-                       </a>
-                    </td>
-                    <td className="px-6 py-8">
-                       <p className="text-xs text-slate-400 font-medium truncate max-w-[200px]">{r.topicUrl || "---"}</p>
-                    </td>
+                     <td className="px-6 py-8">
+                        <div className="flex flex-col">
+                           <p className="text-[11px] font-bold text-white uppercase">{r.userName || "Artist"}</p>
+                           <p className="text-[9px] text-slate-500 tracking-widest truncate max-w-[150px]" title={r.userEmail}>{r.userEmail}</p>
+                           {r.instagramLink && (
+                              <a href={r.instagramLink} target="_blank" className="text-[9px] text-brand-blue uppercase mt-1 hover:underline tracking-tighter">Instagram</a>
+                           )}
+                        </div>
+                     </td>
+                     <td className="px-6 py-8">
+                        <a href={r.channelUrl} target="_blank" className="flex items-center gap-2 text-brand-blue hover:underline text-[10px] font-bold uppercase tracking-widest">
+                           Personal <ExternalLink className="w-2 h-2" />
+                        </a>
+                        {r.topicUrl && (
+                           <p className="text-[8px] text-slate-500 mt-1 uppercase max-w-[150px] truncate">{r.topicUrl}</p>
+                        )}
+                     </td>
+                     <td className="px-6 py-8 border-l border-slate-800/30">
+                        {r.releaseTitle ? (
+                           <div className="flex flex-col">
+                              <p className="text-[11px] font-bold text-emerald-400 uppercase line-clamp-1">{r.releaseTitle}</p>
+                              <p className="text-[8px] text-slate-600 uppercase">Context Song</p>
+                           </div>
+                        ) : (
+                           <span className="text-[10px] text-slate-600 uppercase font-bold italic">Manual</span>
+                        )}
+                     </td>
                     <td className="px-6 py-8">
                        <span className={cn(
                           "px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest",

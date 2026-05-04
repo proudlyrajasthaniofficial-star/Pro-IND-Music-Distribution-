@@ -59,6 +59,8 @@ interface UserRequest {
   id: string;
   ticketId: string;
   type: string;
+  subject?: string;
+  releaseTitle?: string;
   status: string;
   priority: string;
   createdAt: any;
@@ -81,6 +83,7 @@ export default function Requests() {
   const [formData, setFormData] = useState<any>({
     priority: "normal",
     releaseId: "",
+    subject: "",
   });
 
   useEffect(() => {
@@ -107,9 +110,13 @@ export default function Requests() {
 
     // Fetch releases for dropdown
     const fetchReleases = async () => {
-      const rq = query(collection(db, "releases"), where("userId", "==", user.uid));
-      const rSnap = await getDocs(rq);
-      setMyReleases(rSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      try {
+        const rq = query(collection(db, "releases"), where("userId", "==", user.uid));
+        const rSnap = await getDocs(rq);
+        setMyReleases(rSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error("Error fetching releases:", err);
+      }
     };
     fetchReleases();
 
@@ -123,15 +130,23 @@ export default function Requests() {
     setFormLoading(true);
     try {
       const ticketId = `IND-REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+      
+      const selectedRelease = myReleases.find(r => r.id === formData.releaseId);
+      
       const requestData = {
         ticketId,
         userId: user.uid,
         userName: profile?.displayName || "Artist",
         userEmail: user.email,
         type: selectedType,
+        subject: formData.subject || `Request: ${REQUEST_TYPES.find(t => t.id === selectedType)?.label}`,
         priority: formData.priority,
         releaseId: formData.releaseId,
-        data: { ...formData },
+        releaseTitle: selectedRelease?.title || "",
+        data: { 
+          ...formData,
+          releaseTitle: selectedRelease?.title || "",
+        },
         status: "pending",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -154,7 +169,7 @@ export default function Requests() {
   const resetForm = () => {
     setStep(1);
     setSelectedType("");
-    setFormData({ priority: "normal", releaseId: "" });
+    setFormData({ priority: "normal", releaseId: "", subject: "" });
   };
 
   const renderFormFields = () => {
@@ -168,6 +183,7 @@ export default function Requests() {
                 required
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
                 placeholder="https://instagram.com/artistname"
+                value={formData.instagramLink || ""}
                 onChange={(e) => setFormData({...formData, instagramLink: e.target.value})}
               />
             </div>
@@ -175,6 +191,7 @@ export default function Requests() {
               <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Platform</label>
               <select 
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
+                value={formData.platform || "instagram"}
                 onChange={(e) => setFormData({...formData, platform: e.target.value})}
               >
                 <option value="instagram">Instagram</option>
@@ -190,6 +207,7 @@ export default function Requests() {
               <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Field to Update</label>
               <select 
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
+                value={formData.updateField || "song_name"}
                 onChange={(e) => setFormData({...formData, updateField: e.target.value})}
               >
                 <option value="song_name">Song Name</option>
@@ -204,6 +222,7 @@ export default function Requests() {
                 required
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
                 placeholder="Correct value here..."
+                value={formData.newValue || ""}
                 onChange={(e) => setFormData({...formData, newValue: e.target.value})}
               />
             </div>
@@ -212,6 +231,7 @@ export default function Requests() {
               <textarea 
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-24"
                 placeholder="Why do you want this change?"
+                value={formData.reason || ""}
                 onChange={(e) => setFormData({...formData, reason: e.target.value})}
               ></textarea>
             </div>
@@ -226,6 +246,7 @@ export default function Requests() {
                 required
                 className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold h-32"
                 placeholder="Explain your request in detail..."
+                value={formData.description || ""}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
               ></textarea>
             </div>
@@ -343,6 +364,9 @@ export default function Requests() {
                   <div className="mb-10">
                     <span className="text-[10px] font-black text-brand-blue uppercase tracking-widest block mb-1">Ticket Detail</span>
                     <h2 className="text-3xl font-black text-slate-900 uppercase leading-none">{selectedRequest.ticketId}</h2>
+                    {selectedRequest.subject && (
+                      <p className="text-sm font-bold text-slate-500 mt-2 uppercase">{selectedRequest.subject}</p>
+                    )}
                   </div>
 
                   <div className="space-y-8">
@@ -484,9 +508,21 @@ export default function Requests() {
 
                       <div className="space-y-6">
                         <div>
-                          <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Associate Release (Optional)</label>
+                          <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Subject</label>
+                          <input 
+                            required
+                            className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
+                            placeholder="Briefly describe your request..."
+                            value={formData.subject || ""}
+                            onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block">Song/Release Selection</label>
                           <select 
                             className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs font-bold"
+                            value={formData.releaseId || ""}
                             onChange={(e) => setFormData({...formData, releaseId: e.target.value})}
                           >
                             <option value="">No Release Selected</option>

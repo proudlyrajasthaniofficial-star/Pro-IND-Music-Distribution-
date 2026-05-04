@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+// Home Page - IND Music Distribution India
 import { motion, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";

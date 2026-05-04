@@ -74,12 +74,74 @@
         "type": { "type": "string", "enum": ["info", "warning", "urgent"] },
         "createdAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "UserRequest": {
+      "title": "User Request",
+      "description": "Customer requests for metadata changes, profile linking, etc.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "ticketId": { "type": "string" },
+        "type": { "type": "string" },
+        "subject": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "in_review", "approved", "rejected", "completed"] },
+        "priority": { "type": "string", "enum": ["normal", "high", "urgent"] },
+        "releaseId": { "type": "string" },
+        "releaseTitle": { "type": "string" },
+        "data": { "type": "object" },
+        "adminResponse": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "userName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Mail": {
+      "title": "Email Trigger",
+      "description": "Trigger automated emails via Firebase Extension.",
+      "type": "object",
+      "properties": {
+        "to": { "type": "array", "items": { "type": "string" } },
+        "message": {
+          "type": "object",
+          "properties": {
+            "subject": { "type": "string" },
+            "html": { "type": "string" },
+            "text": { "type": "string" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
+    "/mail/{mailId}": {
+      "schema": "Mail",
+      "description": "Triggered emails collection"
+    },
     "/users/{userId}": {
       "schema": "User",
       "description": "Global user profiles"
+    },
+    "/user_requests/{requestId}": {
+      "schema": "UserRequest",
+      "description": "Customer support and metadata requests"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": "UserRequest",
+      "description": "Support tickets (using UserRequest schema)"
+    },
+    "/support_tickets/{ticketId}/messages/{messageId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string" },
+          "userName": { "type": "string" },
+          "message": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "isAdmin": { "type": "boolean" }
+        }
+      },
+      "description": "Threaded messages for support tickets"
     },
     "/plans/{planId}": {
       "schema": "Plan",

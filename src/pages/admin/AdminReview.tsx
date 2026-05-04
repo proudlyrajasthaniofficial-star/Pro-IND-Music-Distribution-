@@ -28,7 +28,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { uploadToCloudinary } from "../../lib/cloudinary";
 import { analyzeReleaseMetadata, MetadataCheckResult } from "../../services/geminiService";
 
-import { triggerNotification } from "../../lib/notifications";
+import { sendMail, triggerNotification } from "../../lib/notifications";
 
 export default function AdminReview() {
   const { releaseId } = useParams();
@@ -49,6 +49,7 @@ export default function AdminReview() {
   const [aiChecking, setAiChecking] = useState(false);
   const [aiResult, setAiResult] = useState<MetadataCheckResult | null>(null);
   const [updateType, setUpdateType] = useState<"rejected" | "action_required" | "live" | "in_progress" | "approved" | "completed">("rejected");
+  const [uploader, setUploader] = useState<any>(null);
 
   const platforms = [
     { id: 'spotify', name: 'Spotify' },
@@ -96,6 +97,17 @@ export default function AdminReview() {
         setIsrc(data.isrc || data.metadata?.isrc || "");
         setUpc(data.upc || data.metadata?.upc || "");
         setLinks(data.platformLinks || {});
+        
+        if (data.userId) {
+          try {
+            const uDoc = await getDoc(doc(db, "users", data.userId));
+            if (uDoc.exists()) {
+              setUploader(uDoc.data());
+            }
+          } catch (e) {
+            console.warn("Could not fetch uploader info", e);
+          }
+        }
       }
       setLoading(false);
     };
@@ -127,14 +139,36 @@ export default function AdminReview() {
       const userDoc = await getDoc(doc(db, "users", release.userId));
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        await triggerNotification("/admin/releases/update-status-notify", {
-          email: userData.email,
-          name: userData.displayName || "Artist",
-          songId: releaseId,
-          songName: release.title || release.songName,
-          status: newStatus,
-          reason: rejectionReason
-        });
+        const statusMap: any = {
+           approved: { color: "#4F46E5", label: "Approved" },
+           live: { color: "#10B981", label: "Distributed (Live)" },
+           rejected: { color: "#F43F5E", label: "Rejected" },
+           action_required: { color: "#F59E0B", label: "Action Required" },
+           completed: { color: "#10B981", label: "Completed" },
+        };
+        const statusInfo = statusMap[newStatus] || { color: "#64748B", label: newStatus.toUpperCase() };
+
+        await sendMail(
+           userData.email,
+           `Release Status Updated: ${release.title || release.songName}`,
+           `
+           <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+              <div style="background-color: ${statusInfo.color}; padding: 40px; text-align: center;">
+                 <h1 style="color: white; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">${statusInfo.label}</h1>
+              </div>
+              <div style="padding: 40px; color: #1e293b; line-height: 1.6;">
+                 <p>Dear ${userData.displayName || "Artist"},</p>
+                 <p>Your release <strong>${release.title || release.songName}</strong> has been updated to <strong>${statusInfo.label}</strong> by our review team.</p>
+                 ${rejectionReason ? `<div style="background: #f8fafc; padding: 20px; border-left: 4px solid ${statusInfo.color}; border-radius: 8px; margin: 20px 0;"><strong>Message from Team:</strong><br/>${rejectionReason}</div>` : ""}
+                 <p style="margin-top: 30px;">You can view the full details and live links in your artist dashboard.</p>
+                 <a href="${window.location.origin}/dashboard/releases/${releaseId}" style="display: inline-block; background: #000; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; margin-top: 20px;">Access Dashboard</a>
+              </div>
+              <div style="padding: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
+                 © ${new Date().getFullYear()} IND Distribution. Professional Music Infrastructure.
+              </div>
+           </div>
+           `
+        );
       }
 
       toast.success(`Protocol updated: ${newStatus.toUpperCase()}`);
@@ -349,6 +383,19 @@ export default function AdminReview() {
                    <p className="text-[10px] md:text-xs text-slate-400 font-medium">3000x3000px Cover • WAV Master • Original IP</p>
                 </div>
             </div>
+
+            {uploader && (
+              <div className="bg-brand-blue/10 border border-brand-blue/20 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex items-center gap-4 md:gap-6">
+                  <div className="w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-lg shrink-0">
+                    {uploader.displayName?.charAt(0) || "U"}
+                  </div>
+                  <div className="min-w-0">
+                     <h4 className="font-bold text-brand-blue text-[9px] uppercase tracking-widest mb-1">Uploaded By Details</h4>
+                     <p className="text-sm font-bold text-slate-200 truncate">{uploader.displayName}</p>
+                     <p className="text-xs text-slate-400 font-medium truncate">{uploader.email}</p>
+                  </div>
+              </div>
+            )}
          </div>
 
          {/* Metadata Control */}

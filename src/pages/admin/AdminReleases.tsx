@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle, Trash2, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../../lib/utils";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminReleases() {
   const [releases, setReleases] = useState<any[]>([]);
@@ -12,6 +13,7 @@ export default function AdminReleases() {
   const [filter, setFilter] = useState("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [stats, setStats] = useState<Record<string, any>>({});
+  const [userMap, setUserMap] = useState<Record<string, any>>({});
 
   const deleteRelease = async (id: string, title: string) => {
     setDeletingId(null);
@@ -31,7 +33,23 @@ export default function AdminReleases() {
       try {
         const q = query(collection(db, "releases"), orderBy("createdAt", "desc"));
         const snap = await getDocs(q);
-        setReleases(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        const releasesData = snap.docs.map(d => ({ id: d.id, ...d.data() })) as any[];
+        setReleases(releasesData);
+        
+        // Fetch uploader details
+        const uniqueUserIds = [...new Set(releasesData.map(r => r.userId).filter(Boolean))] as string[];
+        const usersInfo: Record<string, any> = {};
+        for(const uid of uniqueUserIds) {
+          try {
+            const uDoc = await getDoc(doc(db, "users", uid));
+            if (uDoc.exists()) {
+              usersInfo[uid] = uDoc.data();
+            }
+          } catch(e) {
+            console.warn("Could not fetch user", uid, e);
+          }
+        }
+        setUserMap(usersInfo);
       } catch (err) {
         console.error("Error fetching releases:", err);
       } finally {
@@ -75,6 +93,38 @@ export default function AdminReleases() {
     }
   }, [releases]);
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleBulkAction = async (status: string) => {
+    if (selectedIds.length === 0) return;
+    const tId = toast.loading(`Updating ${selectedIds.length} releases...`);
+    try {
+      const { updateDoc, doc } = await import("firebase/firestore");
+      await Promise.all(selectedIds.map(id => updateDoc(doc(db, "releases", id), { 
+        status,
+        updatedAt: new Date().toISOString()
+      })));
+      setReleases(prev => prev.map(r => selectedIds.includes(r.id) ? { ...r, status } : r));
+      setSelectedIds([]);
+      toast.success(`Batch update successful: ${status.toUpperCase()}`, { id: tId });
+    } catch (err: any) {
+      console.error("Bulk update error:", err);
+      toast.error("Batch update failed.", { id: tId });
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filtered.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filtered.map(r => r.id));
+    }
+  };
+
   const filtered = releases.filter(r => filter === "all" || r.status === filter);
 
   if (loading) {
@@ -109,7 +159,15 @@ export default function AdminReleases() {
             <table className="w-full text-left min-w-[1200px]">
             <thead>
                <tr className="border-b border-slate-800 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                  <th className="px-12 py-8">Asset</th>
+                  <th className="px-6 py-8">
+                     <input 
+                        type="checkbox" 
+                        checked={selectedIds.length === filtered.length && filtered.length > 0} 
+                        onChange={toggleSelectAll}
+                        className="w-4 h-4 rounded bg-slate-700 border-slate-600 border-2 checked:bg-brand-purple cursor-pointer"
+                     />
+                  </th>
+                  <th className="px-6 py-8">Asset</th>
                   <th className="px-6 py-8">Primary Details</th>
                   <th className="px-6 py-8">Status</th>
                   <th className="px-6 py-8">Statistics</th>
@@ -119,8 +177,19 @@ export default function AdminReleases() {
             </thead>
             <tbody className="divide-y divide-slate-800">
                {filtered.map((r, i) => (
-                 <tr key={r.id} className="group hover:bg-slate-800/50 transition-colors">
-                    <td className="px-12 py-8">
+                 <tr key={r.id} className={cn(
+                   "group hover:bg-slate-800/50 transition-colors",
+                   selectedIds.includes(r.id) && "bg-brand-purple/10 border-l-4 border-brand-purple"
+                 )}>
+                    <td className="px-6 py-8">
+                       <input 
+                          type="checkbox" 
+                          checked={selectedIds.includes(r.id)} 
+                          onChange={() => toggleSelect(r.id)}
+                          className="w-4 h-4 rounded bg-slate-700 border-slate-600 border-2 checked:bg-brand-purple cursor-pointer"
+                       />
+                    </td>
+                    <td className="px-6 py-8">
                        <div className="flex items-center gap-6">
                           <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
                              <img src={r.coverUrl} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -132,8 +201,19 @@ export default function AdminReleases() {
                        </div>
                     </td>
                     <td className="px-6 py-8 text-sm">
-                       <p className="font-bold text-white uppercase text-xs truncate max-w-[150px]">{r.artist || r.singerName}</p>
+                       <p className="font-bold text-white uppercase text-xs truncate max-w-[150px]" title={r.artist || r.singerName}>{r.artist || r.singerName}</p>
                        <p className="text-slate-500 mt-1 text-[10px] font-medium truncate max-w-[150px]">{r.labelName || r.label || "Independent"}</p>
+                       {userMap[r.userId] && (
+                          <div className="mt-3 pt-3 border-t border-slate-800/50">
+                             <p className="text-[9px] uppercase font-bold tracking-widest text-slate-500 mb-1">Uploaded By:</p>
+                             <div className="flex items-center gap-2">
+                               <div className="w-4 h-4 rounded-full bg-brand-blue/20 flex items-center justify-center">
+                                 <span className="text-[8px] font-bold text-brand-blue">{userMap[r.userId].displayName?.charAt(0) || "U"}</span>
+                               </div>
+                               <p className="text-[10px] text-slate-300 truncate max-w-[150px]" title={userMap[r.userId].email}>{userMap[r.userId].email}</p>
+                             </div>
+                          </div>
+                       )}
                     </td>
                     <td className="px-6 py-8">
                        <span className={cn(
@@ -214,9 +294,40 @@ export default function AdminReleases() {
                  </tr>
                )}
             </tbody>
-         </table>
+          </table>
+        </div>
       </div>
+
+      {/* Floating Bulk Action Bar */}
+      <AnimatePresence>
+        {selectedIds.length > 0 && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-full max-w-4xl px-4"
+          >
+            <div className="bg-[#1E293B] border border-slate-700 rounded-[2.5rem] p-6 shadow-[0_32px_64px_rgba(0,0,0,0.5)] flex items-center justify-between gap-6 backdrop-blur-3xl">
+               <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 bg-brand-purple rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-xl shadow-purple-500/20">
+                    {selectedIds.length}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-white font-bold uppercase tracking-widest text-xs">Assets Selected</p>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-0.5">Initialize batch operation</p>
+                  </div>
+               </div>
+               <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1">
+                  <button onClick={() => handleBulkAction('live')} className="px-6 py-3 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-emerald-500/20 whitespace-nowrap">Approve & Live</button>
+                  <button onClick={() => handleBulkAction('approved')} className="px-6 py-3 bg-brand-blue text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-blue-500/20 whitespace-nowrap">Mark Approved</button>
+                  <button onClick={() => handleBulkAction('rejected')} className="px-6 py-3 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-rose-500/20 whitespace-nowrap">Reject Batch</button>
+                  <button onClick={() => handleBulkAction('pending')} className="px-6 py-3 bg-slate-700 text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-all whitespace-nowrap">Reset to Pending</button>
+                  <button onClick={() => setSelectedIds([])} className="p-3 bg-slate-800 text-slate-500 hover:text-white rounded-xl transition-all"><Trash2 className="w-5 h-5" /></button>
+               </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  </div>
-);
+  );
 }
