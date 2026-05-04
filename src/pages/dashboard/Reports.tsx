@@ -180,20 +180,9 @@ export default function Reports() {
             <div className="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-sm space-y-6">
                <h4 className="text-lg font-black font-display uppercase tracking-tight">Intelligence Feeds</h4>
                <div className="space-y-4">
-                  {[
-                     { label: "Market Growth", val: "+14%", pos: true },
-                     { label: "Global Streams", val: "1.2M", pos: true },
-                     { label: "Retention Rate", val: "92%", pos: true },
-                     { label: "Disbursement Lag", val: "< 24h", pos: true }
-                  ].map((stat, i) => (
-                     <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{stat.label}</span>
-                        <div className="flex items-center gap-2">
-                           <span className="text-xs font-black text-slate-800">{stat.val}</span>
-                           {stat.pos ? <ArrowUpRight className="w-3 h-3 text-emerald-500" /> : <TrendingDown className="w-3 h-3 text-rose-500" />}
-                        </div>
-                     </div>
-                  ))}
+                  <div className="p-10 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
+                     <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Data aggregation in progress...</p>
+                  </div>
                </div>
             </div>
          </div>

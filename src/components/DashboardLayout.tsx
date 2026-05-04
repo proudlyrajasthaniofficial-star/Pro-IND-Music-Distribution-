@@ -25,7 +25,8 @@ import {
   Clock,
   CheckCircle2,
   Sparkles,
-  ShieldCheck
+  ShieldCheck,
+  Activity
 } from "lucide-react";
 import { auth, db } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
@@ -34,6 +35,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { collection, query, where, onSnapshot, orderBy, limit, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { toast } from "sonner";
 import SEO from "./SEO";
+import NeuralGrid from "./ui/NeuralGrid";
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
@@ -151,12 +153,17 @@ export default function DashboardLayout() {
           {/* Logo Section */}
           <div className="flex items-center justify-between mb-12">
             <Link to="/dashboard" className="flex items-center gap-4 group">
-              <div className="w-12 h-12 bg-slate-950 rounded-[1.25rem] flex items-center justify-center rotate-6 group-hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-slate-950/20">
-                <Zap className="text-white w-6 h-6 fill-brand-blue stroke-brand-blue" />
+              <div className="w-12 h-12 bg-slate-950 rounded-[1.25rem] flex items-center justify-center rotate-6 group-hover:rotate-0 transition-all duration-700 shadow-2xl shadow-slate-950/20 relative overflow-hidden">
+                <div className="absolute inset-0 bg-brand-blue/20 animate-pulse"></div>
+                <Zap className="text-white w-6 h-6 fill-brand-blue stroke-brand-blue relative z-10" />
               </div>
               <div className="flex flex-col">
-                <span className="font-display text-2xl font-black tracking-tighter uppercase leading-none">IND<span className="text-brand-blue">.</span></span>
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mt-1">Nexus-G1</span>
+                <span className="font-display text-2xl font-black tracking-tighter uppercase leading-none text-slate-800">IND<span className="text-brand-blue drop-shadow-[0_0_8px_rgba(0,102,255,0.4)]">.</span></span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">Phase-01</span>
+                  <div className="h-[1px] w-4 bg-slate-100"></div>
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-brand-blue animae-pulse">G1</span>
+                </div>
               </div>
             </Link>
             <button 
@@ -168,32 +175,44 @@ export default function DashboardLayout() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1.5 overflow-y-auto pr-4 -mr-4 scrollbar-hide">
-            {NAV_ITEMS.map((item) => {
+          <nav className="flex-1 space-y-1.5 overflow-y-auto pr-4 -mr-4 custom-scrollbar">
+            {NAV_ITEMS.map((item, index) => {
               const isActive = location.pathname === item.path;
               return (
-                <Link 
+                <motion.div
                   key={item.label}
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all duration-500 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden",
-                    isActive 
-                      ? "bg-slate-950 text-white shadow-[0_20px_40px_-15px_rgba(15,23,42,0.3)] active-nav" 
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  )}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
                 >
-                  <item.icon className={cn(
-                    "w-5 h-5 transition-transform duration-500 group-hover:scale-110", 
-                    isActive ? "text-brand-blue" : "text-slate-400"
-                  )} />
-                  {item.label}
-                  {isActive && (
-                    <motion.div 
-                      layoutId="active-nav-glow"
-                      className="absolute right-4 w-1 h-1 bg-brand-blue rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.6)]"
-                    />
-                  )}
-                </Link>
+                  <Link 
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all duration-700 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden",
+                      isActive 
+                        ? "bg-slate-950 text-white shadow-premium-dark active-nav" 
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div 
+                        layoutId="sidebar-active-scan"
+                        className="absolute inset-0 bg-linear-to-r from-brand-blue/20 to-transparent pointer-events-none"
+                      />
+                    )}
+                    <item.icon className={cn(
+                      "w-5 h-5 transition-all duration-500 group-hover:scale-110 relative z-10", 
+                      isActive ? "text-brand-blue scale-110 drop-shadow-[0_0_8px_rgba(0,102,255,0.6)]" : "text-slate-400 group-hover:text-brand-blue"
+                    )} />
+                    <span className="relative z-10">{item.label}</span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-nav-glow"
+                        className="absolute right-4 w-1 h-1 bg-brand-blue rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.6)]"
+                      />
+                    )}
+                  </Link>
+                </motion.div>
               );
             })}
 
@@ -213,65 +232,109 @@ export default function DashboardLayout() {
             )}
           </nav>
 
-          {/* Bottom Profile Section */}
-          <div className="mt-8 pt-8 border-t border-slate-50 space-y-6">
-            <Link 
-              to="/dashboard/profile" 
-              onClick={() => {
-                if (window.innerWidth < 1024) setIsSidebarOpen(false);
-              }}
-              className="flex items-center gap-4 p-3 bg-slate-50 rounded-[2rem] hover:bg-slate-100 transition-all group"
-            >
-              <div className="w-12 h-12 rounded-[1.25rem] bg-slate-950 flex items-center justify-center text-white font-black text-sm relative shadow-xl overflow-hidden">
-                 <div className="absolute inset-0 bg-linear-to-br from-brand-blue/20 to-brand-purple/20"></div>
-                 <span className="relative z-10">{profile?.displayName?.[0] || "A"}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                 <p className="text-xs font-black truncate text-slate-800 uppercase tracking-tight">{profile?.displayName}</p>
-                 <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span className="text-[9px] text-emerald-600 uppercase tracking-widest font-black">Authorized</span>
-                 </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 mr-2 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-4 px-6 py-4 w-full text-slate-400 hover:text-rose-500 transition-all text-[11px] font-black uppercase tracking-widest group"
-            >
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center group-hover:bg-rose-50">
-                 <LogOut className="w-4 h-4" />
-              </div>
-              Disconnect
-            </button>
+          {/* User Section Bottom */}
+          <div className="mt-auto pt-6 border-t border-slate-50 flex flex-col gap-4">
+             <Link 
+               to="/dashboard/profile"
+               className="flex items-center gap-3 p-3 bg-slate-50 rounded-[2rem] hover:bg-slate-100 transition-all group"
+             >
+                <div className="w-12 h-12 rounded-[1.25rem] bg-slate-950 flex items-center justify-center text-white font-black text-sm relative shadow-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-linear-to-br from-brand-blue/20 to-brand-purple/20"></div>
+                  <span className="relative z-10">{profile?.displayName?.[0] || 'U'}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-800 truncate">{profile?.displayName || 'Authorized User'}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Secure Node Syncing</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-300 mr-2 group-hover:translate-x-1 transition-transform" />
+             </Link>
+             
+             <div className="bg-slate-50 rounded-2xl p-4 flex flex-col gap-3 group relative overflow-hidden">
+                <div className="absolute inset-0 noise opacity-[0.03]"></div>
+                <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-3 h-3 text-brand-blue" />
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Security Rank</span>
+                   </div>
+                   <Activity className="w-3 h-3 text-emerald-500 animate-pulse" />
+                </div>
+                <div className="flex items-center justify-between">
+                   <span className="text-[10px] font-black uppercase tracking-tight text-slate-900">Elite Verified</span>
+                   <span className="text-[8px] font-bold text-slate-400">v1.2.0</span>
+                </div>
+             </div>
+
+             <button 
+               onClick={handleLogout}
+               className="flex items-center gap-4 px-6 py-4 w-full text-slate-400 hover:text-rose-500 transition-all text-[11px] font-black uppercase tracking-widest group"
+             >
+               <div className="w-8 h-8 rounded-xl flex items-center justify-center group-hover:bg-rose-50">
+                  <LogOut className="w-4 h-4" />
+               </div>
+               Disconnect Node
+             </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 h-full relative">
+        <NeuralGrid />
+        {/* System Status Ticker */}
+        <div className="bg-slate-950 text-white h-8 flex items-center overflow-hidden border-b border-white/5 relative z-30">
+          <div className="flex items-center gap-4 px-4 bg-brand-blue h-full font-black text-[8px] uppercase tracking-[0.2em] relative z-10">
+            <Activity className="w-3 h-3" /> System Status
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <motion.div 
+              animate={{ x: [0, -1000] }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              className="flex items-center gap-12 whitespace-nowrap text-[9px] font-bold text-slate-500 uppercase tracking-widest pl-6"
+            >
+              {[
+                "• All nodes operational in India Sector // Mumbai (Phase-1) Live",
+                "• Spotify API Data Refreshing: Next sync in 12m",
+                "• Apple Music Trending: Global metadata update complete",
+                "• IND Music Neural Network G1 online",
+                "• New high-latency warning in Sector-South cleared",
+                "• Payment Gateway [Razorpay/Stripe] Online"
+              ].map((msg, i) => <span key={i}>{msg}</span>)}
+              {/* Duplicate for seamless loop */}
+              {[
+                "• All nodes operational in India Sector // Mumbai (Phase-1) Live",
+                "• Spotify API Data Refreshing: Next sync in 12m",
+                "• Apple Music Trending: Global metadata update complete",
+                "• IND Music Neural Network G1 online",
+                "• New high-latency warning in Sector-South cleared",
+                "• Payment Gateway [Razorpay/Stripe] Online"
+              ].map((msg, i) => <span key={i + 10}>{msg}</span>)}
+            </motion.div>
+          </div>
+        </div>
+
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-brand-blue/5 blur-[150px] -translate-y-1/2 translate-x-1/2 rounded-full pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[40rem] h-[40rem] bg-brand-purple/5 blur-[150px] translate-y-1/2 -translate-x-1/2 rounded-full pointer-events-none"></div>
 
         {/* Dynamic Header */}
-        <header className="h-20 lg:h-28 flex items-center justify-between px-4 md:px-8 lg:px-12 relative z-20 backdrop-blur-sm">
+        <header className="h-20 lg:h-24 flex items-center justify-between px-4 md:px-8 lg:px-12 relative z-20 backdrop-blur-sm border-b border-slate-100/50">
           <div className="flex items-center gap-4 lg:gap-8">
             <button 
               onClick={() => setIsSidebarOpen(true)}
               className={cn(
-                "p-3 lg:p-4 bg-white rounded-2xl shadow-xl border border-slate-50 text-slate-400 transition-all hover:text-slate-900 group",
+                "p-3 lg:p-4 bg-white rounded-2xl shadow-premium border border-slate-50 text-slate-400 transition-all hover:text-slate-900 group",
                 isSidebarOpen ? "lg:hidden" : "block"
               )}
             >
-              <Menu className="w-6 h-6 transition-transform group-active:scale-95" />
+              <Menu className="w-5 h-5 transition-transform group-active:scale-95" />
             </button>
-            <div className="hidden lg:flex items-center bg-white p-3 px-6 rounded-[2rem] shadow-xl border border-slate-50 gap-4 w-[28rem] xl:w-[32rem]">
+            <div className="hidden lg:flex items-center bg-slate-50/50 backdrop-blur-md p-3 px-6 rounded-[2rem] border border-slate-100 gap-4 w-[28rem] xl:w-[32rem]">
               <Search className="w-4 h-4 text-slate-300" />
               <input 
-                placeholder="Search global metadata or assets..."
-                className="bg-transparent border-none focus:ring-0 text-xs font-bold w-full placeholder:text-slate-400"
+                placeholder="Query mission-critical metadata..."
+                className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300"
               />
             </div>
           </div>

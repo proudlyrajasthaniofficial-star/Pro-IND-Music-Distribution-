@@ -111,12 +111,33 @@
         },
         "createdAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "ContentIdRequest": {
+      "title": "Content ID Request",
+      "description": "Requests for YouTube/Social Media Content ID activation.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "releaseId": { "type": "string" },
+        "songName": { "type": "string" },
+        "artistName": { "type": "string" },
+        "songLink": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "adminResponse": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userEmail", "releaseId", "songName", "artistName", "songLink", "status"]
     }
   },
   "firestore": {
     "/mail/{mailId}": {
       "schema": "Mail",
       "description": "Triggered emails collection"
+    },
+    "/content_id_requests/{requestId}": {
+      "schema": "ContentIdRequest",
+      "description": "Requests for Content ID protection"
     },
     "/users/{userId}": {
       "schema": "User",

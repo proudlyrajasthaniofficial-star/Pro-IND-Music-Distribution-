@@ -18,10 +18,14 @@ import {
   ShieldAlert,
   ShieldCheck,
   Headphones,
-  Activity
+  Activity,
+  Terminal,
+  Zap,
+  ArrowRightCircle,
+  BarChart3
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AreaChart, Area, BarChart, Bar, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { motion, AnimatePresence } from "motion/react";
 import { FadeIn } from "../../components/ui/FadeIn";
@@ -32,6 +36,7 @@ import GlobeBox from "../../components/Globe";
 
 export default function Overview() {
   const { user, profile, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [recentReleases, setRecentReleases] = useState<any[]>([]);
   const [stats, setStats] = useState({ total: 0, live: 0, pending: 0, rejected: 0 });
   const [chartData, setChartData] = useState<any[]>([]);
@@ -42,15 +47,6 @@ export default function Overview() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulated Platform data for professional look
-    setPlatformData([
-      { name: "Spotify", streams: 15400, color: "#1DB954" },
-      { name: "Apple", streams: 12200, color: "#FA243C" },
-      { name: "Wynk", streams: 8400, color: "#FF0000" },
-      { name: "JioSaavn", streams: 6800, color: "#2E8B57" },
-      { name: "YouTube", streams: 18900, color: "#FF0000" }
-    ]);
-
     const qNews = query(collection(db, "system_notifications"), orderBy("createdAt", "desc"), limit(3));
     const unsubNews = onSnapshot(qNews, (snap) => {
       setSystemNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
@@ -225,68 +221,111 @@ export default function Overview() {
           )}
         </AnimatePresence>
 
-        {/* Welcome & Earnings Header */}
-        <div className="grid lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0">
-          <div className="lg:col-span-2 text-left">
-            <motion.h1 
-               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-               className="text-3xl md:text-5xl font-black font-display tracking-tight mb-2 uppercase flex flex-wrap items-center gap-2 md:gap-4 leading-tight"
-            >
-              Master <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-purple-600 block">{profile?.displayName?.trim() ? profile.displayName : (profile?.artistName || 'Artist')}</span>
-            </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="text-xs md:text-sm text-slate-400 font-bold tracking-widest uppercase mb-8">
-               System Initialized • All Systems Operational
-            </motion.p>
-            
-            <div className="flex flex-wrap items-center gap-4">
-              {/* Refined Plan Info Card */}
-              <Link to="/dashboard/subscription" className="group">
-                <div className="px-6 py-4 bg-white border border-slate-100 shadow-xl rounded-[2rem] flex items-center gap-4 hover:border-brand-blue transition-all">
-                  <div className="w-12 h-12 bg-brand-blue rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform">
-                    <ShieldCheck className="w-6 h-6 text-white" />
+        {/* Mission Control Hub */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 px-4 md:px-0">
+          {/* Main Stat Card (Vault) */}
+          <div className="lg:col-span-2">
+            <div className="bg-slate-950 rounded-[3.5rem] p-8 md:p-12 shadow-premium-dark relative overflow-hidden group h-full">
+              <div className="absolute inset-0 noise opacity-10 pointer-events-none"></div>
+              <div className="absolute -top-48 -right-48 w-[40rem] h-[40rem] bg-brand-blue/20 blur-[150px] rounded-full group-hover:bg-brand-blue/30 transition-all duration-1000"></div>
+              
+              <div className="relative z-10 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-12">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
+                      <Wallet className="w-7 h-7 text-brand-blue" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Global Treasury</h3>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Extraction Ready</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5 whitespace-nowrap">Active Plan Status</p>
-                    <p className="text-sm font-black uppercase text-slate-900 leading-none tracking-tight">
-                      {profile?.planId ? (PLANS.find(p => p.id === profile.planId)?.name || profile.planId.toUpperCase()) : 'FREE TIER'}
-                    </p>
+                  <div className="hidden md:flex flex-col items-end text-white">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Node ID: IND-MB-021</span>
+                    <span className="text-[8px] font-bold text-slate-600 mt-1 uppercase">Block Height: 18,294,021</span>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-brand-blue group-hover:translate-x-1 group-hover:-translate-y-1 transition-all ml-2" />
                 </div>
-              </Link>
 
-              <div className="flex items-center gap-3">
-                 <Link to="/dashboard/subscription" className="px-6 py-4 rounded-[2rem] bg-brand-purple/5 text-brand-purple hover:bg-brand-purple hover:text-white transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-sm">
-                   <Activity className="w-4 h-4" /> Upgrade Capacity
-                 </Link>
+                <div className="flex-1 flex flex-col justify-center mb-12">
+                   <div className="flex items-baseline gap-4 mb-3">
+                      <span className="text-2xl font-black text-slate-500 uppercase">₹</span>
+                      <h2 className="text-7xl md:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                        {profile?.walletBalance?.toFixed(2) || "0.00"}
+                      </h2>
+                   </div>
+                   <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-4">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "85%" }}
+                        transition={{ duration: 2, delay: 0.5 }}
+                        className="h-full bg-linear-to-r from-brand-blue via-brand-purple to-pink-500"
+                      />
+                   </div>
+                   <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                      <Zap className="w-3 h-3 fill-brand-blue stroke-brand-blue" /> Next Cycle Syncing in 14:02:51
+                   </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                   <button onClick={() => navigate('/dashboard/wallet')} className="group/btn relative py-5 bg-brand-blue hover:bg-brand-blue/90 text-white rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] transition-all shadow-[0_20px_40px_-10px_rgba(0,102,255,0.4)] overflow-hidden cursor-pointer">
+                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
+                      <span className="relative z-10 flex items-center justify-center gap-3">Request Payout <ArrowRightCircle className="w-5 h-5" /></span>
+                   </button>
+                   <button onClick={() => navigate('/dashboard/wallet')} className="py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] transition-all backdrop-blur-md cursor-pointer">
+                      Transaction Mesh
+                   </button>
+                </div>
               </div>
             </div>
           </div>
-          
-          <div className="bg-[#1E293B] p-6 md:p-8 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border-none flex flex-col justify-center gap-4 md:gap-8 group relative overflow-hidden text-white">
-             <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-all"></div>
-             
-             <div className="flex items-center justify-between relative z-10 w-full mb-2">
-                <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/20 rounded-[1.5rem] flex items-center justify-center text-emerald-400 shrink-0">
-                      <Wallet className="w-5 h-5 md:w-6 md:h-6" />
-                   </div>
-                   <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Treasury Vault</p>
-                </div>
-                <Link to="/dashboard/wallet" className="w-8 h-8 md:w-12 md:h-12 bg-white/10 text-white rounded-[1rem] md:rounded-[1.5rem] flex items-center justify-center hover:bg-emerald-500 hover:scale-105 transition-all backdrop-blur-md">
-                  <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
-                </Link>
-             </div>
 
-             <div className="relative z-10 w-full text-left">
-                <h2 className="text-3xl md:text-5xl font-black font-display tracking-tighter group-hover:scale-105 transition-transform origin-left whitespace-nowrap">
-                  {formatCurrency(profile?.walletBalance || 0)}
-                </h2>
-                <div className="flex items-center gap-2 mt-2">
-                   <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-md text-[9px] font-bold uppercase tracking-widest">+4.2%</span>
-                   <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">since last payout</span>
-                </div>
-             </div>
+          {/* System Event Log (Mission Control Feel) */}
+          <div className="bg-slate-900 rounded-[3rem] p-8 shadow-premium border border-slate-800 relative overflow-hidden flex flex-col h-full">
+            <div className="absolute top-0 right-0 p-4">
+               <div className="w-2 h-2 bg-brand-blue rounded-full animate-ping opacity-30"></div>
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-brand-blue border border-white/5">
+                  <Terminal className="w-4 h-4" />
+               </div>
+               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">System Events</h3>
+            </div>
+            
+            <div className="flex-1 space-y-4 font-mono text-[10px] text-slate-400 overflow-y-auto custom-scrollbar pr-2">
+               <div className="flex gap-3">
+                  <span className="text-brand-blue opacity-50">14:05:22</span>
+                  <p><span className="text-emerald-500 font-bold">[OK]</span> Gateway response 200. Sync complete.</p>
+               </div>
+               <div className="flex gap-3">
+                  <span className="text-brand-blue opacity-50">14:02:11</span>
+                  <p><span className="text-brand-blue font-bold">[MSG]</span> Metadata broadcast to Spotify Nodes.</p>
+               </div>
+               <div className="flex gap-3">
+                  <span className="text-brand-blue opacity-50">13:58:45</span>
+                  <p><span className="text-brand-purple font-bold">[AI]</span> Analyzing sonic patterns for ISRC-021.</p>
+               </div>
+               <div className="flex gap-3">
+                  <span className="text-brand-blue opacity-50">13:45:10</span>
+                  <p><span className="text-emerald-500 font-bold">[OK]</span> Apple Music portal handshake verified.</p>
+               </div>
+               <div className="flex gap-3 opacity-40">
+                  <span className="text-brand-blue opacity-50">13:30:00</span>
+                  <p><span className="text-slate-500 font-bold">[SYS]</span> Daily treasury re-balance initiated.</p>
+               </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-white/5 space-y-4">
+               <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Network Latency</span>
+                  <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">12ms</span>
+               </div>
+               <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                  <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity }} className="w-1/3 h-full bg-brand-blue" />
+               </div>
+            </div>
           </div>
         </div>
         
@@ -308,20 +347,18 @@ export default function Overview() {
                  </div>
                  
                  <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { label: "Top Region", val: "United States", trend: "+8.2%" },
-                      { label: "Rising", val: "India / Brazil", trend: "+14.5%" },
-                      { label: "Active nodes", val: "142 Cities", trend: "Live" },
-                      { label: "Avg Latency", val: "42ms", trend: "Stable" }
-                    ].map((stat, i) => (
+                    {platformData.length > 0 ? platformData.slice(0, 4).map((plat, i) => (
                       <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
-                         <p className="text-[8px] font-black uppercase tracking-widest text-slate-500 mb-1">{stat.label}</p>
+                         <p className="text-[8px] font-black uppercase tracking-widest text-slate-500 mb-1">{plat.name}</p>
                          <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-white uppercase">{stat.val}</p>
-                            <span className="text-[8px] font-black text-emerald-400">{stat.trend}</span>
+                            <p className="text-xs font-bold text-white uppercase">{plat.streams} Streams</p>
                          </div>
                       </div>
-                    ))}
+                    )) : (
+                      <div className="col-span-2 p-10 text-center border border-dashed border-white/10 rounded-2xl">
+                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aggregate Global Data Pending</p>
+                      </div>
+                    )}
                  </div>
                  
                  <button className="px-8 py-3 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-white/5">

@@ -30,6 +30,7 @@ import IndianFeatures from "../components/IndianFeatures";
 import PricingSection from "../components/PricingSection";
 import GalaxyBackground from "../components/GalaxyBackground";
 import PublicFooter from "../components/PublicFooter";
+import NeuralGrid from "../components/ui/NeuralGrid";
 
 const PLATFORMS = [
   { name: "Spotify", gradient: "from-[#1DB954] to-[#1ed760]" },
@@ -61,7 +62,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-950 font-sans overflow-x-hidden selection:bg-brand-blue/10 selection:text-brand-blue">
+    <div className="min-h-screen bg-slate-950 text-white font-sans overflow-x-hidden selection:bg-brand-blue/10 selection:text-brand-blue relative">
+      <div className="absolute inset-0 noise opacity-[0.03] z-[1] pointer-events-none"></div>
+      <NeuralGrid />
       <SEO 
         title="IND Music Distribution India | #1 Music Distribution | Release & Earn"
         description="Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!"
@@ -158,23 +161,23 @@ export default function Home() {
               className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-10 cursor-pointer shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             >
               <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Premium Digital Distribution // 2026 Edition</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Premium Digital Distribution // 2026 G1 Edition</span>
             </motion.div>
 
-            <h1 className="text-6xl md:text-[8.5rem] font-black font-display tracking-tighter leading-[0.85] uppercase mb-10">
+            <h1 className="text-6xl md:text-[9.5rem] font-black font-display tracking-tight leading-[0.8] uppercase mb-12">
               <motion.span 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.8 }}
-                className="block text-white mb-2 drop-shadow-2xl"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                className="block text-white mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
               >
                 THE STANDARD
               </motion.span>
               <motion.span 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="bg-gradient-to-r from-brand-blue via-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text animate-gradient py-2 block drop-shadow-xl"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4, duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-4 block"
               >
                 FOR GLOBAL ARTISTS
               </motion.span>
@@ -184,12 +187,10 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 1 }}
-              className="text-xl md:text-2xl text-slate-300 font-medium max-w-4xl mx-auto mb-16 leading-relaxed px-4"
+              className="text-lg md:text-xl text-slate-400 font-medium max-w-3xl mx-auto mb-20 leading-relaxed px-4 uppercase tracking-widest"
             >
-              IND Music Distribution India is a digital music aggregator from India. We help individual artists and music producers get their music on Spotify, iTunes, JioSaavn, Wynk, Gaana, and 150+ stores globally. <br /><br />
-              <span className="text-slate-400 text-lg md:text-xl block">
-                भारत की नंबर 1 डिजिटल संगीत वितरण सेवा। अपने गानों को दुनिया भर के सभी प्रमुख प्लेटफॉर्म पर रिलीज़ करें।
-              </span>
+              IND Music Distribution is the neural backbone for independent creators in India. 
+              Deploy your catalog to 250+ global nodes including Spotify, iTunes, and JioSaavn.
             </motion.p>
 
             <motion.div 

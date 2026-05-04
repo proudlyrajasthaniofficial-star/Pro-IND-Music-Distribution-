@@ -11,61 +11,92 @@ import {
   CheckCircle2,
   Clock,
   ExternalLink,
-  Info
+  Info,
+  Zap,
+  MessageSquare
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 
 export default function ContentID() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [requests, setRequests] = useState<any[]>([]);
   const [releases, setReleases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({ 
     releaseId: "", 
-    youtubeUrl: "", 
-    type: "whitelist" as "whitelist" | "removal" 
+    songName: "", 
+    artistName: "", 
+    songLink: "" 
   });
 
   const fetchData = async () => {
     if (!user) return;
     setLoading(true);
     
-    const rSnap = await getDocs(query(collection(db, "releases"), where("userId", "==", user.uid)));
-    const liveReleases = rSnap.docs.map(d => ({ id: d.id, ...d.data() } as any)).filter(r => r.status === "live");
-    setReleases(liveReleases);
+    try {
+      const rSnap = await getDocs(query(collection(db, "releases"), where("userId", "==", user.uid)));
+      const filteredReleases = rSnap.docs
+        .map(d => ({ id: d.id, ...d.data() } as any))
+        .filter(r => r.status === "live" || r.status === "approved");
+      setReleases(filteredReleases);
 
-    const qSnap = await getDocs(query(collection(db, "content_id_requests"), where("userId", "==", user.uid)));
-    const sortedDocs = qSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
-       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-       return dateB - dateA;
-    });
-    setRequests(sortedDocs);
-    
-    setLoading(false);
+      const qSnap = await getDocs(query(collection(db, "content_id_requests"), where("userId", "==", user.uid)));
+      const sortedDocs = qSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a: any, b: any) => {
+         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+         return dateB - dateA;
+      });
+      setRequests(sortedDocs);
+    } catch (err) {
+      console.error("Error fetching Content ID data:", err);
+      toast.error("Failed to load data.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, [user]);
 
+  const handleReleaseSelect = (releaseId: string) => {
+    const selectedRelease = releases.find(r => r.id === releaseId);
+    if (selectedRelease) {
+      setFormData({
+        ...formData,
+        releaseId,
+        songName: selectedRelease.title,
+        artistName: selectedRelease.artist || profile?.artistName || ""
+      });
+    } else {
+      setFormData({
+        ...formData,
+        releaseId,
+        songName: "",
+        artistName: ""
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !formData.releaseId || !formData.youtubeUrl) return;
+    if (!user || !formData.releaseId || !formData.songLink) return;
     setSubmitting(true);
     try {
       await addDoc(collection(db, "content_id_requests"), {
         ...formData,
         userId: user.uid,
+        userEmail: user.email,
+        userName: profile?.displayName || user.displayName || "Unknown",
         status: "pending",
         createdAt: new Date().toISOString()
       });
-      setFormData({ releaseId: "", youtubeUrl: "", type: "whitelist" });
+      setFormData({ releaseId: "", songName: "", artistName: "", songLink: "" });
       fetchData();
-      toast.success("Content ID request submitted.");
+      toast.success("Content ID request submitted successfully.");
     } catch (err) {
       toast.error("Submission failed.");
     } finally {
@@ -73,121 +104,168 @@ export default function ContentID() {
     }
   };
 
-  if (loading) return <div className="p-10 animate-pulse text-slate-400">Loading Content Controls...</div>;
+  if (loading) return <div className="p-10 animate-pulse text-slate-400 font-black uppercase tracking-widest">Initialising Neural Content Scanner...</div>;
 
   return (
     <div className="space-y-12 pb-20">
-      <div className="flex flex-col lg:flex-row gap-12">
+      <div className="flex flex-col xl:flex-row gap-12">
          <div className="flex-1 space-y-8">
-            <h1 className="text-5xl font-black font-display tracking-tight uppercase"><span className="text-brand-blue">YouTube</span> Content ID</h1>
-            <p className="text-slate-400 font-medium">Protect your intellectual property and manage digital rights across the YouTube ecosystem.</p>
+            <div className="text-left">
+              <h1 className="text-5xl md:text-7xl font-black font-display tracking-tight uppercase leading-none mb-4">
+                Content <span className="text-brand-blue">Guardian</span>
+              </h1>
+              <p className="text-slate-400 font-bold text-sm tracking-widest uppercase">Global Rights Management & Fingerprinting Portal</p>
+            </div>
             
-            <div className="bg-slate-900 rounded-[3.5rem] p-10 text-white border border-white/5 shadow-2xl relative overflow-hidden group">
-               <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] -translate-y-1/2 translate-x-1/3"></div>
-               <div className="relative z-10 space-y-6">
+            <div className="bg-slate-950 rounded-[3.5rem] p-10 text-white shadow-premium-dark relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-brand-blue/10 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+               <div className="noise absolute inset-0 opacity-[0.03] pointer-events-none"></div>
+               
+               <div className="relative z-10 space-y-8">
                   <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-900/40">
-                        <Youtube className="w-6 h-6 fill-white" />
+                     <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
+                        <Youtube className="w-7 h-7 text-brand-blue" />
                      </div>
-                     <h3 className="text-xl font-bold uppercase tracking-tight">Rights Activation Port</h3>
+                     <div>
+                        <h3 className="text-xl font-black uppercase tracking-tight">Deploy Rights Signal</h3>
+                        <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase">Secure your metadata across global video nodes</p>
+                     </div>
                   </div>
-                  <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
-                     <div className="space-y-2">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-white/40 ml-4">Select Live Track</label>
-                        <select 
-                          required
-                          value={formData.releaseId}
-                          onChange={(e) => setFormData({...formData, releaseId: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm font-bold text-white outline-none focus:border-red-500 transition-all appearance-none"
-                        >
-                           <option value="" className="bg-slate-900">Select Track</option>
-                           {releases.map(r => <option key={r.id} value={r.id} className="bg-slate-900">{r.title}</option>)}
-                        </select>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                     <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Select Distributed Asset (Live/Approved)</label>
+                           <select 
+                             required
+                             value={formData.releaseId}
+                             onChange={(e) => handleReleaseSelect(e.target.value)}
+                             className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black uppercase tracking-tight text-white outline-none focus:border-brand-blue transition-all appearance-none cursor-pointer"
+                           >
+                              <option value="" className="bg-slate-950">Select Track...</option>
+                              {releases.map(r => <option key={r.id} value={r.id} className="bg-slate-950">{r.title}</option>)}
+                           </select>
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">YouTube / Music Platform URL</label>
+                           <input 
+                              required
+                              value={formData.songLink}
+                              onChange={(e) => setFormData({...formData, songLink: e.target.value})}
+                              className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black text-white outline-none focus:border-brand-blue transition-all placeholder:text-slate-700"
+                              placeholder="https://youtube.com/watch?v=..."
+                           />
+                        </div>
                      </div>
-                     <div className="space-y-2">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-white/40 ml-4">YouTube URL / Link</label>
-                        <input 
-                           required
-                           value={formData.youtubeUrl}
-                           onChange={(e) => setFormData({...formData, youtubeUrl: e.target.value})}
-                           className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm font-bold text-white outline-none focus:border-red-500 transition-all"
-                           placeholder="https://youtube.com/watch?v=..."
-                        />
+
+                     <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Verified Song Name</label>
+                           <input 
+                             readOnly
+                             value={formData.songName}
+                             className="w-full bg-slate-900/50 border border-white/5 rounded-3xl p-5 text-sm font-black uppercase text-slate-500 outline-none cursor-not-allowed"
+                             placeholder="Select track to populate..."
+                           />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Authorized Artist</label>
+                           <input 
+                             readOnly
+                             value={formData.artistName}
+                             className="w-full bg-slate-900/50 border border-white/5 rounded-3xl p-5 text-sm font-black uppercase text-slate-500 outline-none cursor-not-allowed"
+                             placeholder="Artist metadata..."
+                           />
+                        </div>
                      </div>
-                     <div className="col-span-2 flex items-center gap-4">
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, type: 'whitelist'})}
-                          className={cn("flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all", formData.type === 'whitelist' ? "bg-red-600 border-red-600 text-white shadow-xl shadow-red-900/40" : "bg-white/5 border-white/10 text-white/40 hover:text-white")}
-                        >
-                           Whitelist Channel
-                        </button>
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, type: 'removal'})}
-                          className={cn("flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all", formData.type === 'removal' ? "bg-red-600 border-red-600 text-white shadow-xl shadow-red-900/40" : "bg-white/5 border-white/10 text-white/40 hover:text-white")}
-                        >
-                           Claim Removal
-                        </button>
-                     </div>
+
                      <button 
-                       disabled={submitting}
-                       className="col-span-2 py-5 bg-white text-slate-950 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] hover:bg-red-600 hover:text-white transition-all disabled:opacity-50"
+                       disabled={submitting || !formData.releaseId}
+                       className="w-full py-6 bg-brand-blue text-white rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] hover:bg-white hover:text-slate-950 transition-all shadow-[0_20px_40px_-10px_rgba(0,102,255,0.4)] disabled:opacity-30 disabled:cursor-not-allowed group/btn overflow-hidden relative"
                      >
-                        {submitting ? "Transmitting Signal..." : "Transmit Control Request"}
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
+                        <span className="relative z-10 flex items-center justify-center gap-3">
+                           {submitting ? "Broadcasting Sequence..." : "Transmit Content ID Signal"}
+                           <Zap className="w-4 h-4 fill-current" />
+                        </span>
                      </button>
                   </form>
                </div>
             </div>
 
-            <div className="bg-blue-50/50 border border-blue-100 rounded-[2.5rem] p-8 flex items-start gap-6">
-               <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-brand-blue shadow-lg">
-                  <Info className="w-6 h-6" />
+            <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 flex items-start gap-6 backdrop-blur-xl">
+               <div className="w-14 h-14 bg-brand-blue/10 rounded-2xl flex items-center justify-center text-brand-blue shadow-lg border border-brand-blue/20">
+                  <ShieldCheck className="w-7 h-7" />
                </div>
                <div>
-                  <h4 className="font-black text-brand-blue uppercase text-sm tracking-tight mb-2">Network Knowledge</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed">YouTube Content ID requests typically propagate within 48-72 standard business rotations. Ensure the target URL is accurate to prevent processing rejection.</p>
+                  <h4 className="font-black text-white uppercase text-sm tracking-widest mb-2">Neural Security Protocol</h4>
+                  <p className="text-xs text-slate-400 font-medium leading-relaxed tracking-wide">
+                     Our automated fingerprinting engine scans 250+ global nodes once a request is approved. 
+                     Processing typically completes within 3-5 mission cycles (days). 
+                     Duplicate links will result in sequence termination.
+                  </p>
                </div>
             </div>
          </div>
 
-         <div className="w-full lg:w-96 space-y-6">
-            <h3 className="text-2xl font-black font-display tracking-tight uppercase flex items-center gap-3">
-               <Clock className="w-6 h-6 text-brand-blue" /> Request Log
-            </h3>
-            <div className="space-y-4">
+         <div className="w-full xl:w-[450px] space-y-8">
+            <div className="flex items-center justify-between">
+               <h3 className="text-2xl font-black font-display tracking-tight uppercase flex items-center gap-3">
+                  <Clock className="w-7 h-7 text-brand-blue" /> Event Horizon
+               </h3>
+               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{requests.length} Requests</span>
+            </div>
+
+            <div className="space-y-4 max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
                {requests.map((r, i) => (
                   <motion.div 
-                    initial={{ x: 20, opacity: 0 }}
+                    initial={{ x: 50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.1 }}
+                    transition={{ delay: i * 0.05 }}
                     key={r.id} 
-                    className="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex flex-col gap-4"
+                    className="bg-white rounded-[2rem] border border-slate-100 shadow-premium p-6 group hover:border-brand-blue transition-all duration-500"
                   >
-                     <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                           <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center", r.type === 'whitelist' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600")}>
-                              {r.type === 'whitelist' ? <ShieldCheck className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                           </div>
-                           <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">{r.type}</span>
+                     <div className="flex items-start justify-between mb-4">
+                        <div className="flex flex-col gap-1">
+                           <span className={cn(
+                              "text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest border w-fit",
+                              r.status === 'approved' ? "bg-emerald-50 border-emerald-100 text-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : 
+                              r.status === 'pending' ? "bg-brand-blue/5 border-brand-blue/10 text-brand-blue" : "bg-rose-50 border-rose-100 text-rose-600"
+                           )}>{r.status}</span>
+                           <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Isrc-Node: {r.id.slice(-8).toUpperCase()}</h4>
                         </div>
-                        <span className={cn(
-                           "text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest border",
-                           r.status === 'completed' ? "bg-emerald-50 border-emerald-100 text-emerald-600" : 
-                           r.status === 'pending' ? "bg-brand-blue/5 border-brand-blue/10 text-brand-blue" : "bg-rose-50 border-rose-100 text-rose-600"
-                        )}>{r.status}</span>
+                        <a href={r.songLink} target="_blank" rel="noreferrer" className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 transition-all">
+                           <ExternalLink className="w-4 h-4" />
+                        </a>
                      </div>
-                     <p className="text-[11px] font-bold text-slate-500 truncate">{r.youtubeUrl}</p>
-                     <div className="flex items-center justify-between pt-2 border-t border-slate-50">
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{new Date(r.createdAt).toLocaleDateString()}</span>
-                        <a href={r.youtubeUrl} target="_blank" rel="noreferrer" className="text-brand-blue hover:scale-110 transition-transform"><ExternalLink className="w-4 h-4" /></a>
+                     
+                     <div className="space-y-3 pb-4 border-b border-slate-50">
+                        <div>
+                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Metadata</p>
+                           <p className="text-xs font-black text-slate-900 uppercase truncate mt-0.5">{r.songName}</p>
+                        </div>
+                        <div>
+                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Artist Source</p>
+                           <p className="text-[10px] font-bold text-slate-600 uppercase mt-0.5">{r.artistName}</p>
+                        </div>
+                     </div>
+
+                     <div className="flex items-center justify-between mt-4">
+                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">{new Date(r.createdAt).toLocaleDateString()}</span>
+                        {r.adminResponse && (
+                           <div className="flex items-center gap-1.5 text-brand-purple">
+                              <MessageSquare className="w-3 h-3" />
+                              <span className="text-[8px] font-black uppercase tracking-widest">Cmd Feedback</span>
+                           </div>
+                        )}
                      </div>
                   </motion.div>
                ))}
                {requests.length === 0 && (
-                 <div className="p-20 text-center bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-100 italic text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-                   No signals transmitted
-                 </div>
+                  <div className="py-24 text-center bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                     <ShieldCheck className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">No Active Signals</p>
+                  </div>
                )}
             </div>
          </div>
@@ -195,3 +273,4 @@ export default function ContentID() {
     </div>
   );
 }
+

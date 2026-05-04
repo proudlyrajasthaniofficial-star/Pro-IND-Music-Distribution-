@@ -48,6 +48,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import PageLoader from './components/ui/Loading';
 import { Toaster } from 'sonner';
+import CustomCursor from './components/ui/CustomCursor';
 
 // Dashboad Components - moved to imports
 // Legal Pages - moved to imports
@@ -174,6 +175,7 @@ function AppContent() {
 export default function App() {
   return (
     <>
+      <CustomCursor />
       <Toaster position="top-right" expand={false} richColors />
       <AppContent />
     </>
