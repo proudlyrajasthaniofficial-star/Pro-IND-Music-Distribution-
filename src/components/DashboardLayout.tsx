@@ -333,13 +333,8 @@ export default function DashboardLayout() {
             <div className="hidden lg:flex items-center bg-slate-50/50 backdrop-blur-md p-3 px-6 rounded-[2rem] border border-slate-100 gap-4 w-[28rem] xl:w-[32rem]">
               <Search className="w-4 h-4 text-slate-300" />
               <input 
-                placeholder="Search music, labels or release ID..."
+                placeholder="Search music and artists..."
                 className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    navigate(`/dashboard/releases?q=${(e.target as HTMLInputElement).value}`);
-                  }
-                }}
               />
             </div>
           </div>

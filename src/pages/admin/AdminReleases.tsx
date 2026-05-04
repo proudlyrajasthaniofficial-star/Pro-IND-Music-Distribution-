@@ -2,25 +2,16 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { Music, Search, Filter, ArrowRight, Clock, CheckCircle, XCircle, Trash2, Activity } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "../../lib/utils";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminReleases() {
-  const [searchParams] = useSearchParams();
   const [releases, setReleases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState(searchParams.get("q") || "");
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const q = searchParams.get("q");
-    if (q !== null) {
-      setSearch(q);
-    }
-  }, [searchParams]);
   const [stats, setStats] = useState<Record<string, any>>({});
   const [userMap, setUserMap] = useState<Record<string, any>>({});
 
@@ -134,16 +125,7 @@ export default function AdminReleases() {
     }
   };
 
-  const filtered = releases.filter(r => {
-    const matchesFilter = filter === "all" || r.status === filter;
-    const searchLower = search.toLowerCase();
-    const matchesSearch = (r.title || r.songName || "").toLowerCase().includes(searchLower) || 
-                          (r.artist || r.singerName || "").toLowerCase().includes(searchLower) ||
-                          (r.label || r.labelName || "").toLowerCase().includes(searchLower) ||
-                          (r.customId || "").toLowerCase().includes(searchLower) ||
-                          (r.id || "").toLowerCase().includes(searchLower);
-    return matchesFilter && matchesSearch;
-  });
+  const filtered = releases.filter(r => filter === "all" || r.status === filter);
 
   if (loading) {
      return <div className="py-40 text-center animate-pulse font-black text-xs uppercase tracking-widest text-slate-500">Initializing Global Data Stream...</div>;
@@ -155,15 +137,6 @@ export default function AdminReleases() {
         <div>
            <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight uppercase">Global Release Catalog</h1>
            <p className="text-xs md:text-sm text-slate-400 font-medium">Comprehensive oversight of all submissions across the global distribution network.</p>
-        </div>
-        <div className="flex items-center gap-4 bg-slate-800 p-2 pl-4 rounded-2xl border border-slate-700 w-full lg:w-96">
-           <Search className="w-4 h-4 text-slate-500" />
-           <input 
-             value={search}
-             onChange={(e) => setSearch(e.target.value)}
-             placeholder="Search title, artist, label, ID..."
-             className="bg-transparent border-none focus:ring-0 text-sm font-bold flex-1 text-white"
-           />
         </div>
         <div className="flex gap-2 md:gap-4 overflow-x-auto pb-2 scrollbar-hide py-1 max-w-full">
            {["all", "pending", "action_required", "approved", "in_progress", "live", "takedown_requested", "completed", "rejected"].map(f => (
@@ -223,7 +196,7 @@ export default function AdminReleases() {
                           </div>
                           <div>
                              <p className="font-bold text-white text-lg">{r.title || r.songName}</p>
-                             <p className="text-[10px] text-brand-blue font-black uppercase tracking-widest mt-1">ID: {r.customId || r.id.slice(0, 8)}</p>
+                             <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">ID: {r.id.slice(0, 8)}</p>
                           </div>
                        </div>
                     </td>
