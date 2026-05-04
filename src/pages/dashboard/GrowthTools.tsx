@@ -170,7 +170,7 @@ export default function GrowthTools() {
                   <h2 className="text-2xl font-black uppercase tracking-tight">
                     {INDIAN_POWER_FEATURES.find(f => f.id === activeFeature)?.title}
                   </h2>
-                  <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Configuration Panel</p>
+                  <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Settings</p>
                 </div>
               </div>
 
@@ -315,9 +315,9 @@ export default function GrowthTools() {
                  {activeFeature === 'shortvideo' && (
                   <div className="space-y-6">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Select Base Track</label>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/40">Select Song</label>
                        <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-electric-blue transition-colors">
-                         <option>Choose from your discography...</option>
+                         <option>Choose from your songs...</option>
                        </select>
                     </div>
                     <div className="space-y-2">
@@ -347,7 +347,7 @@ export default function GrowthTools() {
                      <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
                         <Clock className="w-8 h-8 text-white/20" />
                      </div>
-                     <p className="text-white/40 text-sm">Action panel for this feature is being synchronized. <br />Please check back in 24 hours.</p>
+                     <p className="text-white/40 text-sm">This feature is being updated. <br />Please check back soon.</p>
                    </div>
                  )}
 
@@ -356,7 +356,7 @@ export default function GrowthTools() {
                     onClick={() => setActiveFeature(null)}
                     className="w-full py-5 bg-linear-to-r from-electric-blue to-neon-purple text-[#0D1B2A] rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl"
                   >
-                    Confirm Configuration
+                    Confirm
                   </button>
                 </div>
               </div>

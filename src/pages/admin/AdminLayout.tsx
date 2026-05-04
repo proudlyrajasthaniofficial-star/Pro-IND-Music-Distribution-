@@ -162,6 +162,18 @@ export default function AdminLayout() {
            </button>
 
            <div className="flex items-center gap-8">
+              <div className="hidden lg:flex items-center bg-white/5 border border-white/10 p-3 px-6 rounded-2xl gap-4 w-96">
+                <Search className="w-4 h-4 text-slate-500" />
+                <input 
+                  placeholder="Global Metadata Search..."
+                  className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase tracking-widest w-full text-white placeholder:text-slate-600"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      navigate(`/admin/releases?q=${(e.target as HTMLInputElement).value}`);
+                    }
+                  }}
+                />
+              </div>
               <div className="hidden md:flex flex-col items-end text-right">
                  <p className="text-xs font-black text-white uppercase tracking-tight">{profile?.displayName || 'Administrator'}</p>
                  <p className="text-[10px] text-brand-blue font-bold uppercase tracking-widest">System Node Alpha</p>

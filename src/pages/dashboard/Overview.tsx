@@ -145,7 +145,7 @@ export default function Overview() {
   return (
     <FadeIn>
       <div className="space-y-12 pb-20 text-left">
-        <SEO title="Artist Mission Control" />
+        <SEO title="Overview" />
 
         {error && (
           <motion.div 
@@ -171,12 +171,12 @@ export default function Overview() {
                 <Shield className="w-7 h-7 text-white" />
               </div>
               <div className="flex-1">
-                <p className="font-black uppercase tracking-tighter text-xl leading-tight text-white/90">Administrative System Online</p>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mt-1">Superuser access confirmed. You have global override authority.</p>
+                <p className="font-black uppercase tracking-tighter text-xl leading-tight text-white/90">Platform Management Hub</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mt-1">Admin access confirmed. Use the portal to manage platform data.</p>
               </div>
             </div>
             <Link to="/admin" className="relative z-10 w-full md:w-auto text-center px-10 py-4 bg-white text-brand-purple rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all shadow-xl whitespace-nowrap">
-              Enter Platform Root
+              Enter Admin Portal
             </Link>
           </motion.div>
         )}
@@ -236,16 +236,16 @@ export default function Overview() {
                       <Wallet className="w-7 h-7 text-brand-blue" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Global Treasury</h3>
+                      <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Total Earnings</h3>
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Extraction Ready</span>
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Available for Payout</span>
                       </div>
                     </div>
                   </div>
                   <div className="hidden md:flex flex-col items-end text-white">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Node ID: IND-MB-021</span>
-                    <span className="text-[8px] font-bold text-slate-600 mt-1 uppercase">Block Height: 18,294,021</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
+                    <span className="text-[8px] font-bold text-slate-600 mt-1 uppercase">Level 1 Distribution</span>
                   </div>
                 </div>
 
@@ -265,7 +265,7 @@ export default function Overview() {
                       />
                    </div>
                    <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
-                      <Zap className="w-3 h-3 fill-brand-blue stroke-brand-blue" /> Next Cycle Syncing in 14:02:51
+                      <Zap className="w-3 h-3 fill-brand-blue stroke-brand-blue" /> Next Royalty Update in 14h
                    </p>
                 </div>
 
@@ -275,7 +275,7 @@ export default function Overview() {
                       <span className="relative z-10 flex items-center justify-center gap-3">Request Payout <ArrowRightCircle className="w-5 h-5" /></span>
                    </button>
                    <button onClick={() => navigate('/dashboard/wallet')} className="py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] transition-all backdrop-blur-md cursor-pointer">
-                      Transaction Mesh
+                      Transaction History
                    </button>
                 </div>
               </div>
@@ -289,38 +289,38 @@ export default function Overview() {
             </div>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-brand-blue border border-white/5">
-                  <Terminal className="w-4 h-4" />
+                  <BarChart3 className="w-4 h-4" />
                </div>
-               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">System Events</h3>
+               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Recent Activity</h3>
             </div>
             
             <div className="flex-1 space-y-4 font-mono text-[10px] text-slate-400 overflow-y-auto custom-scrollbar pr-2">
                <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">14:05:22</span>
-                  <p><span className="text-emerald-500 font-bold">[OK]</span> Gateway response 200. Sync complete.</p>
+                  <span className="text-brand-blue opacity-50">14:05</span>
+                  <p><span className="text-emerald-500 font-bold">[OK]</span> Server response 200. Data updated.</p>
                </div>
                <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">14:02:11</span>
-                  <p><span className="text-brand-blue font-bold">[MSG]</span> Metadata broadcast to Spotify Nodes.</p>
+                  <span className="text-brand-blue opacity-50">14:02</span>
+                  <p><span className="text-brand-blue font-bold">[MSG]</span> Metadata sent to Spotify server.</p>
                </div>
                <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">13:58:45</span>
-                  <p><span className="text-brand-purple font-bold">[AI]</span> Analyzing sonic patterns for ISRC-021.</p>
+                  <span className="text-brand-blue opacity-50">13:58</span>
+                  <p><span className="text-brand-purple font-bold">[LOG]</span> Processing track ISRC details.</p>
                </div>
                <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">13:45:10</span>
-                  <p><span className="text-emerald-500 font-bold">[OK]</span> Apple Music portal handshake verified.</p>
+                  <span className="text-brand-blue opacity-50">13:45</span>
+                  <p><span className="text-emerald-500 font-bold">[OK]</span> Apple Music portal connection verified.</p>
                </div>
                <div className="flex gap-3 opacity-40">
-                  <span className="text-brand-blue opacity-50">13:30:00</span>
-                  <p><span className="text-slate-500 font-bold">[SYS]</span> Daily treasury re-balance initiated.</p>
+                  <span className="text-brand-blue opacity-50">13:30</span>
+                  <p><span className="text-slate-500 font-bold">[SYS]</span> Daily dashboard data refresh.</p>
                </div>
             </div>
 
             <div className="mt-6 pt-6 border-t border-white/5 space-y-4">
                <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Network Latency</span>
-                  <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">12ms</span>
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">System Speed</span>
+                  <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">Fast</span>
                </div>
                <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
                   <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity }} className="w-1/3 h-full bg-brand-blue" />
@@ -343,7 +343,7 @@ export default function Overview() {
               <div className="flex-1 text-left space-y-6">
                  <div className="space-y-2">
                     <h3 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white uppercase italic">Global Listener <span className="text-brand-blue">Reach</span></h3>
-                    <p className="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-[0.2em]">Real-time spatial data ingestion from 200+ territories</p>
+                    <p className="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-[0.2em]">Live listener data from territories across the world</p>
                  </div>
                  
                  <div className="grid grid-cols-2 gap-4">
@@ -356,13 +356,13 @@ export default function Overview() {
                       </div>
                     )) : (
                       <div className="col-span-2 p-10 text-center border border-dashed border-white/10 rounded-2xl">
-                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aggregate Global Data Pending</p>
+                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aggregate Global Data Loading...</p>
                       </div>
                     )}
                  </div>
                  
                  <button className="px-8 py-3 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-white/5">
-                    Detailed Mapping
+                    View Analytics
                  </button>
               </div>
               

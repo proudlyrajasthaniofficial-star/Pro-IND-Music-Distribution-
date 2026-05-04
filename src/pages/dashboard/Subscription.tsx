@@ -79,7 +79,7 @@ export default function Subscription() {
               Membership <span className="text-brand-blue">& Rewards</span>
             </h1>
             <p className="text-xs md:text-sm text-slate-400 font-medium tracking-wide italic">
-              Empowering your artistic journey with elite-tier distribution technology.
+              Empowering your artistic journey with premium distribution tools.
             </p>
           </div>
         </div>

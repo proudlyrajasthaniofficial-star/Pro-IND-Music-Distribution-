@@ -29,6 +29,9 @@ export default function ContentID() {
     releaseId: "", 
     songName: "", 
     artistName: "", 
+    singerName: "",
+    labelName: "",
+    platform: "YouTube",
     songLink: "" 
   });
 
@@ -69,32 +72,51 @@ export default function ContentID() {
         ...formData,
         releaseId,
         songName: selectedRelease.title,
-        artistName: selectedRelease.artist || profile?.artistName || ""
+        artistName: selectedRelease.artist || profile?.artistName || "",
+        labelName: selectedRelease.label || profile?.labelName || ""
       });
     } else {
       setFormData({
         ...formData,
         releaseId,
         songName: "",
-        artistName: ""
+        artistName: "",
+        labelName: ""
       });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !formData.releaseId || !formData.songLink) return;
+    if (!user || !formData.releaseId || !formData.songLink || !formData.singerName) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
     setSubmitting(true);
     try {
       await addDoc(collection(db, "content_id_requests"), {
-        ...formData,
+        releaseId: formData.releaseId,
+        songName: formData.songName,
+        artistName: formData.artistName,
+        singerName: formData.singerName,
+        labelName: formData.labelName,
+        platform: formData.platform,
+        songLink: formData.songLink,
         userId: user.uid,
         userEmail: user.email,
         userName: profile?.displayName || user.displayName || "Unknown",
         status: "pending",
         createdAt: new Date().toISOString()
       });
-      setFormData({ releaseId: "", songName: "", artistName: "", songLink: "" });
+      setFormData({ 
+        releaseId: "", 
+        songName: "", 
+        artistName: "", 
+        singerName: "",
+        labelName: "",
+        platform: "YouTube",
+        songLink: "" 
+      });
       fetchData();
       toast.success("Content ID request submitted successfully.");
     } catch (err) {
@@ -104,17 +126,17 @@ export default function ContentID() {
     }
   };
 
-  if (loading) return <div className="p-10 animate-pulse text-slate-400 font-black uppercase tracking-widest">Initialising Neural Content Scanner...</div>;
+  if (loading) return <div className="p-10 animate-pulse text-slate-400 font-black uppercase tracking-widest">Checking Content Data...</div>;
 
   return (
-    <div className="space-y-12 pb-20">
-      <div className="flex flex-col xl:flex-row gap-12">
-         <div className="flex-1 space-y-8">
+    <div className="space-y-12 pb-20 text-left">
+      <div className="flex flex-col xl:flex-row gap-12 text-left">
+         <div className="flex-1 space-y-8 text-left">
             <div className="text-left">
               <h1 className="text-5xl md:text-7xl font-black font-display tracking-tight uppercase leading-none mb-4">
-                Content <span className="text-brand-blue">Guardian</span>
+                Content <span className="text-brand-blue">ID</span>
               </h1>
-              <p className="text-slate-400 font-bold text-sm tracking-widest uppercase">Global Rights Management & Fingerprinting Portal</p>
+              <p className="text-slate-400 font-bold text-sm tracking-widest uppercase">Protect your music and manage rights across YouTube</p>
             </div>
             
             <div className="bg-slate-950 rounded-[3.5rem] p-10 text-white shadow-premium-dark relative overflow-hidden group">
@@ -126,16 +148,16 @@ export default function ContentID() {
                      <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
                         <Youtube className="w-7 h-7 text-brand-blue" />
                      </div>
-                     <div>
-                        <h3 className="text-xl font-black uppercase tracking-tight">Deploy Rights Signal</h3>
-                        <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase">Secure your metadata across global video nodes</p>
+                     <div className="text-left">
+                        <h3 className="text-xl font-black uppercase tracking-tight">Request Protection</h3>
+                        <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase">Secure your music metadata for fingerprinting (Live Tracks Only)</p>
                      </div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                      <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Select Distributed Asset (Live/Approved)</label>
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Select Live Track</label>
                            <select 
                              required
                              value={formData.releaseId}
@@ -147,36 +169,53 @@ export default function ContentID() {
                            </select>
                         </div>
                         <div className="space-y-3">
-                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">YouTube / Music Platform URL</label>
-                           <input 
-                              required
-                              value={formData.songLink}
-                              onChange={(e) => setFormData({...formData, songLink: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black text-white outline-none focus:border-brand-blue transition-all placeholder:text-slate-700"
-                              placeholder="https://youtube.com/watch?v=..."
-                           />
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Platform</label>
+                           <select 
+                             required
+                             value={formData.platform}
+                             onChange={(e) => setFormData({...formData, platform: e.target.value})}
+                             className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black uppercase tracking-tight text-white outline-none focus:border-brand-blue transition-all appearance-none cursor-pointer"
+                           >
+                              <option value="YouTube" className="bg-slate-950">YouTube</option>
+                              <option value="Facebook" className="bg-slate-950">Facebook / Instagram</option>
+                              <option value="TikTok" className="bg-slate-950">TikTok</option>
+                              <option value="All" className="bg-slate-950">All Global Platforms</option>
+                           </select>
                         </div>
                      </div>
 
                      <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Verified Song Name</label>
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Singer Name</label>
                            <input 
-                             readOnly
-                             value={formData.songName}
-                             className="w-full bg-slate-900/50 border border-white/5 rounded-3xl p-5 text-sm font-black uppercase text-slate-500 outline-none cursor-not-allowed"
-                             placeholder="Select track to populate..."
+                             required
+                             value={formData.singerName}
+                             onChange={(e) => setFormData({...formData, singerName: e.target.value})}
+                             className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black text-white outline-none focus:border-brand-blue transition-all placeholder:text-slate-700"
+                             placeholder="Lead Vocalist Name"
                            />
                         </div>
                         <div className="space-y-3">
-                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Authorized Artist</label>
+                           <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Label Name</label>
                            <input 
-                             readOnly
-                             value={formData.artistName}
-                             className="w-full bg-slate-900/50 border border-white/5 rounded-3xl p-5 text-sm font-black uppercase text-slate-500 outline-none cursor-not-allowed"
-                             placeholder="Artist metadata..."
+                             required
+                             value={formData.labelName}
+                             onChange={(e) => setFormData({...formData, labelName: e.target.value})}
+                             className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black text-white outline-none focus:border-brand-blue transition-all placeholder:text-slate-700"
+                             placeholder="Music Label"
                            />
                         </div>
+                     </div>
+
+                     <div className="space-y-3 text-left">
+                        <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Song URL / Link</label>
+                        <input 
+                           required
+                           value={formData.songLink}
+                           onChange={(e) => setFormData({...formData, songLink: e.target.value})}
+                           className="w-full bg-white/5 border border-white/10 rounded-3xl p-5 text-sm font-black text-white outline-none focus:border-brand-blue transition-all placeholder:text-slate-700"
+                           placeholder="https://youtube.com/watch?v=..."
+                        />
                      </div>
 
                      <button 
@@ -185,7 +224,7 @@ export default function ContentID() {
                      >
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
                         <span className="relative z-10 flex items-center justify-center gap-3">
-                           {submitting ? "Broadcasting Sequence..." : "Transmit Content ID Signal"}
+                           {submitting ? "SUBMITTING..." : "SUBMIT CONTENT ID REQUEST"}
                            <Zap className="w-4 h-4 fill-current" />
                         </span>
                      </button>
@@ -198,11 +237,11 @@ export default function ContentID() {
                   <ShieldCheck className="w-7 h-7" />
                </div>
                <div>
-                  <h4 className="font-black text-white uppercase text-sm tracking-widest mb-2">Neural Security Protocol</h4>
+                  <h4 className="font-black text-white uppercase text-sm tracking-widest mb-2">Protection Guidelines</h4>
                   <p className="text-xs text-slate-400 font-medium leading-relaxed tracking-wide">
-                     Our automated fingerprinting engine scans 250+ global nodes once a request is approved. 
-                     Processing typically completes within 3-5 mission cycles (days). 
-                     Duplicate links will result in sequence termination.
+                     Our automated system will scan and protect your music across YouTube. 
+                     Processing usually takes about 3-5 business days. 
+                     Make sure the provided link is valid to avoid any delays.
                   </p>
                </div>
             </div>
@@ -211,7 +250,7 @@ export default function ContentID() {
          <div className="w-full xl:w-[450px] space-y-8">
             <div className="flex items-center justify-between">
                <h3 className="text-2xl font-black font-display tracking-tight uppercase flex items-center gap-3">
-                  <Clock className="w-7 h-7 text-brand-blue" /> Event Horizon
+                  <Clock className="w-7 h-7 text-brand-blue" /> Request History
                </h3>
                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{requests.length} Requests</span>
             </div>
@@ -232,7 +271,7 @@ export default function ContentID() {
                               r.status === 'approved' ? "bg-emerald-50 border-emerald-100 text-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : 
                               r.status === 'pending' ? "bg-brand-blue/5 border-brand-blue/10 text-brand-blue" : "bg-rose-50 border-rose-100 text-rose-600"
                            )}>{r.status}</span>
-                           <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Isrc-Node: {r.id.slice(-8).toUpperCase()}</h4>
+                           <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Request ID: {r.id.slice(-8).toUpperCase()}</h4>
                         </div>
                         <a href={r.songLink} target="_blank" rel="noreferrer" className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 transition-all">
                            <ExternalLink className="w-4 h-4" />
@@ -245,7 +284,7 @@ export default function ContentID() {
                            <p className="text-xs font-black text-slate-900 uppercase truncate mt-0.5">{r.songName}</p>
                         </div>
                         <div>
-                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Artist Source</p>
+                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Artist Name</p>
                            <p className="text-[10px] font-bold text-slate-600 uppercase mt-0.5">{r.artistName}</p>
                         </div>
                      </div>
@@ -255,7 +294,7 @@ export default function ContentID() {
                         {r.adminResponse && (
                            <div className="flex items-center gap-1.5 text-brand-purple">
                               <MessageSquare className="w-3 h-3" />
-                              <span className="text-[8px] font-black uppercase tracking-widest">Cmd Feedback</span>
+                              <span className="text-[8px] font-black uppercase tracking-widest">Admin Reply</span>
                            </div>
                         )}
                      </div>
@@ -264,7 +303,7 @@ export default function ContentID() {
                {requests.length === 0 && (
                   <div className="py-24 text-center bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
                      <ShieldCheck className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">No Active Signals</p>
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">No Requests Found</p>
                   </div>
                )}
             </div>

@@ -161,7 +161,7 @@ export default function Home() {
               className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-10 cursor-pointer shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             >
               <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Premium Digital Distribution // 2026 G1 Edition</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Professional Music Distribution for Indian Artists</span>
             </motion.div>
 
             <h1 className="text-6xl md:text-[9.5rem] font-black font-display tracking-tight leading-[0.8] uppercase mb-12">
@@ -189,8 +189,8 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 1 }}
               className="text-lg md:text-xl text-slate-400 font-medium max-w-3xl mx-auto mb-20 leading-relaxed px-4 uppercase tracking-widest"
             >
-              IND Music Distribution is the neural backbone for independent creators in India. 
-              Deploy your catalog to 250+ global nodes including Spotify, iTunes, and JioSaavn.
+              IND Music Distribution is the most trusted platform for independent artists in India. 
+              Distribute your music to over 250 platforms including Spotify, Apple Music, and JioSaavn.
             </motion.p>
 
             <motion.div 

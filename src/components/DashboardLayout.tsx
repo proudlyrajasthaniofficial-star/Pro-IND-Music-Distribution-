@@ -99,9 +99,9 @@ export default function DashboardLayout() {
         batch.update(doc(db, "user_notifications", n.id), { read: true });
       });
       await batch.commit();
-      toast.success("Notification chronicle cleared.");
+      toast.success("Notifications cleared.");
     } catch (err) {
-      toast.error("Batch update failure.");
+      toast.error("Error updating notifications.");
     }
   };
 
@@ -130,7 +130,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans">
-      <SEO title="Dashboard Architecture" description="Manage your music distribution, assets, and royalties with IND Distribution neural network." />
+      <SEO title="Artist Dashboard" description="Manage your music distribution, assets, and royalties with IND Distribution." />
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -160,9 +160,9 @@ export default function DashboardLayout() {
               <div className="flex flex-col">
                 <span className="font-display text-2xl font-black tracking-tighter uppercase leading-none text-slate-800">IND<span className="text-brand-blue drop-shadow-[0_0_8px_rgba(0,102,255,0.4)]">.</span></span>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">Phase-01</span>
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">Music Distribution</span>
                   <div className="h-[1px] w-4 bg-slate-100"></div>
-                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-brand-blue animae-pulse">G1</span>
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-brand-blue animae-pulse">Live</span>
                 </div>
               </div>
             </Link>
@@ -246,7 +246,7 @@ export default function DashboardLayout() {
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-800 truncate">{profile?.displayName || 'Authorized User'}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Secure Node Syncing</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-300 mr-2 group-hover:translate-x-1 transition-transform" />
@@ -257,12 +257,12 @@ export default function DashboardLayout() {
                 <div className="flex items-center justify-between">
                    <div className="flex items-center gap-2">
                       <ShieldCheck className="w-3 h-3 text-brand-blue" />
-                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Security Rank</span>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Security Status</span>
                    </div>
                    <Activity className="w-3 h-3 text-emerald-500 animate-pulse" />
                 </div>
                 <div className="flex items-center justify-between">
-                   <span className="text-[10px] font-black uppercase tracking-tight text-slate-900">Elite Verified</span>
+                   <span className="text-[10px] font-black uppercase tracking-tight text-slate-900">Premium Member</span>
                    <span className="text-[8px] font-bold text-slate-400">v1.2.0</span>
                 </div>
              </div>
@@ -274,7 +274,7 @@ export default function DashboardLayout() {
                <div className="w-8 h-8 rounded-xl flex items-center justify-center group-hover:bg-rose-50">
                   <LogOut className="w-4 h-4" />
                </div>
-               Disconnect Node
+               Logout Session
              </button>
           </div>
         </div>
@@ -295,20 +295,20 @@ export default function DashboardLayout() {
               className="flex items-center gap-12 whitespace-nowrap text-[9px] font-bold text-slate-500 uppercase tracking-widest pl-6"
             >
               {[
-                "• All nodes operational in India Sector // Mumbai (Phase-1) Live",
-                "• Spotify API Data Refreshing: Next sync in 12m",
-                "• Apple Music Trending: Global metadata update complete",
-                "• IND Music Neural Network G1 online",
-                "• New high-latency warning in Sector-South cleared",
+                "• All systems operational // Fast distribution active",
+                "• Spotify data refreshing: Analytics updating",
+                "• Apple Music Trending: Metadata sync complete",
+                "• Distribution network online",
+                "• All systems running smoothly",
                 "• Payment Gateway [Razorpay/Stripe] Online"
               ].map((msg, i) => <span key={i}>{msg}</span>)}
               {/* Duplicate for seamless loop */}
               {[
-                "• All nodes operational in India Sector // Mumbai (Phase-1) Live",
-                "• Spotify API Data Refreshing: Next sync in 12m",
-                "• Apple Music Trending: Global metadata update complete",
-                "• IND Music Neural Network G1 online",
-                "• New high-latency warning in Sector-South cleared",
+                "• All systems operational // Fast distribution active",
+                "• Spotify data refreshing: Analytics updating",
+                "• Apple Music Trending: Metadata sync complete",
+                "• Distribution network online",
+                "• All systems running smoothly",
                 "• Payment Gateway [Razorpay/Stripe] Online"
               ].map((msg, i) => <span key={i + 10}>{msg}</span>)}
             </motion.div>
@@ -333,8 +333,13 @@ export default function DashboardLayout() {
             <div className="hidden lg:flex items-center bg-slate-50/50 backdrop-blur-md p-3 px-6 rounded-[2rem] border border-slate-100 gap-4 w-[28rem] xl:w-[32rem]">
               <Search className="w-4 h-4 text-slate-300" />
               <input 
-                placeholder="Query mission-critical metadata..."
+                placeholder="Search music, labels or release ID..."
                 className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/dashboard/releases?q=${(e.target as HTMLInputElement).value}`);
+                  }
+                }}
               />
             </div>
           </div>
@@ -376,13 +381,13 @@ export default function DashboardLayout() {
                       className="absolute right-0 mt-4 w-80 md:w-96 bg-white rounded-[2rem] shadow-4xl border border-slate-100 z-50 overflow-hidden"
                     >
                       <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-                        <h4 className="text-sm font-black uppercase tracking-widest">Global Signals</h4>
+                        <h4 className="text-sm font-black uppercase tracking-widest">Notifications</h4>
                         {unreadCount > 0 && (
                           <button 
                             onClick={markAllAsRead}
                             className="text-[9px] font-black text-brand-blue uppercase hover:underline"
                           >
-                            Purge Unread
+                            Clear All
                           </button>
                         )}
                       </div>
@@ -426,7 +431,7 @@ export default function DashboardLayout() {
                         {notifications.length === 0 && (
                           <div className="p-12 text-center">
                             <Bell className="w-10 h-10 text-slate-100 mx-auto mb-4" />
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Quiet Sector. No signals detected.</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">No notifications found.</p>
                           </div>
                         )}
                       </div>
@@ -435,7 +440,7 @@ export default function DashboardLayout() {
                         className="block p-4 text-center text-[10px] font-black uppercase tracking-widest bg-slate-50 hover:bg-slate-100 text-slate-400 transition-colors"
                         onClick={() => setIsNotificationsOpen(false)}
                       >
-                        Access Nexus Intelligence
+                        Help & Support Center
                       </Link>
                     </motion.div>
                   </>
@@ -447,7 +452,7 @@ export default function DashboardLayout() {
               to="/dashboard/upload"
               className="px-4 py-3 lg:px-8 lg:py-4 bg-slate-950 text-white rounded-xl lg:rounded-[1.5rem] font-black text-[10px] lg:text-[11px] uppercase tracking-widest shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] flex items-center gap-2 lg:gap-3 active:scale-95 transition-all group"
             >
-              <span className="hidden sm:inline">Primary Release</span>
+              <span className="hidden sm:inline">Upload Track</span>
               <span className="sm:hidden">Upload</span>
               <Plus className="w-4 h-4 text-brand-blue group-hover:scale-125 transition-transform" />
             </Link>

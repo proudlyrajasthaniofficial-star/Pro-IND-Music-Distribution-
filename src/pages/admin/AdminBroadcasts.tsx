@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, limit, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { 
   Bell, 
@@ -12,10 +12,12 @@ import {
   Zap,
   Globe,
   Plus,
-  MessageSquare
+  MessageSquare,
+  X
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 
 export default function AdminBroadcasts() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -36,6 +38,17 @@ export default function AdminBroadcasts() {
     fetchNotifications();
   }, []);
 
+  const deleteNotification = async (id: string) => {
+    if (!window.confirm("Are you sure you want to remove this signal?")) return;
+    try {
+      await deleteDoc(doc(db, "system_notifications", id));
+      setNotifications(notifications.filter(n => n.id !== id));
+      toast.success("Signal terminated successfully.");
+    } catch (err) {
+      toast.error("Termination failed.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !message) return;
@@ -50,21 +63,21 @@ export default function AdminBroadcasts() {
       setTitle("");
       setMessage("");
       fetchNotifications();
-      alert("Broadcast transmitted to all active users.");
+      toast.success("Broadcast transmitted to all active users.");
     } catch (err) {
-      alert("Transmission Failure.");
+      toast.error("Transmission Failure.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="space-y-12 pb-24">
+    <div className="space-y-12 pb-24 text-left">
       <div className="flex flex-col lg:flex-row gap-12 text-left">
          {/* New Broadcast Form */}
-         <div className="flex-1 space-y-8">
-            <div className="space-y-2">
-               <h1 className="text-5xl font-black font-display tracking-tight uppercase">System <span className="text-brand-blue">Broadcast</span></h1>
+         <div className="flex-1 space-y-8 text-left">
+            <div className="space-y-2 text-left">
+               <h1 className="text-5xl font-black font-display tracking-tight uppercase text-white">System <span className="text-brand-blue">Broadcast</span></h1>
                <p className="text-slate-400 font-medium text-xs uppercase tracking-widest ">Deploy global notifications to the user dashboard mesh.</p>
             </div>
 
@@ -148,7 +161,15 @@ export default function AdminBroadcasts() {
                            n.type === 'urgent' ? "bg-rose-500/10 border-rose-500/20 text-rose-500" : 
                            n.type === 'warning' ? "bg-amber-500/10 border-amber-500/20 text-amber-500" : "bg-blue-500/10 border-blue-500/20 text-blue-500"
                         )}>{n.type}</span>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
+                          <button 
+                            onClick={() => deleteNotification(n.id)}
+                            className="p-1.5 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
                      </div>
                      <div>
                         <h4 className="font-bold text-white uppercase text-xs tracking-tight group-hover:text-brand-blue transition-colors line-clamp-1">{n.title}</h4>

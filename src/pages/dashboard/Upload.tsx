@@ -323,8 +323,15 @@ export default function Upload() {
       // Execute uploads in parallel
       await Promise.all(uploadPromises);
 
+      const generateCustomId = (title: string) => {
+        const sanitized = title.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toUpperCase();
+        const num = Math.floor(100000 + Math.random() * 900000);
+        return `IND-${sanitized}-${num}`;
+      };
+
       const releaseData = {
         userId: user.uid,
+        customId: generateCustomId(data.songName),
         title: data.songName,
         artist: data.singerName,
         genre: data.primaryGenre, 
@@ -337,7 +344,7 @@ export default function Upload() {
         releaseTime: data.releaseTime,
         audioUrl,
         coverUrl,
-        status: "pending", // Reset to pending after edit
+        status: "pending", 
         platforms: selectedPlatforms,
         metadata: data,
         isrc: data.isrc || existingRelease?.isrc || null,
@@ -346,6 +353,8 @@ export default function Upload() {
       };
 
       if (releaseId) {
+        // preserve original customId if editing
+        if (existingRelease?.customId) releaseData.customId = existingRelease.customId;
         await updateDoc(doc(db, "releases", releaseId), releaseData);
       } else {
         await addDoc(collection(db, "releases"), {
