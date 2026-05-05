@@ -47,7 +47,7 @@
         "userId": { "type": "string" },
         "title": { "type": "string" },
         "artist": { "type": "string" },
-        "status": { "type": "string", "enum": ["pending", "approved", "live", "rejected"] },
+        "status": { "type": "string", "enum": ["pending", "in_review", "approved", "live", "rejected"] },
         "coverUrl": { "type": "string" },
         "audioUrl": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" }
@@ -183,6 +183,20 @@
     "/system_notifications/{notifId}": {
       "schema": "SystemNotification",
       "description": "Global dashboard news"
+    },
+    "/user_notifications/{notifId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string" },
+          "title": { "type": "string" },
+          "message": { "type": "string" },
+          "type": { "type": "string" },
+          "read": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "description": "User-specific notifications"
     },
     "/system/{statusId}": {
       "schema": { "type": "object", "properties": { "status": { "type": "string" } } },

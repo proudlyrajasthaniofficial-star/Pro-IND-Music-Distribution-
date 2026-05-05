@@ -18,8 +18,8 @@ service cloud.firestore {
     // These users have TOTAL authority over the database.
     function isMasterAdmin() {
       return isSignedIn() && (
-        request.auth.token.email == "musicdistributionindia.in@gmail.com" || 
-        request.auth.token.email == "summyskji@gmail.com"
+        request.auth.token.get('email', '') == "musicdistributionindia.in@gmail.com" || 
+        request.auth.token.get('email', '') == "summyskji@gmail.com"
       );
     }
 
@@ -27,8 +27,13 @@ service cloud.firestore {
     function isAdmin() {
       return isMasterAdmin() || (
         isSignedIn() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'artist') == 'admin'
       );
+    }
+
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
     }
 
     function incoming() { return request.resource.data; }
@@ -46,31 +51,31 @@ service cloud.firestore {
     // -------------------------------------------------------------------------
 
     match /users/{userId} {
-      allow get: if isOwner(userId) || isAdmin();
+      allow get: if isUser(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId) && incoming().role == 'artist';
-      allow update: if isOwner(userId) || isAdmin();
+      allow create: if isUser(userId) && incoming().role == 'artist';
+      allow update: if isUser(userId) || isAdmin();
       allow delete: if isAdmin();
     }
 
     match /releases/{releaseId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isSignedIn();
-      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
     }
 
     match /artists/{artistId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn();
-      allow update: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
     }
 
     match /labels/{labelId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn();
-      allow update, delete: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
     }
 
     match /transactions/{txId} {
@@ -79,12 +84,14 @@ service cloud.firestore {
     }
 
     match /system_notifications/{nId} {
-      allow read: if true;
+      allow list: if true;
+      allow get: if true;
       allow write: if isAdmin();
     }
 
     match /user_notifications/{nId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow create, delete: if isAdmin();
     }

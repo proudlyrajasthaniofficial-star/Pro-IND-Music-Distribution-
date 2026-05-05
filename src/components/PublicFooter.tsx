@@ -15,7 +15,7 @@ import { cn } from '../lib/utils';
 
 const PublicFooter = () => {
   return (
-    <footer className="relative py-32 px-6 bg-[#0a0a0b] border-t border-white/5 overflow-hidden text-left">
+    <footer className="relative py-32 px-6 bg-[#020617] border-t border-white/5 overflow-hidden text-left">
       {/* Subtle Gradient Backgrounds */}
       <div className="absolute top-0 left-1/4 w-[40rem] h-[40rem] bg-brand-blue/10 blur-[160px] rounded-full pointer-events-none mix-blend-screen"></div>
       <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-neon-purple/10 blur-[140px] rounded-full pointer-events-none mix-blend-screen"></div>
@@ -38,7 +38,7 @@ const PublicFooter = () => {
               </div>
             </Link>
             <p className="text-slate-400 max-w-md text-sm font-medium leading-relaxed italic opacity-80">
-              IND Music Distribution India. Upload your music, we deliver your music on JioSaavn, Wynk Music, Gaana, Resso, Spotify and more 150+ music platforms. <br /><br />
+              IND Music Distribution India ka bharosemand platform hai. Apna music JioSaavn, Wynk Music, Gaana, Instagram aur 150+ platforms par distribute karein. <br /><br />
               म्यूजिक डिस्ट्रीब्यूशन इंडिया पर अपना संगीत अपलोड करें, हम आपका संगीत JioSaavn, Wynk Music, Gaana, Resso, Spotify और अधिक 150+ संगीत प्लेटफार्मों पर वितरित करते हैं।
             </p>
             <div className="flex gap-4">

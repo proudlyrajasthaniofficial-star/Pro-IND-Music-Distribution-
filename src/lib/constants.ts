@@ -37,7 +37,7 @@ export const INDIAN_POWER_FEATURES = [
   {
     id: "crbt",
     title: "Caller Tune Distribution",
-    description: "Publish your songs as caller tunes on Jio, Airtel, VI & BSNL and earn revenue every time someone sets your song.",
+    description: "Apne gaane Jio, Airtel, VI aur BSNL par caller tunes ke roop me release karein aur jab koi aapka gaana set kare toh paise kamayein.",
     icon: "PhoneCall",
     badge: "🔥 High Demand",
     accent: "electric-blue"
@@ -45,56 +45,56 @@ export const INDIAN_POWER_FEATURES = [
   {
     id: "instagram",
     title: "Instagram Music & Reels",
-    description: "Make your music available on Instagram Reels & Facebook so users can create viral content using your sound.",
+    description: "Instagram Reels aur Facebook par apna music available karayein taaki log aapke sound par viral content bana sakein.",
     icon: "Instagram",
     accent: "neon-purple"
   },
   {
     id: "whatsapp",
     title: "WhatsApp Audio Library",
-    description: "Allow users to use your music in WhatsApp status and grow organically across India.",
+    description: "Users ko apne music ko WhatsApp status me use karne dein aur poore India me organically grow karein.",
     icon: "MessageSquare",
     accent: "whatsapp-green"
   },
   {
     id: "regional",
     title: "Indian Streaming Platforms",
-    description: "Distribute your music to Gaana, Wynk, JioSaavn, Hungama & other regional platforms.",
+    description: "Gaana, Wynk, JioSaavn, Hungama aur baaki regional platforms par apna music distribute karein.",
     icon: "Music",
     accent: "electric-blue"
   },
   {
     id: "languages",
-    title: "All Indian Languages Supported",
-    description: "Upload songs in Hindi, Punjabi, Bhojpuri, Tamil, Telugu, Marathi & more with proper targeting.",
+    title: "Sabhi Indian Languages",
+    description: "Hindi, Punjabi, Bhojpuri, Tamil, Telugu, Marathi aur baki sabhi languages me gaane upload karein proper targeting ke saath.",
     icon: "Languages",
     accent: "neon-purple"
   },
   {
     id: "lyrics",
     title: "Lyrics Integration",
-    description: "Display your song lyrics across platforms to increase engagement and visibility.",
+    description: "Apne gaane ke lyrics sabhi platforms par dikhayein taaki fans aapke words ke saath connect kar sakein.",
     icon: "FileText",
     accent: "electric-blue"
   },
   {
     id: "verification",
     title: "Artist Verification",
-    description: "Get your official artist profiles verified on YouTube, Spotify & Instagram.",
+    description: "YouTube, Spotify aur Instagram par apna official artist profile verify karayein.",
     icon: "ShieldCheck",
     accent: "neon-purple"
   },
   {
     id: "upi",
     title: "Instant UPI Withdrawals",
-    description: "Withdraw your earnings directly to your UPI or bank account quickly and securely.",
+    description: "Apni kamai seedhe apne UPI ya bank account me jaldi aur safely nikaalein.",
     icon: "Wallet",
     accent: "whatsapp-green"
   },
   {
     id: "shortvideo",
     title: "Short Video Integration",
-    description: "Auto-create clips for Reels, Shorts & viral content platforms.",
+    description: "Reels, Shorts aur viral content platforms ke liye apne clips auto-create karein.",
     icon: "Video",
     accent: "electric-blue"
   }

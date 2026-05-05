@@ -65,8 +65,8 @@ export default function Overview() {
       setStats({
         total: allData.length,
         live: allData.filter((r: any) => r.status === 'live').length,
-        pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved').length,
-        rejected: allData.filter((r: any) => r.status === 'rejected').length
+        pending: allData.filter((r: any) => r.status === 'pending' || r.status === 'approved' || r.status === 'in_review').length,
+        rejected: allData.filter((r: any) => r.status === 'rejected' || r.status === 'action_required').length
       });
       // Derive recent
       const sorted = [...allData].sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
@@ -483,7 +483,7 @@ export default function Overview() {
                   <div className="flex flex-col gap-4">
                     {[
                       { label: "Live Catalog", count: stats.live, color: "bg-emerald-500", text: "text-emerald-700", ring: "ring-emerald-100" },
-                      { label: "Processing", count: stats.pending, color: "bg-brand-blue", text: "text-blue-700", ring: "ring-blue-100" },
+                      { label: "Processing", count: stats.pending, color: "bg-indigo-500", text: "text-indigo-700", ring: "ring-indigo-100" },
                       { label: "Action Required", count: stats.rejected, color: "bg-rose-500", text: "text-rose-700", ring: "ring-rose-100" },
                     ].map((item, i) => (
                       <div key={i} className="p-4 bg-slate-50 rounded-[1.5rem] flex items-center justify-between group cursor-default">
@@ -526,14 +526,18 @@ export default function Overview() {
                              <div className={cn(
                                 "w-1.5 h-1.5 md:w-2 md:h-2 rounded-full",
                                 release.status === 'live' ? "bg-emerald-500 animate-pulse" : 
-                                release.status === 'pending' || release.status === 'approved' ? "bg-brand-blue" :
-                                "bg-amber-500"
+                                release.status === 'pending' ? "bg-amber-500" :
+                                release.status === 'in_review' ? "bg-indigo-500" :
+                                release.status === 'approved' ? "bg-brand-blue" :
+                                "bg-rose-500"
                              )}></div>
                              <span className={cn(
                                "text-[8px] md:text-[9px] font-black uppercase tracking-widest leading-none",
                                release.status === 'live' ? "text-emerald-500" : 
-                               release.status === 'pending' || release.status === 'approved' ? "text-brand-blue" :
-                               "text-amber-500"
+                               release.status === 'pending' ? "text-amber-500" :
+                               release.status === 'in_review' ? "text-indigo-500" :
+                               release.status === 'approved' ? "text-brand-blue" :
+                               "text-rose-500"
                              )}>
                                {release.status.replace("_", " ")}
                              </span>

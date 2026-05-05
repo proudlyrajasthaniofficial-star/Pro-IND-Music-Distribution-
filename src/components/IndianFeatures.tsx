@@ -28,7 +28,7 @@ const iconMap: Record<string, any> = {
 
 export default function IndianFeatures() {
   return (
-    <section className="py-32 px-6 relative overflow-hidden bg-[#0a0a0b]">
+    <section className="py-32 px-6 relative overflow-hidden bg-[#020617]">
       {/* Background Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-blue/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen"></div>
       
@@ -47,18 +47,18 @@ export default function IndianFeatures() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-display text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase mb-6 text-white"
+            className="font-display text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase mb-6 text-white text-left md:text-center"
           >
-            Built for <span className="bg-gradient-to-r from-brand-blue to-neon-purple text-transparent bg-clip-text animate-gradient drop-shadow-xl inline-block mt-2">Indian Artists</span>
+            Khaas <span className="bg-gradient-to-r from-brand-blue to-neon-purple text-transparent bg-clip-text animate-gradient drop-shadow-xl inline-block mt-2">Indian Artists</span> Ke Liye
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto"
+            className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto text-left md:text-center"
           >
-            Everything you need to grow your music career in India’s digital ecosystem.
+            Woh sab kuch jo aapko apne music career ko India me grow karne ke liye chahiye.
           </motion.p>
         </div>
 

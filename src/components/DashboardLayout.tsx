@@ -28,11 +28,11 @@ import {
   ShieldCheck,
   Activity
 } from "lucide-react";
-import { auth, db } from "../lib/firebase";
+import { auth, db, handleFirestoreError, OperationType } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import { collection, query, where, onSnapshot, orderBy, limit, doc, updateDoc, writeBatch } from "firebase/firestore";
+import { collection, query, where, onSnapshot, limit, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { toast } from "sonner";
 import SEO from "./SEO";
 import NeuralGrid from "./ui/NeuralGrid";
@@ -69,15 +69,13 @@ export default function DashboardLayout() {
     const q = query(
       collection(db, "user_notifications"),
       where("userId", "==", user.uid),
-      orderBy("createdAt", "desc"),
       limit(20)
     );
     
     const unsubscribe = onSnapshot(q, (snap) => {
       setNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     }, (err) => {
-      console.error("Notifications snapshot error:", err);
-      // Don't toast here to avoid spamming the user if it's a persistent error
+      handleFirestoreError(err, OperationType.GET, "user_notifications");
     });
 
     return unsubscribe;

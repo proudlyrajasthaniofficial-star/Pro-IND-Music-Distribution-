@@ -80,11 +80,11 @@ export default function Features() {
           >
             <span className="text-electric-blue font-black uppercase tracking-[0.4em] text-[10px] mb-6 block drop-shadow-[0_0_10px_rgba(0,212,255,0.5)] italic">Unleash Your Sound</span>
             <h1 className="font-display text-5xl md:text-8xl font-black tracking-tight leading-[0.9] mb-8 uppercase">
-              Powerful Features to Grow <br />
-              <span className="bg-clip-text text-transparent bg-linear-to-r from-electric-blue via-neon-purple to-soft-orange">Your Music Career</span>
+              Apne Music Career Ko Grow <br />
+              <span className="bg-clip-text text-transparent bg-linear-to-r from-electric-blue via-neon-purple to-soft-orange">Karne Ke Best Features</span>
             </h1>
             <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
-              Everything you need to distribute, monetize, and manage your music globally — all in one place.
+              Music distribute karein, paise kamayein aur apne gano ko manage karein — woh bhi ek hi jagah.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6">
               <Link to="/auth?mode=signup" className="px-10 py-5 bg-electric-blue text-[#0D1B2A] rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_20px_50px_rgba(0,212,255,0.3)] hover:-translate-y-2 transition-all">
@@ -130,10 +130,10 @@ export default function Features() {
               <Globe className="w-3 h-3" /> Worldwide Reach
             </div>
             <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase leading-tight">
-              Global Music <br /> <span className="text-electric-blue">Distribution</span>
+              Global Level Par <br /> <span className="text-electric-blue">Music Distribution</span>
             </h2>
             <p className="text-white/60 text-lg font-light leading-relaxed">
-              Distribute your music to 250+ digital streaming platforms worldwide including Spotify, Apple Music, JioSaavn, YouTube Music, Instagram, Facebook, Amazon Music, and more.
+              Apna music 150+ platforms par distribute karein jaise Spotify, Apple Music, JioSaavn, Wynk, Instagram aur YouTube Music.
             </p>
             
             <div className="grid sm:grid-cols-2 gap-6">
@@ -186,16 +186,16 @@ export default function Features() {
       <section id="royalties" className="py-32 px-6 relative bg-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 mb-20">
-             <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase underline decoration-electric-blue underline-offset-8">Transparent Royalty Collection</h2>
-             <p className="text-white/60 max-w-2xl mx-auto font-light">Earn money every time your music is streamed or downloaded. Track everything in real-time.</p>
+             <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase underline decoration-electric-blue underline-offset-8">Saaf-Suthri Royalty Earnings</h2>
+             <p className="text-white/60 max-w-2xl mx-auto font-light">Har stream par paise kamayein aur real-time me apna paisa track karein.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
              {[
-               { title: "Real-time Dashboard", desc: "Track earnings as they happen with precision.", icon: Layout, color: "text-electric-blue" },
-               { title: "Detailed Reports", desc: "Monthly & quarterly financial statements.", icon: BarChart3, color: "text-neon-purple" },
-               { title: "Withdrawals", desc: "Easy withdrawal system via UPI or Bank Transfer.", icon: ShieldCheck, color: "text-emerald-400" },
-               { title: "Full Transparency", desc: "No hidden fees. You see exactly what you earn.", icon: CheckCircle2, color: "text-soft-orange" }
+               { title: "Real-time Dashboard", desc: "Apni kamayi usi waqt dekhein live graph ke saath.", icon: Layout, color: "text-electric-blue" },
+               { title: "Detailed Reports", desc: "Har mahine ki report aur financial data check karein.", icon: BarChart3, color: "text-neon-purple" },
+               { title: "Withdrawals", desc: "UPI ya Bank Transfer se turant payout lein.", icon: ShieldCheck, color: "text-emerald-400" },
+               { title: "Full Transparency", desc: "Koi hidden charges nahi, pura hisab saamne.", icon: CheckCircle2, color: "text-soft-orange" }
              ].map((item, i) => (
                <motion.div
                  key={i}
@@ -266,10 +266,10 @@ export default function Features() {
               <ShieldCheck className="w-3 h-3" /> Automatic Protection
             </div>
             <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase leading-tight">
-              YouTube Content ID <br /> <span className="text-rose-500">Protection</span>
+              YouTube Content ID <br /> <span className="text-rose-500">Se Income Karein</span>
             </h2>
             <p className="text-white/60 text-lg font-light leading-relaxed">
-              Protect your music and monetize user-generated content across YouTube automatically. Turn every use of your music into income.
+              Agar koi aur aapka gaana use karega, toh uska paisa bhi aapko milega. Automatic system se apna copyright music secure karein.
             </p>
             
             <div className="space-y-4">
@@ -306,8 +306,8 @@ export default function Features() {
                <div className="w-20 h-20 bg-electric-blue text-[#0D1B2A] rounded-3xl flex items-center justify-center mx-auto shadow-[0_20px_50px_rgba(0,212,255,0.3)] rotate-6">
                   <CheckCircle2 className="w-10 h-10" />
                </div>
-               <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase">Official Artist <br /> <span className="text-electric-blue">Channel (OAC)</span></h2>
-               <p className="text-white/60 text-lg font-light max-w-2xl mx-auto">Get your official YouTube artist channel and unify all your content in one place. Upgrade your brand identity instantly.</p>
+               <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase">Apna Official <br /> <span className="text-electric-blue">Artist Channel (OAC)</span></h2>
+               <p className="text-white/60 text-lg font-light max-w-2xl mx-auto">YouTube par verified tick payein aur apne saare content ko ek hi channel par unify karein.</p>
                
                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {[
@@ -329,9 +329,9 @@ export default function Features() {
       <section className="py-32 px-6 bg-white/5">
         <div className="max-w-7xl mx-auto text-center space-y-20">
            <div className="space-y-6">
-              <h2 className="text-4xl md:text-7xl font-black font-display tracking-tight uppercase">Smart Artist <span className="text-electric-blue">Dashboard</span></h2>
+              <h2 className="text-4xl md:text-7xl font-black font-display tracking-tight uppercase">Artists Ke Liye <span className="text-electric-blue">Fast Dashboard</span></h2>
               <div className="flex flex-wrap justify-center gap-6">
-                 {["Upload Music", "Track Earnings", "Manage Labels", "Request Takedown", "Download Reports"].map((tab, i) => (
+                 {["Gane Upload Karein", "Earnings Check Karein", "Label Manage Karein", "Takedown Seek Karein", "Reports Download"].map((tab, i) => (
                    <span key={i} className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-electric-blue cursor-pointer transition-colors px-4 py-2 border border-white/5 rounded-xl hover:bg-white/5">{tab}</span>
                  ))}
               </div>
@@ -378,8 +378,8 @@ export default function Features() {
       <section className="py-32 px-6">
         <div className="max-w-7xl mx-auto space-y-20">
            <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase">We’re Here to <span className="text-soft-orange">Help You</span></h2>
-              <p className="text-white/60 max-w-2xl mx-auto font-light">Join a network where support is a priority, not an afterthought.</p>
+              <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase">Hum Aapki Madad Ke <span className="text-soft-orange">Liye Taiyar Hain</span></h2>
+              <p className="text-white/60 max-w-2xl mx-auto font-light">Join karein India ka sabse bharosemand distribution network.</p>
            </div>
 
            <div className="grid md:grid-cols-3 gap-8">

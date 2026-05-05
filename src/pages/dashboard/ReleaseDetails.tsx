@@ -78,9 +78,10 @@ export default function ReleaseDetails() {
 
   const statusColors: any = {
     pending: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+    in_review: "bg-indigo-500/10 text-indigo-600 border border-indigo-500/20",
     correction: "bg-rose-500/10 text-rose-600 border-rose-500/20",
     action_required: "bg-rose-500/10 text-rose-600 border-rose-500/20",
-    approved: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
+    approved: "bg-blue-500/10 text-blue-600 border-blue-500/20",
     in_progress: "bg-blue-500/10 text-blue-600 border-blue-500/20",
     live: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
     rejected: "bg-rose-500/10 text-rose-600 border-rose-500/20",

@@ -119,7 +119,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6 overflow-hidden relative">
+    <div className="min-h-screen flex items-center justify-center bg-[#020617] p-6 overflow-hidden relative">
       <SEO 
         title={mode === 'login' ? "Sign In - IND Distribution" : "Create Artist Account - IND"}
         description="Access your artist dashboard. Manage your music distribution and royalties easily."
@@ -143,24 +143,24 @@ export default function Auth() {
         
         <div className="relative z-10">
           <div className="flex flex-col items-center mb-12">
-            <Link to="/" className="group/logo relative">
-              <div className="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center rotate-12 group-hover/logo:rotate-0 transition-all duration-700 shadow-2xl relative overflow-hidden ring-1 ring-white/10 uppercase font-black text-white">
-                <div className="absolute inset-0 bg-brand-blue/20 animate-pulse"></div>
-                <Music className="text-white w-10 h-10 -rotate-12 group-hover/logo:rotate-0 transition-all duration-700 relative z-10" />
+            <Link to="/" className="group/logo relative transition-transform hover:scale-105 duration-500">
+              <div className="w-24 h-24 bg-[#020617] rounded-[2.5rem] flex items-center justify-center relative overflow-hidden ring-1 ring-white/10 shadow-2xl">
+                <div className="absolute inset-0 bg-brand-blue/5 animate-pulse"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <span className="text-white font-black text-3xl tracking-tighter leading-none mb-1">IND</span>
+                  <div className="w-8 h-1 bg-brand-blue rounded-full"></div>
+                </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg transform rotate-[-15deg] group-hover/logo:rotate-0 transition-all duration-500">
-                <Zap className="w-4 h-4 text-white fill-white shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-brand-blue rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,102,255,0.4)] transform rotate-[-12deg] group-hover/logo:rotate-0 transition-all duration-500 text-white">
+                <Music className="w-5 h-5 fill-white" />
               </div>
             </Link>
             
-            <div className="mt-8 text-center">
+            <div className="mt-10 text-center">
               <h1 className="font-display text-4xl font-black tracking-tighter text-white uppercase leading-none">
-                {mode === "login" ? "SIGN" : "ARTIST"} <span className="text-brand-blue">{mode === "login" ? "IN" : "SIGNUP"}</span>
+                {mode === "login" ? "WELCOME" : "JOIN"} <span className="text-brand-blue">{mode === "login" ? "BACK" : "IND"}</span>
               </h1>
-              <div className="flex items-center justify-center gap-3 mt-4">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-                <p className="text-slate-400 text-[10px] uppercase font-black tracking-[0.4em]">Secure Artist Portal</p>
-              </div>
+              <p className="text-slate-400 text-[10px] uppercase font-black tracking-[0.4em] mt-4 opacity-70">Artist Dashboard Access</p>
             </div>
           </div>
 
@@ -255,12 +255,15 @@ export default function Auth() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full mt-8 py-5 flex items-center justify-center gap-4 bg-white/5 border border-white/10 hover:bg-brand-blue hover:border-brand-blue transition-all duration-500 rounded-3xl disabled:opacity-50 disabled:cursor-not-allowed group/social"
+            className="w-full mt-8 py-5 flex items-center justify-center gap-4 bg-white text-slate-950 hover:bg-slate-100 transition-all duration-300 rounded-[2rem] font-bold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed group/social"
           >
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover/social:scale-110 transition-transform">
-              <Chrome className="w-4 h-4 text-brand-blue" />
-            </div>
-            <span className="text-[10px] font-black text-white uppercase tracking-widest">Connect with Google</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg" className="group-hover/social:scale-110 transition-transform">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c3.11 0 5.72-1.03 7.63-2.79l-3.57-2.77c-1.03.69-2.35 1.11-4.06 1.11-3.12 0-5.76-2.11-6.71-4.94h-3.7v2.87C3.51 20.12 7.46 23 12 23z" fill="#34A853"/>
+              <path d="M5.29 13.61c-.24-.72-.37-1.5-.37-2.31s.13-1.59.37-2.31V6.12h-3.7C.86 7.89 0 9.86 0 12s.86 4.11 1.59 5.88l3.7-2.27z" fill="#FBBC05"/>
+              <path d="M12 4.96c1.69 0 3.21.58 4.41 1.72l3.31-3.31C17.71 1.59 15.1 0 12 0 7.46 0 3.51 2.88 1.59 7.12l3.7 2.87c.95-2.83 3.59-4.94 6.71-4.94z" fill="#EA4335"/>
+            </svg>
+            <span className="text-xs uppercase tracking-[0.2em]">Continue with Google</span>
           </button>
 
           <div className="mt-10 text-center">

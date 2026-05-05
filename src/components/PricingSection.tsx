@@ -126,16 +126,16 @@ export default function PricingSection() {
       id: "free",
       price: 0,
       lifetime: true,
-      tag: "Entry Funnel",
+      tag: "Shuruat Ke Liye",
       features: [
-        "1 Song Release (per month)",
-        "70% Royalty Earnings",
-        "Basic Distribution",
-        "Standard Delivery (7–10 days)",
-        "Basic Artist Dashboard",
+        "Har mahine 1 Gaana release",
+        "70% Royalty Kamayein",
+        "Basic Global Distribution",
+        "Standard Delivery (7–10 din)",
+        "Artist Dashboard Access",
         "Track Status Monitoring"
       ],
-      cta: "Grab Trial",
+      cta: "Free Me Shuru Karein",
       color: "slate"
     },
     {
@@ -143,99 +143,99 @@ export default function PricingSection() {
       id: "starter-pro",
       price: billingCycle === 'yearly' ? 999 : 99,
       popular: true,
-      highlight: "MOST POPULAR",
+      highlight: "SABSE POPULAR",
       customGradient: "bg-gradient-to-r from-brand-blue to-purple-600",
-      tag: "Best for Beginners",
+      tag: "Beginners Ke Liye Best",
       features: [
-        "Up to 5 Song Releases",
-        "80% Royalty Earnings",
-        "Basic Distribution",
-        "Standard Delivery (5-7 days)",
-        "Basic Artist Dashboard",
+        "Up to 5 Gaane Release Karein",
+        "80% Royalty Kamayein",
+        "Global Distribution",
+        "Fast Delivery (5-7 din)",
+        "Artist Dashboard Premium",
         "Track Status Monitoring",
-        "Email Support"
+        "Basic Email Support"
       ],
-      cta: "Get Started",
+      cta: "Plan Join Karein",
       color: "blue"
     },
     {
       name: "Artist Plan",
       id: "artist",
       price: billingCycle === 'yearly' ? 1499 : 199,
-      tag: "Core Plan",
+      tag: "Unlimited Maza",
       features: [
-        "Unlimited Song Releases",
-        "85% Royalty Earnings",
-        "150+ Platforms",
+        "Unlimited Gaane Release Karein",
+        "85% Royalty Kamayein",
+        "150+ Platforms Par Music",
         "YouTube Content ID (Basic)",
-        "Caller Tune (India)",
+        "Caller Tune Support",
         "ISRC & UPC Generation",
-        "Basic Analytics",
+        "Basic Analytics & Reports",
         "Lyrics Distribution",
         "Cover Song Support"
       ],
-      cta: "Start Now",
+      cta: "Artist Baney",
       color: "blue"
     },
     {
       name: "Pro Artist",
       id: "pro",
       price: billingCycle === 'yearly' ? 2499 : 349,
-      tag: "Serious Artists",
+      tag: "Serious Music",
       features: [
-        "Everything in Artist Plan",
-        "90% Royalty Earnings",
-        "Fast Release (48 Hours)",
-        "Instagram & Facebook Music",
-        "YouTube OAC Support",
+        "Unlimited Everything",
+        "90% Royalty Kamayein",
+        "Sabse Fast (48 Hours)",
+        "Instagram & Facebook Clips",
+        "YouTube OAC Verification",
         "Advanced Analytics",
-        "Smart Link / Pre-save",
+        "Smart Link & Pre-save",
         "Release Scheduling",
-        "Priority Support (WhatsApp)"
+        "VIP Support (WhatsApp)"
       ],
-      cta: "Unlock Pro",
+      cta: "Pro Banein",
       color: "purple"
     },
     {
       name: "Label Plan",
       id: "label",
       price: billingCycle === 'yearly' ? 4999 : 699,
-      tag: "Business Starter",
+      tag: "Business Ke Liye",
       features: [
-        "Manage up to 10 Artists",
+        "10 Artists Tak Manage Karein",
         "Unlimited Releases",
-        "90% Royalty Earnings",
-        "Team Access Dashboard",
+        "90% Royalty Kamayein",
+        "Team Dashboard Access",
         "Revenue Split System",
-        "Label Name Branding",
-        "Bulk Upload System",
+        "Apna Label Name Branding",
+        "Bulk Video Upload",
         "YouTube Content ID (Adv)"
       ],
-      cta: "Start Label",
+      cta: "Label Shuru Karein",
       color: "pink"
     },
     {
       name: "Unlimited Label",
       id: "unlimited-label",
       price: billingCycle === 'yearly' ? 9999 : 1299,
-      tag: "Scale Plan",
+      tag: "Scale UP Plan",
       features: [
         "Unlimited Artists",
         "Unlimited Releases",
-        "95% Royalty Earnings",
+        "95% Royalty Kamayein",
         "Advanced Bulk Upload",
-        "Dedicated Account Manager",
+        "Dedicated Manager",
         "Full Analytics Dashboard",
-        "White-label Branding",
-        "API Access (Optional)"
+        "White-label Solution",
+        "Priority API Access"
       ],
-      cta: "Scale Now",
+      cta: "Dhamaka Karein",
       color: "red"
     }
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 relative overflow-hidden bg-[#0a0a0b] text-white">
+    <section id="pricing" className="py-32 px-6 relative overflow-hidden bg-[#020617] text-white">
       {/* Background Animated Waves/Gradients */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-screen opacity-50">
         <motion.div 
@@ -269,8 +269,8 @@ export default function PricingSection() {
             transition={{ delay: 0.1 }}
             className="font-display text-4xl md:text-7xl font-black tracking-tighter leading-none uppercase mb-8"
           >
-            Simple, Transparent Pricing <br />
-            <span className="bg-gradient-to-r from-brand-blue via-purple-400 to-pink-500 text-transparent bg-clip-text animate-gradient drop-shadow-xl inline-block mt-2">for Indian Artists</span>
+            Saste Aur Transparent Plans <br />
+            <span className="bg-gradient-to-r from-brand-blue via-purple-400 to-pink-500 text-transparent bg-clip-text animate-gradient drop-shadow-xl inline-block mt-2">Indian Artists ke liye</span>
           </motion.h2>
           
           <motion.p 
@@ -280,7 +280,7 @@ export default function PricingSection() {
             transition={{ delay: 0.2 }}
             className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-12"
           >
-            Distribute your music worldwide with powerful tools made for India.
+            Apna music duniya bhar me release karein best plans ke saath.
           </motion.p>
 
           {/* Billing Toggle */}

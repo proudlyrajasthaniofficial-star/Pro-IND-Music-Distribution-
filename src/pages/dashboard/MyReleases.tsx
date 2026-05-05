@@ -24,12 +24,11 @@ import { toast } from "sonner";
 const STATUSES = [
   { id: 'all', label: 'All Releases' },
   { id: 'pending', label: 'Pending', color: 'bg-amber-500/10 text-amber-600 border border-amber-500/20' },
-  { id: 'action_required', label: 'Correction', color: 'bg-rose-500/10 text-rose-600 border border-rose-500/20' },
-  { id: 'approved', label: 'Approved', color: 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20' },
-  { id: 'in_progress', label: 'In Progress', color: 'bg-blue-500/10 text-blue-600 border border-blue-500/20' },
+  { id: 'in_review', label: 'In Review', color: 'bg-indigo-500/10 text-indigo-600 border border-indigo-500/20' },
+  { id: 'approved', label: 'Approved', color: 'bg-blue-500/10 text-blue-600 border border-blue-500/20' },
   { id: 'live', label: 'Live', color: 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' },
-  { id: 'takedown_requested', label: 'Takedown Requested', color: 'bg-slate-500/10 text-slate-600 border border-slate-500/20' },
-  { id: 'completed', label: 'Completed', color: 'bg-slate-900 text-white' },
+  { id: 'action_required', label: 'Correction', color: 'bg-rose-500/10 text-rose-600 border border-rose-500/20' },
+  { id: 'takedown_requested', label: 'Takedown', color: 'bg-slate-500/10 text-slate-600 border border-slate-500/20' },
   { id: 'rejected', label: 'Rejected', color: 'bg-rose-500/10 text-rose-600 border border-rose-500/20' },
 ];
 
