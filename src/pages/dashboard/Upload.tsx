@@ -323,8 +323,15 @@ export default function Upload() {
       // Execute uploads in parallel
       await Promise.all(uploadPromises);
 
+      const generateCustomId = (title: string) => {
+        const sanitized = title.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toUpperCase();
+        const num = Math.floor(100000 + Math.random() * 900000);
+        return `IND-${sanitized}-${num}`;
+      };
+
       const releaseData = {
         userId: user.uid,
+        customId: generateCustomId(data.songName),
         title: data.songName,
         artist: data.singerName,
         genre: data.primaryGenre, 
@@ -337,7 +344,7 @@ export default function Upload() {
         releaseTime: data.releaseTime,
         audioUrl,
         coverUrl,
-        status: "pending", // Reset to pending after edit
+        status: "pending", 
         platforms: selectedPlatforms,
         metadata: data,
         isrc: data.isrc || existingRelease?.isrc || null,
@@ -346,6 +353,8 @@ export default function Upload() {
       };
 
       if (releaseId) {
+        // preserve original customId if editing
+        if (existingRelease?.customId) releaseData.customId = existingRelease.customId;
         await updateDoc(doc(db, "releases", releaseId), releaseData);
       } else {
         await addDoc(collection(db, "releases"), {
@@ -437,7 +446,7 @@ export default function Upload() {
                <span className={cn(
                  "text-[6px] md:text-[9px] font-black uppercase tracking-widest md:tracking-[0.2em]",
                  step >= i ? "text-brand-blue" : "text-slate-300",
-                 step !== i && "hidden" // Only show label for current step on extreme mobile
+                 step !== i && "hidden md:block" // More visible on tablet/desktop
                )}>{s}</span>
             </div>
          ))}
@@ -1035,12 +1044,12 @@ export default function Upload() {
                       <div className="absolute -inset-10 bg-emerald-500/10 blur-[60px] rounded-full animate-pulse"></div>
                    </div>
                    <div className="space-y-4">
-                      <h2 className="text-6xl font-black font-display tracking-tighter uppercase">Mission <span className="text-emerald-500">Accomplished</span></h2>
+                      <h2 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase">Mission <span className="text-emerald-500">Accomplished</span></h2>
                       <p className="text-slate-400 max-w-lg mx-auto font-medium text-lg leading-relaxed">Your release has entered the global distribution pipeline. Our content review board will verify metadata within 24 hours.</p>
                    </div>
-                   <div className="flex gap-6">
-                      <button type="button" onClick={() => navigate("/dashboard")} className="btn-premium bg-slate-900 text-white rounded-3xl py-5 px-10 shadow-2xl">Return to Overview</button>
-                      <button type="button" onClick={() => { setStep(0); setAudioFile(null); setCoverFile(null); }} className="btn-premium glass text-slate-600 rounded-3xl py-5 px-10">Deploy New Asset</button>
+                   <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto px-6 md:px-0">
+                      <button type="button" onClick={() => navigate("/dashboard")} className="btn-premium bg-slate-900 text-white rounded-3xl py-5 px-10 shadow-2xl w-full sm:w-auto">Return to Overview</button>
+                      <button type="button" onClick={() => { setStep(0); setAudioFile(null); setCoverFile(null); }} className="btn-premium glass text-slate-600 rounded-3xl py-5 px-10 w-full sm:w-auto">Deploy New Asset</button>
                    </div>
                 </motion.div>
              )}

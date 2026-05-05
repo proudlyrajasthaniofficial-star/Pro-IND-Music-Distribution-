@@ -126,7 +126,7 @@ export default function OACRequest() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-blue/10 rounded-full text-[10px] font-black text-brand-blue uppercase tracking-widest border border-brand-blue/10">
                <Zap className="w-3 h-3" /> Get Verified on YouTube
             </div>
-            <h1 className="text-6xl font-black font-display tracking-tight uppercase">OFFICIAL <span className="text-brand-blue">ARTIST</span> CHANNEL</h1>
+            <h1 className="text-4xl md:text-6xl font-black font-display tracking-tight uppercase">OFFICIAL <span className="text-brand-blue">ARTIST</span> CHANNEL</h1>
             <p className="text-slate-400 font-medium max-w-2xl mx-auto">Link your YouTube channels into a single, verified master channel with the music note badge.</p>
          </div>
 
@@ -146,7 +146,7 @@ export default function OACRequest() {
             ))}
          </div>
 
-          <div className="bg-brand-dark rounded-[4rem] p-16 text-white relative overflow-hidden shadow-3xl">
+          <div className="bg-brand-dark rounded-[2.5rem] md:rounded-[4rem] p-6 md:p-16 text-white relative overflow-hidden shadow-3xl">
             <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-brand-blue/20 to-brand-purple/20 opacity-30"></div>
             <div className="relative z-10 space-y-12">
                <div className="flex items-center gap-6">

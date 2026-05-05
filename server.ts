@@ -59,8 +59,9 @@ async function startServer() {
   app.use((req, res, next) => {
     const isHttps = req.headers["x-forwarded-proto"] === "https";
     const isProd = process.env.NODE_ENV === "production" || req.hostname.includes("musicdistributionindia.online");
+    const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1";
     
-    if (isProd && !isHttps) {
+    if (isProd && !isHttps && !isLocalhost) {
       return res.redirect(301, `https://${req.get("host")}${req.url}`);
     }
     next();

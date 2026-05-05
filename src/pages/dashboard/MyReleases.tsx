@@ -17,7 +17,7 @@ import {
   Image as ImageIcon
 } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
@@ -48,12 +48,20 @@ const PLATFORMS = [
 
 export default function MyReleases() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [releases, setReleases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "az" | "za">("newest");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null) {
+      setSearch(q);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!user) return;
@@ -81,8 +89,11 @@ export default function MyReleases() {
 
   const filteredReleases = releases.filter(r => {
     const matchesFilter = filter === 'all' || r.status === filter;
-    const matchesSearch = r.title?.toLowerCase().includes(search.toLowerCase()) || 
-                          r.artist?.toLowerCase().includes(search.toLowerCase());
+    const searchLower = search.toLowerCase();
+    const matchesSearch = (r.title || "").toLowerCase().includes(searchLower) || 
+                          (r.artist || "").toLowerCase().includes(searchLower) ||
+                          (r.label || r.labelName || "").toLowerCase().includes(searchLower) ||
+                          (r.customId || "").toLowerCase().includes(searchLower);
     return matchesFilter && matchesSearch;
   }).sort((a, b) => {
     if (sortOrder === "newest") {
@@ -282,6 +293,9 @@ export default function MyReleases() {
                            {release.artist}
                         </p>
                         <div className="mt-4 flex flex-wrap gap-2">
+                           {release.customId && (
+                             <span className="text-[8px] font-black uppercase px-2 py-1 bg-brand-blue/10 text-brand-blue rounded-lg border border-brand-blue/20">ID: {release.customId}</span>
+                           )}
                            <span className="text-[8px] font-black uppercase px-2 py-1 bg-slate-50 text-slate-400 rounded-lg border border-slate-100 italic">Lang: {release.language}</span>
                            <span className="text-[8px] font-black uppercase px-2 py-1 bg-slate-50 text-slate-400 rounded-lg border border-slate-100 italic">Genre: {release.primaryGenre}</span>
                            <span className="text-[8px] font-black uppercase px-2 py-1 bg-slate-50 text-slate-400 rounded-lg border border-slate-100 italic">Label: {release.labelName}</span>

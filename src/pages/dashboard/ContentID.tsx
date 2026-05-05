@@ -133,13 +133,13 @@ export default function ContentID() {
       <div className="flex flex-col xl:flex-row gap-12 text-left">
          <div className="flex-1 space-y-8 text-left">
             <div className="text-left">
-              <h1 className="text-5xl md:text-7xl font-black font-display tracking-tight uppercase leading-none mb-4">
+              <h1 className="text-4xl md:text-7xl font-black font-display tracking-tight uppercase leading-none mb-4">
                 Content <span className="text-brand-blue">ID</span>
               </h1>
               <p className="text-slate-400 font-bold text-sm tracking-widest uppercase">Protect your music and manage rights across YouTube</p>
             </div>
             
-            <div className="bg-slate-950 rounded-[3.5rem] p-10 text-white shadow-premium-dark relative overflow-hidden group">
+            <div className="bg-slate-950 rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-10 text-white shadow-premium-dark relative overflow-hidden group">
                <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-brand-blue/10 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                <div className="noise absolute inset-0 opacity-[0.03] pointer-events-none"></div>
                

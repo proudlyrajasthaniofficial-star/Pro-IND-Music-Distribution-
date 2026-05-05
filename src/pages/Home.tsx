@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 // Home Page - IND Music Distribution India
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { 
@@ -21,7 +21,9 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronRight,
-  Cpu
+  Cpu,
+  Menu,
+  X
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { LoadingSpinner } from "../components/ui/Loading";
@@ -51,6 +53,16 @@ export default function Home() {
   const yTranslate = useTransform(scrollYProgress, [0, 1], [0, -100]);
   
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Features", href: "#features" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Founder", to: "/founder-developer" },
+    { label: "Blog", to: "/blog" },
+    { label: "Contact", to: "/contact" },
+    { label: "Support", href: "#features" },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,42 +92,103 @@ export default function Home() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between bg-[#0a0a0b]/80 backdrop-blur-2xl border-b border-white/5 mt-0 mx-auto max-w-full left-0 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+      <nav className="fixed top-0 w-full z-50 px-4 md:px-6 py-4 flex items-center justify-between bg-[#0a0a0b]/80 backdrop-blur-2xl border-b border-white/5 mt-0 mx-auto max-w-full left-0 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
         <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-indigo-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all">
-            <Music className="text-white w-6 h-6" />
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-brand-blue to-indigo-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all">
+            <Music className="text-white w-5 h-5 md:w-6 md:h-6" />
           </div>
-          <span className="font-display text-2xl font-bold tracking-tighter text-white">IND<span className="text-brand-blue animate-pulse">.</span></span>
+          <span className="font-display text-xl md:text-2xl font-bold tracking-tighter text-white">IND<span className="text-brand-blue animate-pulse">.</span></span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8 text-[10px] font-black uppercase tracking-widest text-slate-300">
-          <a href="#features" className="hover:text-brand-blue transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-brand-blue transition-colors">Pricing</a>
-          <Link to="/founder-developer" className="hover:text-brand-blue transition-colors">Founder</Link>
-          <Link to="/blog" className="hover:text-brand-blue transition-colors">Blog</Link>
-          <Link to="/contact" className="hover:text-brand-blue transition-colors">Contact</Link>
-          <a href="#features" className="hover:text-brand-blue transition-colors uppercase">Support</a>
+          {navLinks.map((link) => (
+            link.to ? (
+              <Link key={link.label} to={link.to} className="hover:text-brand-blue transition-colors">{link.label}</Link>
+            ) : (
+              <a key={link.label} href={link.href} className="hover:text-brand-blue transition-colors">{link.label}</a>
+            )
+          ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link 
-            to={user ? "/dashboard" : "/auth?mode=login"} 
-            className="text-sm font-bold text-slate-300 hover:text-white transition-colors"
+        <div className="flex items-center gap-3 md:gap-4 font-display">
+          <div className="hidden sm:flex items-center gap-3 md:gap-4">
+            <Link 
+              to={user ? "/dashboard" : "/auth?mode=login"} 
+              className="text-xs md:text-sm font-bold text-slate-300 hover:text-white transition-colors"
+            >
+              {user ? "Dashboard" : "Login"}
+            </Link>
+            <Link 
+              to={user ? "/dashboard/upload" : "/auth?mode=signup"} 
+              className="px-4 md:px-6 py-2 md:py-2.5 bg-brand-blue text-white rounded-full font-bold text-[10px] md:text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all active:scale-95"
+            >
+              {user ? "Upload" : "Start Now"}
+            </Link>
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white"
           >
-            {user ? "Dashboard" : "Login"}
-          </Link>
-          <Link 
-            to={user ? "/dashboard/upload" : "/auth?mode=signup"} 
-            className="px-6 py-2.5 bg-brand-blue text-white rounded-full font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all active:scale-95"
-          >
-            {user ? "Primary Release" : "Start Now"}
-          </Link>
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-2xl border-b border-white/5 py-8 px-6 flex flex-col gap-6 md:hidden text-center"
+            >
+              {navLinks.map((link) => (
+                link.to ? (
+                  <Link 
+                    key={link.label} 
+                    to={link.to} 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-sm font-black uppercase tracking-widest text-slate-300 hover:text-brand-blue"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a 
+                    key={link.label} 
+                    href={link.href} 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-sm font-black uppercase tracking-widest text-slate-300 hover:text-brand-blue"
+                  >
+                    {link.label}
+                  </a>
+                )
+              ))}
+              <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
+                <Link 
+                  to={user ? "/dashboard" : "/auth?mode=login"} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-xs font-black uppercase tracking-widest text-white py-4 bg-white/5 rounded-2xl"
+                >
+                  {user ? "Enter Dashboard" : "Login to Account"}
+                </Link>
+                <Link 
+                  to={user ? "/dashboard/upload" : "/auth?mode=signup"} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-xs font-black uppercase tracking-widest text-white py-4 bg-brand-blue rounded-2xl shadow-xl"
+                >
+                  {user ? "Start New Release" : "Create Account"}
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section - Professional & Modern Light Style */}
       <section 
-        className="relative w-full min-h-[100vh] flex items-center justify-center px-6 pt-40 pb-20 overflow-hidden bg-[#0a0a0b]"
+        className="relative w-full min-h-[100vh] flex items-center justify-center px-4 md:px-6 pt-32 md:pt-40 pb-20 overflow-hidden bg-[#0a0a0b]"
       >
         {/* Figma Style Blurred Color Orbs Background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -158,18 +231,18 @@ export default function Home() {
             <motion.div 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-10 cursor-pointer shadow-[0_0_30px_rgba(37,99,235,0.2)]"
+              className="inline-flex items-center gap-3 px-4 md:px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-6 md:mb-10 cursor-pointer shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             >
-              <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80">Professional Music Distribution for Indian Artists</span>
+              <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></div>
+              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/80">Professional Music Distribution for Indian Artists</span>
             </motion.div>
 
-            <h1 className="text-6xl md:text-[9.5rem] font-black font-display tracking-tight leading-[0.8] uppercase mb-12">
+            <h1 className="text-4xl md:text-6xl lg:text-[9.5rem] font-black font-display tracking-tight leading-[0.9] md:leading-[0.8] uppercase mb-8 md:mb-12">
               <motion.span 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="block text-white mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                className="block text-white mb-2 md:mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
               >
                 THE STANDARD
               </motion.span>
@@ -177,7 +250,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4, duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-4 block"
+                className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-2 md:py-4 block"
               >
                 FOR GLOBAL ARTISTS
               </motion.span>
@@ -187,7 +260,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 1 }}
-              className="text-lg md:text-xl text-slate-400 font-medium max-w-3xl mx-auto mb-20 leading-relaxed px-4 uppercase tracking-widest"
+              className="text-sm md:text-xl text-slate-400 font-medium max-w-3xl mx-auto mb-12 md:mb-20 leading-relaxed px-4 uppercase tracking-widest"
             >
               IND Music Distribution is the most trusted platform for independent artists in India. 
               Distribute your music to over 250 platforms including Spotify, Apple Music, and JioSaavn.
@@ -197,11 +270,11 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-4 md:px-0"
             >
               <Link 
                 to={user ? "/dashboard" : "/auth?mode=signup"} 
-                className="group relative w-full sm:w-auto px-16 py-6 bg-brand-blue text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(37,99,235,0.4)]"
+                className="group relative w-full sm:w-auto px-8 md:px-16 py-4 md:py-6 bg-brand-blue text-white rounded-[1.5rem] md:rounded-[2rem] font-black text-[10px] md:text-xs uppercase tracking-[0.3em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(37,99,235,0.4)]"
               >
                 <span className="relative z-10 flex items-center justify-center gap-3">
                   {user ? "Enter Dashboard" : "Access Platform"}
@@ -211,7 +284,7 @@ export default function Home() {
               </Link>
               <a 
                 href="#features" 
-                className="w-full sm:w-auto px-16 py-6 bg-white/5 border border-white/10 backdrop-blur-md text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] hover:bg-white/10 transition-all flex items-center justify-center gap-3 hover:border-brand-blue/50"
+                className="w-full sm:w-auto px-8 md:px-16 py-4 md:py-6 bg-white/5 border border-white/10 backdrop-blur-md text-white rounded-[1.5rem] md:rounded-[2rem] font-black text-[10px] md:text-xs uppercase tracking-[0.3em] hover:bg-white/10 transition-all flex items-center justify-center gap-3 hover:border-brand-blue/50"
               >
                 View Features
               </a>

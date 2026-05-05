@@ -49,20 +49,20 @@ export default function Reports() {
 
   return (
     <div className="space-y-12 pb-20">
-      <div className="flex items-center justify-between">
-         <div>
-            <h1 className="text-5xl font-black font-display tracking-tight uppercase">Royalty <span className="text-brand-blue">Intelligence</span></h1>
-            <p className="text-slate-400 font-medium">Analyze your global revenue streams and performance data.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+         <div className="text-left">
+            <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight uppercase">Royalty <span className="text-brand-blue">Intelligence</span></h1>
+            <p className="text-slate-400 font-medium text-xs md:text-base">Analyze your global revenue streams and performance data.</p>
          </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-10">
          <div className="lg:col-span-2 space-y-10">
             {/* Visual Analytics */}
-            <div className="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm relative overflow-hidden">
-               <div className="flex items-center justify-between mb-10">
-                  <h3 className="text-2xl font-black font-display uppercase tracking-tight flex items-center gap-4">
-                     <TrendingUp className="w-8 h-8 text-brand-blue" /> REVENUE PROJECTION
+            <div className="bg-white p-6 md:p-10 rounded-[2.5rem] md:rounded-[4rem] border border-slate-100 shadow-sm relative overflow-hidden">
+               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 md:mb-10 gap-4">
+                  <h3 className="text-xl md:text-2xl font-black font-display uppercase tracking-tight flex items-center gap-4 text-left">
+                     <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-brand-blue" /> REVENUE PROJECTION
                   </h3>
                   <div className="flex items-center gap-4">
                      <div className="flex items-center gap-2">
@@ -94,32 +94,32 @@ export default function Reports() {
             </div>
 
             {/* Reports List */}
-            <div className="bg-white rounded-[4rem] p-10 border border-slate-100 shadow-sm">
-               <h3 className="text-2xl font-black font-display uppercase mb-8 flex items-center gap-4">
-                  <TableIcon className="w-8 h-8 text-slate-800" /> REVENUE STATEMENTS
+            <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] p-6 md:p-10 border border-slate-100 shadow-sm">
+               <h3 className="text-xl md:text-2xl font-black font-display uppercase mb-6 md:mb-8 flex items-center gap-4 text-left">
+                  <TableIcon className="w-6 h-6 md:w-8 md:h-8 text-slate-800" /> REVENUE STATEMENTS
                </h3>
                <div className="space-y-4">
                   {reports.map((r, i) => (
-                     <motion.div 
+<motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
                         key={r.id} 
-                        className="p-8 bg-slate-50 rounded-[2.5rem] flex items-center justify-between group hover:bg-brand-blue transition-all"
+                        className="p-6 md:p-8 bg-slate-50 rounded-[2.5rem] flex flex-col sm:flex-row sm:items-center justify-between group hover:bg-brand-blue transition-all gap-6"
                      >
-                        <div className="flex items-center gap-8">
-                           <div className="w-16 h-16 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-400 group-hover:text-brand-blue transition-colors shadow-sm">
-                              <Calendar className="w-8 h-8" />
+                        <div className="flex items-center gap-4 md:gap-8">
+                           <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-[1.25rem] md:rounded-[1.5rem] flex items-center justify-center text-slate-400 group-hover:text-brand-blue transition-colors shadow-sm shrink-0">
+                              <Calendar className="w-6 h-6 md:w-8 md:h-8" />
                            </div>
-                           <div>
-                              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-white/60 transition-colors mb-1">Financial Cycle</p>
-                              <h4 className="text-2xl font-black font-display uppercase group-hover:text-white transition-colors">{r.period}</h4>
+                           <div className="text-left">
+                              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 group-hover:text-white/60 transition-colors mb-1">Financial Cycle</p>
+                              <h4 className="text-lg md:text-2xl font-black font-display uppercase group-hover:text-white transition-colors">{r.period}</h4>
                            </div>
                         </div>
-                        <div className="text-right flex items-center gap-10">
-                           <div>
-                              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white/60 transition-colors mb-1">Net Credit</p>
-                              <p className="text-2xl font-black font-display text-emerald-600 group-hover:text-white transition-colors">{formatCurrency(r.amount)}</p>
+                        <div className="text-left md:text-right flex items-center justify-between md:justify-end gap-6 md:gap-10 w-full md:w-auto">
+                           <div className="text-left md:text-right">
+                              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white/60 transition-colors mb-1">Net Credit</p>
+                              <p className="text-lg md:text-2xl font-black font-display text-emerald-600 group-hover:text-white transition-colors">{formatCurrency(r.amount)}</p>
                            </div>
                            <a 
                              href={r.reportUrl} 

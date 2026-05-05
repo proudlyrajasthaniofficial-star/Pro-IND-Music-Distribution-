@@ -222,41 +222,41 @@ export default function Overview() {
         </AnimatePresence>
 
         {/* Mission Control Hub */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 px-4 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-12 px-2 md:px-0">
           {/* Main Stat Card (Vault) */}
           <div className="lg:col-span-2">
-            <div className="bg-slate-950 rounded-[3.5rem] p-8 md:p-12 shadow-premium-dark relative overflow-hidden group h-full">
+            <div className="bg-slate-950 rounded-[2rem] md:rounded-[3.5rem] p-6 md:p-12 shadow-premium-dark relative overflow-hidden group h-full">
               <div className="absolute inset-0 noise opacity-10 pointer-events-none"></div>
               <div className="absolute -top-48 -right-48 w-[40rem] h-[40rem] bg-brand-blue/20 blur-[150px] rounded-full group-hover:bg-brand-blue/30 transition-all duration-1000"></div>
               
               <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-12">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
-                      <Wallet className="w-7 h-7 text-brand-blue" />
+                <div className="flex items-center justify-between mb-8 md:mb-12">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <div className="w-10 h-10 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
+                      <Wallet className="w-5 h-5 md:w-7 md:h-7 text-brand-blue" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500 mb-1">Total Earnings</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Available for Payout</span>
+                      <h3 className="text-[9px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] text-slate-500 mb-0.5 md:mb-1">Total Earnings</h3>
+                      <div className="flex items-center gap-1.5 md:gap-2">
+                        <span className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Available for Payout</span>
                       </div>
                     </div>
                   </div>
-                  <div className="hidden md:flex flex-col items-end text-white">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
-                    <span className="text-[8px] font-bold text-slate-600 mt-1 uppercase">Level 1 Distribution</span>
+                  <div className="hidden sm:flex flex-col items-end text-white text-right">
+                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
+                    <span className="text-[7px] md:text-[8px] font-bold text-slate-600 mt-0.5 md:mt-1 uppercase">Level 1 Distribution</span>
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col justify-center mb-12">
-                   <div className="flex items-baseline gap-4 mb-3">
-                      <span className="text-2xl font-black text-slate-500 uppercase">₹</span>
-                      <h2 className="text-7xl md:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                        {profile?.walletBalance?.toFixed(2) || "0.00"}
-                      </h2>
-                   </div>
-                   <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-4">
+                <div className="flex-1 flex flex-col justify-center mb-8 md:mb-12">
+                    <div className="flex flex-col sm:flex-row items-baseline gap-1 md:gap-4 mb-2 md:mb-3 overflow-hidden">
+                       <span className="text-lg md:text-2xl font-black text-slate-500 uppercase">₹</span>
+                       <h2 className="text-3xl sm:text-7xl md:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] break-all lg:break-normal">
+                         {profile?.walletBalance?.toFixed(2) || "0.00"}
+                       </h2>
+                    </div>
+                   <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-3 md:mb-4">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: "85%" }}
@@ -264,17 +264,17 @@ export default function Overview() {
                         className="h-full bg-linear-to-r from-brand-blue via-brand-purple to-pink-500"
                       />
                    </div>
-                   <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
-                      <Zap className="w-3 h-3 fill-brand-blue stroke-brand-blue" /> Next Royalty Update in 14h
+                   <p className="text-[9px] md:text-[11px] font-black text-slate-500 uppercase tracking-widest md:tracking-[0.3em] flex items-center gap-1.5 md:gap-2">
+                      <Zap className="w-2.5 h-2.5 md:w-3 md:h-3 fill-brand-blue stroke-brand-blue" /> Next Royalty Update in 14h
                    </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                   <button onClick={() => navigate('/dashboard/wallet')} className="group/btn relative py-5 bg-brand-blue hover:bg-brand-blue/90 text-white rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] transition-all shadow-[0_20px_40px_-10px_rgba(0,102,255,0.4)] overflow-hidden cursor-pointer">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6">
+                   <button onClick={() => navigate('/dashboard/wallet')} className="group/btn relative py-4 md:py-5 bg-brand-blue hover:bg-brand-blue/90 text-white rounded-2xl md:rounded-3xl font-black text-[9px] md:text-[11px] uppercase tracking-widest md:tracking-[0.2em] transition-all shadow-[0_20px_40px_-10px_rgba(0,102,255,0.4)] overflow-hidden cursor-pointer">
                       <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
-                      <span className="relative z-10 flex items-center justify-center gap-3">Request Payout <ArrowRightCircle className="w-5 h-5" /></span>
+                      <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">Request Payout <ArrowRightCircle className="w-4 h-4 md:w-5 md:h-5" /></span>
                    </button>
-                   <button onClick={() => navigate('/dashboard/wallet')} className="py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] transition-all backdrop-blur-md cursor-pointer">
+                   <button onClick={() => navigate('/dashboard/wallet')} className="py-4 md:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl md:rounded-3xl font-black text-[9px] md:text-[11px] uppercase tracking-widest md:tracking-[0.2em] transition-all backdrop-blur-md cursor-pointer">
                       Transaction History
                    </button>
                 </div>
@@ -283,7 +283,7 @@ export default function Overview() {
           </div>
 
           {/* System Event Log (Mission Control Feel) */}
-          <div className="bg-slate-900 rounded-[3rem] p-8 shadow-premium border border-slate-800 relative overflow-hidden flex flex-col h-full">
+          <div className="bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-premium border border-slate-800 relative overflow-hidden flex flex-col h-full min-h-[300px]">
             <div className="absolute top-0 right-0 p-4">
                <div className="w-2 h-2 bg-brand-blue rounded-full animate-ping opacity-30"></div>
             </div>
@@ -374,7 +374,7 @@ export default function Overview() {
         </motion.div>
 
         {/* 3D Quick Actions */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
            {[
              { label: "New Release", icon: Headphones, path: "/dashboard/upload", color: "bg-brand-blue shadow-blue-500/40 text-white" },
              { label: "My Catalog", icon: Music, path: "/dashboard/releases", color: "bg-white text-slate-900 border border-slate-200 shadow-xl" },
@@ -385,18 +385,18 @@ export default function Overview() {
                key={i} 
                to={btn.path}
                className={cn(
-                 "relative h-28 md:h-32 rounded-[2rem] p-6 font-black font-display tracking-wider uppercase text-xs md:text-sm overflow-hidden group transition-all transform hover:-translate-y-2 active:translate-y-0 shadow-lg group-hover:shadow-2xl flex flex-col justify-between",
+                 "relative h-24 md:h-32 rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 font-black font-display tracking-wider uppercase text-[10px] md:text-sm overflow-hidden group transition-all transform hover:-translate-y-2 active:translate-y-0 shadow-lg group-hover:shadow-2xl flex flex-col justify-between",
                  btn.color
                )}
              >
                 <div className="flex items-center justify-between w-full relative z-10">
                    <div className={cn(
-                      "w-10 h-10 rounded-[1rem] flex items-center justify-center backdrop-blur-sm",
+                      "w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-[1rem] flex items-center justify-center backdrop-blur-sm",
                       btn.color.includes('bg-white') ? "bg-slate-100" : "bg-white/20"
                    )}>
-                      <btn.icon className="w-5 h-5" />
+                      <btn.icon className="w-4 h-4 md:w-5 md:h-5" />
                    </div>
-                   <ArrowUpRight className={cn("w-5 h-5 opacity-0 group-hover:opacity-100 transition-all", btn.color.includes('bg-white') ? "text-slate-400" : "text-white/60")} />
+                   <ArrowUpRight className={cn("w-4 h-4 md:w-5 md:h-5 opacity-0 group-hover:opacity-100 transition-all", btn.color.includes('bg-white') ? "text-slate-400" : "text-white/60")} />
                 </div>
                 <div className="relative z-10 text-left mt-2 leading-tight">
                    {btn.label}
@@ -404,7 +404,7 @@ export default function Overview() {
                 
                 {/* Background wash icon */}
                 <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-125 transition-transform duration-700">
-                   <btn.icon className="w-32 h-32" />
+                   <btn.icon className="w-24 h-24 md:w-32 md:h-32" />
                 </div>
              </Link>
            ))}

@@ -147,44 +147,44 @@ export default function WalletPage() {
     <div className="space-y-12 pb-32">
       {/* Treasury Header */}
       <div className="grid lg:grid-cols-3 gap-8 items-start">
-         <div className="lg:col-span-2 space-y-8">
-            <div>
+         <div className="lg:col-span-2 space-y-6 md:space-y-8">
+            <div className="text-center md:text-left">
                <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight uppercase">TREASURY <span className="text-brand-blue">VAULT</span></h1>
-               <p className="text-slate-400 font-medium text-center md:text-left">Manage your global royalties and financial distribution.</p>
+               <p className="text-slate-400 font-medium text-xs md:text-base">Manage your global royalties and financial distribution.</p>
             </div>
 
-            <div className="bg-slate-950 rounded-[2.5rem] md:rounded-[4rem] p-6 sm:p-8 md:p-12 text-white relative overflow-hidden shadow-3xl group">
+            <div className="bg-slate-950 rounded-[2.5rem] md:rounded-[4rem] p-6 sm:p-10 md:p-12 text-white relative overflow-hidden shadow-3xl group">
                <div className="absolute top-0 right-0 w-80 h-80 bg-brand-blue/20 blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:scale-125 transition-transform duration-1000"></div>
-               <div className="relative z-10 space-y-6 md:space-y-10">
+               <div className="relative z-10 space-y-8 md:space-y-10">
                   <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-                     <div className="w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/10 rounded-[1.5rem] flex items-center justify-center">
-                        <Wallet className="w-8 h-8 text-brand-blue" />
+                     <div className="w-14 h-14 md:w-16 md:h-16 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center">
+                        <Wallet className="w-7 h-7 md:w-8 md:h-8 text-brand-blue" />
                      </div>
-                     <div className="text-center md:text-left">
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Consolidated Balance</p>
-                        <h2 className="text-4xl md:text-7xl font-black font-display tracking-tighter mt-1">
-                          {formatCurrency(profile?.walletBalance || 0)}
+                     <div className="text-center md:text-left flex flex-col items-center md:items-start gap-1">
+                        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest md:tracking-[0.3em] text-white/40">Consolidated Balance</p>
+                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-black font-display tracking-tighter break-all">
+                           {formatCurrency(profile?.walletBalance || 0)}
                         </h2>
                      </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-6 pt-4 border-t border-white/5">
-                     <div className="flex-1 min-w-[140px] p-6 bg-white/5 rounded-3xl border border-white/5 text-left">
-                        <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1">Total Earned</p>
-                        <p className="text-2xl font-black">{formatCurrency(profile?.totalEarned || 0)}</p>
+                  <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-4 border-t border-white/5">
+                     <div className="flex-1 p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-left">
+                        <p className="text-[8px] md:text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1">Total Earned</p>
+                        <p className="text-xl md:text-2xl font-black">{formatCurrency(profile?.totalEarned || 0)}</p>
                      </div>
-                     <div className="flex-1 min-w-[140px] p-6 bg-white/5 rounded-3xl border border-white/5 text-left">
-                        <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1">Total Withdrawn</p>
-                        <p className="text-2xl font-black text-rose-400">{formatCurrency(profile?.totalWithdrawn || 0)}</p>
+                     <div className="flex-1 p-4 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-left">
+                        <p className="text-[8px] md:text-[9px] font-bold text-white/30 uppercase tracking-widest mb-1">Total Withdrawn</p>
+                        <p className="text-xl md:text-2xl font-black text-rose-400">{formatCurrency(profile?.totalWithdrawn || 0)}</p>
                      </div>
                   </div>
 
                   <button 
                     onClick={() => setShowForm(true)}
-                    className="w-full py-6 bg-white text-slate-950 rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all group overflow-hidden relative"
+                    className="w-full py-5 md:py-6 bg-white text-slate-950 rounded-[2rem] md:rounded-[2.5rem] font-black text-[10px] md:text-xs uppercase tracking-widest md:tracking-[0.4em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all group overflow-hidden relative"
                   >
-                     <span className="relative z-10 flex items-center justify-center gap-3">
-                        Initiate Withdrawal <ArrowUpRight className="w-5 h-5" />
+                     <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+                        Initiate Withdrawal <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
                      </span>
                      <div className="absolute inset-0 bg-brand-blue translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                   </button>
@@ -237,11 +237,11 @@ export default function WalletPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     key={w.id} 
-                    className="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex items-center justify-between group hover:shadow-xl transition-all"
+                    className="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between group hover:shadow-xl transition-all gap-4 text-left"
                   >
-                     <div className="flex items-center gap-6">
+                     <div className="flex items-center gap-4 md:gap-6">
                         <div className={cn(
-                          "w-12 h-12 rounded-2xl flex items-center justify-center",
+                          "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0",
                           w.status === 'approved' ? "bg-emerald-50 text-emerald-500" : "bg-slate-50 text-slate-400"
                         )}>
                            <Banknote className="w-5 h-5" />
@@ -251,9 +251,9 @@ export default function WalletPage() {
                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{w.method}</p>
                         </div>
                      </div>
-                     <div className="text-right flex flex-col items-end gap-2">
+                     <div className="text-left md:text-right flex flex-row md:flex-col items-center md:items-end justify-between md:justify-end gap-2 w-full md:w-auto">
                         <span className={cn(
-                           "text-[8px] font-black px-4 py-1.5 uppercase tracking-widest border",
+                           "text-[8px] font-black px-4 py-1.5 uppercase tracking-widest border rounded-full",
                            WITHDRAWAL_STATUSES.find(s => s.id === w.status)?.color || "bg-slate-50 border-slate-100 text-slate-500"
                         )}>{w.status}</span>
                         <p className="text-[9px] font-bold text-slate-300 uppercase">{new Date(w.createdAt).toLocaleDateString()}</p>
@@ -284,22 +284,22 @@ export default function WalletPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     key={t.id} 
-                    className="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex items-center justify-between group hover:-translate-y-1 transition-all"
+                    className="bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between group hover:-translate-y-1 transition-all gap-4 text-left"
                   >
-                     <div className="flex items-center gap-6">
+                     <div className="flex items-center gap-4 md:gap-6">
                         <div className={cn(
-                          "w-12 h-12 rounded-2xl flex items-center justify-center",
+                          "w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0",
                           t.type === 'earning' ? "bg-brand-blue/5 text-brand-blue" : "bg-rose-50 text-rose-500"
                         )}>
                            {t.type === 'earning' ? <ArrowUpRight className="w-5 h-5" /> : <ChevronRight className="w-5 h-5 rotate-90" />}
                         </div>
                         <div className="text-left">
-                           <p className="text-xs font-black text-slate-800 uppercase tracking-tight">{t.description}</p>
+                           <p className="text-[10px] md:text-xs font-black text-slate-800 uppercase tracking-tight">{t.description}</p>
                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{new Date(t.createdAt).toLocaleDateString()}</p>
                         </div>
                      </div>
                      <p className={cn(
-                        "text-sm font-black",
+                        "text-xs md:text-sm font-black text-left md:text-right",
                         t.type === 'earning' ? "text-emerald-500" : "text-rose-500"
                      )}>
                         {t.type === 'earning' ? "+" : "-"}{formatCurrency(Math.abs(t.amount))}
@@ -328,49 +328,49 @@ export default function WalletPage() {
                   initial={{ scale: 0.9, y: 50, opacity: 0 }}
                   animate={{ scale: 1, y: 0, opacity: 1 }}
                   exit={{ scale: 0.9, y: 50, opacity: 0 }}
-                  className="bg-white w-full max-w-lg rounded-[4rem] p-12 relative shadow-3xl overflow-hidden"
+                  className="bg-white w-full max-w-lg rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 relative shadow-3xl overflow-hidden max-h-[90vh] overflow-y-auto"
                >
                   <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
-                  <button onClick={() => setShowForm(false)} className="absolute top-10 right-10 text-slate-400 hover:text-slate-900 transition-colors">
-                     <XCircle className="w-8 h-8" />
+                  <button onClick={() => setShowForm(false)} className="absolute top-6 right-6 md:top-10 md:right-10 text-slate-300 hover:text-slate-900 transition-colors z-20">
+                     <XCircle className="w-6 h-6 md:w-8 md:h-8" />
                   </button>
 
-                  <div className="space-y-10 relative z-10">
-                     <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-slate-950 rounded-[1.5rem] flex items-center justify-center text-white shadow-2xl">
-                           <ArrowUpRight className="w-8 h-8" />
+                  <div className="space-y-6 md:space-y-10 relative z-10">
+                     <div className="flex items-center gap-4 md:gap-6">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-950 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center text-white shadow-2xl">
+                           <ArrowUpRight className="w-6 h-6 md:w-8 md:h-8" />
                         </div>
                         <div className="text-left">
-                           <h3 className="text-3xl font-black font-display uppercase tracking-tight">Initiate Payout</h3>
-                           <p className="text-slate-400 font-medium">Global Royalty Distribution</p>
+                           <h3 className="text-xl md:text-3xl font-black font-display uppercase tracking-tight">Initiate Payout</h3>
+                           <p className="text-[10px] md:text-sm text-slate-400 font-medium">Global Royalty Distribution</p>
                         </div>
                      </div>
 
-                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2 text-left">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Withdrawal Amount (₹)</label>
+                     <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                        <div className="space-y-1 md:space-y-2 text-left">
+                           <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Withdrawal Amount (₹)</label>
                            <input 
                               required
                               type="number"
                               min="1000"
                               value={amount}
                               onChange={e => setAmount(e.target.value)}
-                              className="w-full bg-slate-50 border-none rounded-3xl p-6 text-2xl font-black text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all shadow-inner"
+                              className="w-full bg-slate-50 border-none rounded-2xl md:rounded-3xl p-4 md:p-6 text-xl md:text-2xl font-black text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all shadow-inner"
                               placeholder="₹0.00"
                            />
-                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mt-2">Available: {formatCurrency(profile?.walletBalance || 0)}</p>
+                           <p className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-4 mt-1 md:mt-2">Available: {formatCurrency(profile?.walletBalance || 0)}</p>
                         </div>
 
-                        <div className="space-y-2 text-left">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Transfer Method</label>
-                           <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1 md:space-y-2 text-left">
+                           <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Transfer Method</label>
+                           <div className="grid grid-cols-2 gap-3 md:gap-4">
                               {["Bank Transfer", "UPI / Digital"].map(m => (
                                  <button 
                                     key={m}
                                     type="button"
                                     onClick={() => setMethod(m)}
                                     className={cn(
-                                       "py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all",
+                                       "py-3 md:py-4 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest border transition-all",
                                        method === m ? "bg-slate-900 text-white border-slate-900 shadow-xl" : "bg-white border-slate-100 text-slate-400 hover:border-slate-300"
                                     )}
                                  >
@@ -380,18 +380,18 @@ export default function WalletPage() {
                            </div>
                         </div>
 
-                        <div className="space-y-4 text-left">
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Account Metadata</label>
+                        <div className="space-y-3 md:space-y-4 text-left">
+                           <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Account Metadata</label>
                            {method === "Bank Transfer" ? (
-                              <div className="space-y-3">
-                                 <input type="text" value={bankName} onChange={e => setBankName(e.target.value)} required placeholder="Bank Name" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
-                                 <input type="text" value={accountName} onChange={e => setAccountName(e.target.value)} required placeholder="Account Holder Name" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
-                                 <input type="text" value={accountNumber} onChange={e => setAccountNumber(e.target.value)} required placeholder="Account Number" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
-                                 <input type="text" value={ifscCode} onChange={e => setIfscCode(e.target.value)} required placeholder="IFSC Code" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                              <div className="space-y-2 md:space-y-3">
+                                 <input type="text" value={bankName} onChange={e => setBankName(e.target.value)} required placeholder="Bank Name" className="w-full bg-slate-50 border-none rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={accountName} onChange={e => setAccountName(e.target.value)} required placeholder="Account Holder Name" className="w-full bg-slate-50 border-none rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={accountNumber} onChange={e => setAccountNumber(e.target.value)} required placeholder="Account Number" className="w-full bg-slate-50 border-none rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                                 <input type="text" value={ifscCode} onChange={e => setIfscCode(e.target.value)} required placeholder="IFSC Code" className="w-full bg-slate-50 border-none rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
                               </div>
                            ) : (
-                              <div className="space-y-3">
-                                 <input type="text" value={upiId} onChange={e => setUpiId(e.target.value)} required placeholder="Enter UPI ID (e.g., name@ybl)" className="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
+                              <div className="space-y-2 md:space-y-3">
+                                 <input type="text" value={upiId} onChange={e => setUpiId(e.target.value)} required placeholder="Enter UPI ID (e.g., name@ybl)" className="w-full bg-slate-50 border-none rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-900 focus:ring-4 focus:ring-brand-blue/10 outline-none" />
                               </div>
                            )}
                         </div>

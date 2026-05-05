@@ -318,29 +318,33 @@ export default function DashboardLayout() {
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-brand-blue/5 blur-[150px] -translate-y-1/2 translate-x-1/2 rounded-full pointer-events-none"></div>
 
-        {/* Dynamic Header */}
-        <header className="h-20 lg:h-24 flex items-center justify-between px-4 md:px-8 lg:px-12 relative z-20 backdrop-blur-sm border-b border-slate-100/50">
-          <div className="flex items-center gap-4 lg:gap-8">
-            <button 
-              onClick={() => setIsSidebarOpen(true)}
-              className={cn(
-                "p-3 lg:p-4 bg-white rounded-2xl shadow-premium border border-slate-50 text-slate-400 transition-all hover:text-slate-900 group",
-                isSidebarOpen ? "lg:hidden" : "block"
-              )}
-            >
-              <Menu className="w-5 h-5 transition-transform group-active:scale-95" />
-            </button>
-            <div className="hidden lg:flex items-center bg-slate-50/50 backdrop-blur-md p-3 px-6 rounded-[2rem] border border-slate-100 gap-4 w-[28rem] xl:w-[32rem]">
-              <Search className="w-4 h-4 text-slate-300" />
+      <header className="h-16 lg:h-24 flex items-center justify-between px-3 md:px-8 lg:px-12 relative z-20 backdrop-blur-sm border-b border-slate-100/50">
+        <div className="flex items-center gap-2 lg:gap-8 flex-1">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 lg:p-4 bg-white rounded-xl shadow-premium border border-slate-50 text-slate-400 transition-all hover:text-slate-900 group lg:hidden"
+          >
+            <Menu className="w-5 h-5 transition-transform group-active:scale-95" />
+          </button>
+          
+          <div className="flex-1 max-w-sm lg:w-[28rem] xl:w-[32rem]">
+            <div className="flex items-center bg-slate-50/50 backdrop-blur-md p-1.5 lg:p-3 px-3 lg:px-6 rounded-xl lg:rounded-[2rem] border border-slate-100 gap-2 lg:gap-4 transition-all focus-within:ring-2 focus-within:ring-brand-blue/20">
+              <Search className="w-3.5 h-3.5 text-slate-300 shrink-0" />
               <input 
-                placeholder="Search music and artists..."
-                className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300"
+                placeholder="Search..."
+                className="bg-transparent border-none focus:ring-0 text-[9px] md:text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300 py-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/dashboard/releases?q=${(e.target as HTMLInputElement).value}`);
+                  }
+                }}
               />
             </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3 lg:gap-6">
-            <div className="hidden xl:flex items-center gap-2 mr-4">
+        <div className="flex items-center gap-2 lg:gap-6 ml-2 md:ml-4">
+          <div className="hidden xl:flex items-center gap-2 mr-4">
                <div className="flex -space-x-3">
                   {[1, 2, 3].map(i => (
                     <div key={i} className="w-10 h-10 rounded-full border-4 border-white bg-slate-100 flex items-center justify-center text-[10px] font-black group hover:z-30 transition-all hover:scale-110 cursor-pointer overflow-hidden">
@@ -460,7 +464,7 @@ export default function DashboardLayout() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            className="p-4 md:p-8 lg:p-12 pt-4 max-w-7xl mx-auto w-full"
+            className="p-3 md:p-8 lg:p-12 pt-4 max-w-7xl mx-auto w-full"
           >
              <Outlet />
           </motion.div>

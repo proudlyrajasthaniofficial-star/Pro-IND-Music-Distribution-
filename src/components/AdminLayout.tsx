@@ -154,25 +154,30 @@ export default function AdminLayout() {
       </aside>
 
       {/* Admin Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Admin Topbar */}
         <header className="h-20 bg-[#1E293B]/80 backdrop-blur-xl border-b border-slate-800 px-4 lg:px-10 flex items-center justify-between sticky top-0 z-50">
-          <div className="flex items-center gap-4 lg:gap-8 flex-1">
+          <div className="flex items-center gap-2 lg:gap-8 flex-1 min-w-0">
              <button 
                 onClick={() => setIsSidebarOpen(true)}
                 className={cn(
-                  "p-3 bg-slate-800 rounded-xl text-slate-400 lg:hidden hover:text-white transition-all",
+                  "p-2.5 bg-slate-800 rounded-xl text-slate-400 lg:hidden hover:text-white transition-all shadow-sm",
                   isSidebarOpen ? "hidden" : "block"
                 )}
              >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
              </button>
-             <div className="relative max-w-md w-full hidden md:block">
+             <div className="relative flex-1 max-w-md flex items-center">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <input 
                   type="text" 
-                  placeholder="Seach users, releases, ISRC..."
-                  className="w-full bg-slate-900/50 border border-slate-700 rounded-full py-2.5 pl-12 pr-6 text-xs focus:ring-2 focus:ring-brand-purple transition-all outline-none"
+                  placeholder="Search..."
+                  className="w-full bg-slate-900/50 border border-slate-700 rounded-full py-2 lg:py-2.5 pl-10 lg:pl-12 pr-4 lg:pr-6 text-[10px] lg:text-xs focus:ring-2 focus:ring-brand-purple transition-all outline-none text-white placeholder:text-slate-600"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      navigate(`/admin/releases?q=${(e.target as HTMLInputElement).value}`);
+                    }
+                  }}
                 />
              </div>
              <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400 hidden lg:flex items-center gap-3">
@@ -181,7 +186,7 @@ export default function AdminLayout() {
              </h2>
           </div>
 
-          <div className="flex items-center gap-6">
+           <div className="flex items-center gap-2 md:gap-6 shrink-0">
             <button className="relative w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all">
                <Bell className="w-5 h-5" />
                <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-slate-800"></span>

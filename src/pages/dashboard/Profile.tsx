@@ -96,81 +96,81 @@ export default function Profile() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-20">
-      <div className="flex flex-col md:flex-row items-center gap-10">
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
          <div className="relative group">
-            <div className="w-48 h-48 rounded-[4rem] bg-slate-900 overflow-hidden border-8 border-white shadow-3xl">
+            <div className="w-32 h-32 md:w-48 md:h-48 rounded-[2.5rem] md:rounded-[4rem] bg-slate-900 overflow-hidden border-4 md:border-8 border-white shadow-3xl">
                {formData.photoURL ? (
                   <img src={formData.photoURL} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/10 uppercase font-black text-6xl italic">
+                  <div className="w-full h-full flex items-center justify-center text-white/10 uppercase font-black text-4xl md:text-6xl italic">
                      {profile?.displayName?.charAt(0) || "U"}
                   </div>
                )}
                {uploading && (
                   <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center">
-                     <div className="w-8 h-8 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+                     <div className="w-6 h-6 md:w-8 md:h-8 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
                   </div>
                )}
             </div>
-            <div className="absolute -bottom-2 -right-2">
+            <div className="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2">
                <input type="file" accept="image/*" onChange={handlePhotoUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-               <button className="w-14 h-14 bg-brand-blue text-white rounded-3xl flex items-center justify-center shadow-xl border-4 border-white hover:scale-110 transition-transform">
-                  <Camera className="w-6 h-6" />
+               <button className="w-10 h-10 md:w-14 md:h-14 bg-brand-blue text-white rounded-2xl md:rounded-3xl flex items-center justify-center shadow-xl border-2 md:border-4 border-white hover:scale-110 transition-transform">
+                  <Camera className="w-4 h-4 md:w-6 md:h-6" />
                </button>
             </div>
          </div>
-         <div className="text-center md:text-left space-y-3 px-2">
+         <div className="text-center md:text-left space-y-2 md:space-y-3 px-2">
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
-               <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight uppercase">{profile?.displayName}</h1>
-               <BadgeCheck className="w-6 h-6 md:w-8 md:h-8 text-brand-blue fill-brand-blue/10" />
+               <h1 className="text-2xl md:text-5xl font-black font-display tracking-tight uppercase">{profile?.displayName}</h1>
+               <BadgeCheck className="w-5 h-5 md:w-8 md:h-8 text-brand-blue fill-brand-blue/10" />
             </div>
-            <p className="text-slate-400 font-bold uppercase tracking-widest flex items-center justify-center md:justify-start gap-2">
-               <Zap className="w-4 h-4 text-brand-blue" /> Master Artist Profile
+            <p className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center justify-center md:justify-start gap-2">
+               <Zap className="w-3 h-3 md:w-4 md:h-4 text-brand-blue" /> Master Artist Profile
             </p>
          </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-10">
-         <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white p-12 rounded-[4rem] shadow-sm border border-slate-100">
-               <h3 className="text-2xl font-black font-display tracking-tight mb-10 flex items-center gap-4 uppercase">
-                  <User className="w-8 h-8 text-brand-blue" /> Profile Configuration
+      <div className="grid lg:grid-cols-3 gap-6 md:gap-10">
+         <div className="lg:col-span-2 space-y-6 md:space-y-8">
+            <div className="bg-white p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] shadow-sm border border-slate-100">
+               <h3 className="text-xl md:text-2xl font-black font-display tracking-tight mb-8 md:mb-10 flex items-center gap-4 uppercase text-left">
+                  <User className="w-6 h-6 md:w-8 md:h-8 text-brand-blue" /> Profile Configuration
                </h3>
-               <form onSubmit={handleUpdate} className="space-y-8">
-                  <div className="grid md:grid-cols-2 gap-8">
+               <form onSubmit={handleUpdate} className="space-y-6 md:space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Authorized Name</label>
-                        <div className="relative">
-                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                        <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Authorized Name</label>
+                        <div className="relative text-left">
+                           <User className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300" />
                            <input 
                               value={formData.displayName} 
                               onChange={(e) => setFormData({...formData, displayName: e.target.value})}
-                              className="w-full bg-slate-50 border-none rounded-3xl p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
+                              className="w-full bg-slate-50 border-none rounded-2xl md:rounded-3xl p-4 md:p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
                            />
                         </div>
                      </div>
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Primary Genre</label>
-                        <div className="relative">
-                           <Zap className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                        <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Primary Genre</label>
+                        <div className="relative text-left">
+                           <Zap className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300" />
                            <input 
                               value={formData.genre} 
                               placeholder="e.g. Pop, Bollywood"
                               onChange={(e) => setFormData({...formData, genre: e.target.value})}
-                              className="w-full bg-slate-50 border-none rounded-3xl p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
+                              className="w-full bg-slate-50 border-none rounded-2xl md:rounded-3xl p-4 md:p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
                            />
                         </div>
                      </div>
                   </div>
 
                   <div className="space-y-4">
-                     <div className="flex items-center justify-between ml-4 mr-4">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Artist Manifest (Bio)</label>
+                     <div className="flex items-center justify-between ml-2 md:ml-4 mr-2 md:mr-4">
+                        <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">Artist Manifest (Bio)</label>
                         <button 
                           type="button"
                           onClick={runBioGenerator}
                           disabled={generatingBio}
-                          className="text-[9px] font-black uppercase tracking-widest text-brand-purple flex items-center gap-2 hover:opacity-70 transition-all disabled:opacity-50"
+                          className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-brand-purple flex items-center gap-2 hover:opacity-70 transition-all disabled:opacity-50"
                         >
                            <Sparkles className={cn("w-3 h-3", generatingBio && "animate-spin")} />
                            {generatingBio ? "Scribing..." : "AI Bio Generator"}
@@ -181,34 +181,34 @@ export default function Profile() {
                         onChange={(e) => setFormData({...formData, bio: e.target.value})}
                         rows={5}
                         placeholder="Synthesize your creative journey here..."
-                        className="w-full bg-slate-50 border-none rounded-[2.5rem] p-8 text-sm font-medium focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all resize-none leading-relaxed"
+                        className="w-full bg-slate-50 border-none rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 text-sm font-medium focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all resize-none leading-relaxed text-left font-sans"
                      />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Communication Portal (Phone)</label>
-                        <div className="relative">
-                           <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                        <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 text-left block">Communication Portal (Phone)</label>
+                        <div className="relative text-left">
+                           <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300" />
                            <input 
                               value={formData.phone} 
                               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                              className="w-full bg-slate-50 border-none rounded-3xl p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
+                              className="w-full bg-slate-50 border-none rounded-2xl md:rounded-3xl p-4 md:p-5 pl-14 text-sm font-bold focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all"
                            />
                         </div>
                      </div>
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Master Email Interface (Immutable)</label>
-                        <div className="relative opacity-60">
-                           <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
-                           <input value={profile?.email} disabled className="w-full bg-slate-100 border-none rounded-3xl p-5 pl-14 text-sm font-bold cursor-not-allowed" />
+                        <label className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 text-left block">Master Email Interface (Immutable)</label>
+                        <div className="relative opacity-60 text-left">
+                           <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-300" />
+                           <input value={profile?.email} disabled className="w-full bg-slate-100/50 border-none rounded-2xl md:rounded-3xl p-4 md:p-5 pl-14 text-sm font-bold cursor-not-allowed" />
                         </div>
                      </div>
                   </div>
 
                   <button 
                     disabled={saving}
-                    className="btn-premium btn-glow py-5 px-12 uppercase tracking-widest text-[10px] font-black flex items-center justify-center gap-3"
+                    className="w-full py-4 md:py-6 bg-slate-950 text-white rounded-2xl md:rounded-3xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-brand-blue transition-all shadow-2xl shadow-slate-900/20 disabled:opacity-50 flex items-center justify-center gap-3"
                   >
                      {saving ? "Transmitting Changes..." : success ? <>Signal Synced <BadgeCheck className="w-4 h-4" /></> : "Update Identity Manifest"}
                   </button>
