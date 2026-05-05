@@ -18,8 +18,8 @@ service cloud.firestore {
     // These users have TOTAL authority over the database.
     function isMasterAdmin() {
       return isSignedIn() && (
-        request.auth.token.get('email', '') == "musicdistributionindia.in@gmail.com" || 
-        request.auth.token.get('email', '') == "summyskji@gmail.com"
+        request.auth.token.email == "musicdistributionindia.in@gmail.com" || 
+        request.auth.token.email == "summyskji@gmail.com"
       );
     }
 

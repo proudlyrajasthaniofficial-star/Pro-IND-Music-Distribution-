@@ -39,13 +39,13 @@ export default function AdminBroadcasts() {
   }, []);
 
   const deleteNotification = async (id: string) => {
-    if (!window.confirm("Are you sure you want to remove this signal?")) return;
     try {
       await deleteDoc(doc(db, "system_notifications", id));
       setNotifications(notifications.filter(n => n.id !== id));
       toast.success("Signal terminated successfully.");
     } catch (err) {
-      toast.error("Termination failed.");
+      console.error("Delete error:", err);
+      toast.error("Termination failed. Check console for details.");
     }
   };
 
@@ -164,10 +164,15 @@ export default function AdminBroadcasts() {
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{new Date(n.createdAt).toLocaleDateString()}</span>
                           <button 
-                            onClick={() => deleteNotification(n.id)}
-                            className="p-1.5 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteNotification(n.id);
+                            }}
+                            className="p-2 bg-rose-500/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm flex items-center justify-center group/del relative z-20"
+                            title="Delete Broadcast"
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-4 h-4 group-hover/del:scale-110 transition-transform" />
                           </button>
                         </div>
                      </div>

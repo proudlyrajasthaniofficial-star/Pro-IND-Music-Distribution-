@@ -4,6 +4,7 @@ import { db } from "../../lib/firebase";
 import { Bell, Send, Trash2, Clock, Globe, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../../lib/utils";
+import { toast } from "sonner";
 
 export default function AdminNotifications() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -40,19 +41,20 @@ export default function AdminNotifications() {
       setMessage("");
       fetchNotifications();
     } catch (err) {
-      alert("Failed to deploy notification.");
+      toast.error("Failed to deploy notification.");
     } finally {
       setIsSending(false);
     }
   };
 
   const deleteNotification = async (id: string) => {
-    if (!confirm("Deactivate this transmission?")) return;
     try {
       await deleteDoc(doc(db, "system_notifications", id));
       setNotifications(notifications.filter(n => n.id !== id));
+      toast.success("Bulletin removed.");
     } catch (err) {
-      alert("Deletion failure.");
+      console.error("Delete error:", err);
+      toast.error("Deletion failure.");
     }
   };
 
@@ -164,10 +166,15 @@ export default function AdminNotifications() {
                            </div>
                         </div>
                         <button 
-                          onClick={() => deleteNotification(n.id)}
-                          className="p-2 text-slate-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteNotification(n.id);
+                          }}
+                          className="p-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center group/del relative z-20"
+                          title="Remove Bulletin"
                         >
-                           <Trash2 className="w-4 h-4" />
+                           <Trash2 className="w-5 h-5 group-hover/del:scale-110 transition-transform" />
                         </button>
                      </div>
                      <p className="text-xs text-slate-400 font-medium leading-relaxed">{n.message}</p>
