@@ -4,8 +4,8 @@
   "description": "Premier Music Distribution Platform in India",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAFAFA",
-  "theme_color": "#0066FF",
+  "background_color": "#020617",
+  "theme_color": "#020617",
   "icons": [
     {
       "src": "/favicon.svg",
