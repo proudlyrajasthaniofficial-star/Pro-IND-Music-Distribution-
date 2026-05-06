@@ -31,6 +31,7 @@ const ADMIN_MENU = [
   { id: 'overview', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
   { id: 'withdrawals', label: 'Withdrawals', icon: Wallet, path: '/admin/withdrawals' },
   { id: 'finance', label: 'Finance', icon: CreditCard, path: '/admin/finance' },
+  { id: 'royalties', label: 'Royalties', icon: Disc, path: '/admin/royalties' },
   { id: 'releases', label: 'Releases', icon: Disc, path: '/admin/releases' },
   { id: 'artists', label: 'Artists', icon: Users, path: '/admin/artists' },
   { id: 'labels', label: 'Labels', icon: Building2, path: '/admin/labels' },

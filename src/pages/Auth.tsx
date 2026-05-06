@@ -9,7 +9,7 @@ import { Mail, Lock, Music, Chrome, ArrowRight, User, Zap, ShieldCheck } from "l
 import NeuralGrid from "../components/ui/NeuralGrid";
 
 import { triggerNotification } from "../lib/notifications";
-import { cn } from "../lib/utils";
+import { cn, generateCustomId } from "../lib/utils";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
@@ -31,8 +31,10 @@ export default function Auth() {
       const docSnap = await getDoc(docRef);
       
       if (!docSnap.exists()) {
+        const displayName = result.user.displayName || result.user.email?.split("@")[0] || "Artist";
         const userData = {
-          displayName: result.user.displayName || result.user.email?.split("@")[0] || "Artist",
+          displayName,
+          customId: generateCustomId(displayName),
           email: result.user.email || "",
           photoURL: result.user.photoURL || "",
           role: 'artist',
@@ -77,6 +79,7 @@ export default function Auth() {
         await updateProfile(result.user, { displayName: name });
         await setDoc(doc(db, 'users', result.user.uid), {
           displayName: name,
+          customId: generateCustomId(name),
           email: email,
           role: 'artist',
           walletBalance: 0,

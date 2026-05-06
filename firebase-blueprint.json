@@ -8,7 +8,11 @@
         "uid": { "type": "string" },
         "email": { "type": "string" },
         "displayName": { "type": "string" },
+        "customId": { "type": "string", "description": "Custom UID in format IND-USERNAME-5NUMBER" },
         "role": { "type": "string", "enum": ["artist", "admin"] },
+        "walletBalance": { "type": "number", "description": "Current balance in Rupees" },
+        "totalEarned": { "type": "number", "description": "Lifetime earnings" },
+        "totalWithdrawn": { "type": "number", "description": "Lifetime withdrawals" },
         "planId": { "type": "string", "description": "Current subscription plan ID" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
@@ -53,14 +57,46 @@
         "createdAt": { "type": "string", "format": "date-time" }
       }
     },
-    "Transaction": {
-      "title": "Financial Transaction",
-      "description": "Earnings and withdrawals records.",
+    "WithdrawalRequest": {
+      "title": "Withdrawal Request",
+      "description": "User request to withdraw funds from wallet.",
       "type": "object",
       "properties": {
         "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
         "amount": { "type": "number" },
-        "type": { "type": "string", "enum": ["earning", "withdrawal", "subscription"] },
+        "method": { "type": "string", "enum": ["UPI", "BANK"] },
+        "details": {
+          "type": "object",
+          "properties": {
+            "upiId": { "type": "string" },
+            "bankName": { "type": "string" },
+            "accountHolder": { "type": "string" },
+            "accountNumber": { "type": "string" },
+            "ifscCode": { "type": "string" }
+          }
+        },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "paid"] },
+        "admin_notes": { "type": "string" },
+        "processedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "amount", "method", "status"]
+    },
+    "Transaction": {
+      "title": "Financial Transaction",
+      "description": "Detailed earnings, adds, and payout records.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["earning", "withdrawal"] },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "description": { "type": "string" },
+        "platform": { "type": "string", "description": "e.g. Spotify, Apple Music" },
         "createdAt": { "type": "string", "format": "date-time" }
       }
     },
@@ -128,9 +164,50 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "userEmail", "releaseId", "songName", "artistName", "songLink", "status"]
+    },
+    "RoyaltyReport": {
+      "title": "Royalty Report Batch",
+      "description": "Metadata for a bundle of royalty distributions.",
+      "type": "object",
+      "properties": {
+        "reportName": { "type": "string" },
+        "source": { "type": "string" },
+        "period": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["uploaded", "processing", "processed", "approved"] },
+        "totalRevenue": { "type": "number" },
+        "totalStreams": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "RoyaltyEntry": {
+      "title": "Individual Royalty Entry",
+      "description": "Financial line item for a single track on a single platform.",
+      "type": "object",
+      "properties": {
+        "reportId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "isrc": { "type": "string" },
+        "platform": { "type": "string" },
+        "streams": { "type": "number" },
+        "revenue": { "type": "number" },
+        "country": { "type": "string" },
+        "matched": { "type": "boolean" },
+        "reason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
+    "/royalty_reports/{reportId}": {
+      "schema": "RoyaltyReport",
+      "description": "Batches of processed earnings"
+    },
+    "/royalty_entries/{entryId}": {
+      "schema": "RoyaltyEntry",
+      "description": "Line items for royalty distributions"
+    },
     "/mail/{mailId}": {
       "schema": "Mail",
       "description": "Triggered emails collection"
@@ -179,6 +256,10 @@
     "/transactions/{txId}": {
       "schema": "Transaction",
       "description": "Earnings and payment records"
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": "WithdrawalRequest",
+      "description": "User withdrawal requests"
     },
     "/system_notifications/{notifId}": {
       "schema": "SystemNotification",

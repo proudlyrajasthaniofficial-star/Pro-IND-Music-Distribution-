@@ -12,7 +12,8 @@ import {
   Mail,
   Disc,
   ArrowUpRight,
-  Trash2 
+  Trash2,
+  ShieldCheck
 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { toast } from "sonner";
@@ -109,7 +110,9 @@ export default function AdminUsers() {
 
   const filteredUsers = users.filter(u => 
     u.email?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.displayName?.toLowerCase().includes(searchTerm.toLowerCase())
+    u.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.customId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -154,8 +157,9 @@ export default function AdminUsers() {
                           </div>
                           <div>
                              <p className="font-bold text-white">{u.displayName}</p>
-                             <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium mt-1">
-                                <Mail className="w-3 h-3" /> {u.email}
+                             <div className="flex flex-col gap-1 text-[10px] text-slate-500 font-bold uppercase mt-1 tracking-wider">
+                                <span className="text-brand-blue flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" /> {u.customId || u.id}</span>
+                                <span className="flex items-center gap-1.5 opacity-60"><Mail className="w-3 h-3" /> {u.email}</span>
                              </div>
                           </div>
                        </div>

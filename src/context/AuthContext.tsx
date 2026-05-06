@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, User, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc, getDocFromServer } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -29,21 +29,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
-  const MASTER_ADMIN = ["musicdistributionindia.in@gmail.com", "summyskji@gmail.com"];
+  const MASTER_ADMIN = [
+    "musicdistributionindia.in@gmail.com", 
+    "summyskji@gmail.com",
+    "admin@musicdistributionindia.in"
+  ];
 
   useEffect(() => {
-    const testConnection = async () => {
-      try {
-        await getDocFromServer(doc(db, 'system', 'status'));
-        setConnectionError(null);
-      } catch (error: any) {
-        if (error.message?.includes('client is offline')) {
-          setConnectionError("Please check your Firebase configuration or wait for provisioning.");
-        }
-      }
-    };
-    testConnection();
-
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
       if (authUser) {
@@ -53,12 +45,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (docSnap.exists()) {
             setProfile(docSnap.data());
           } else {
-            console.log("No profile found for user:", authUser.uid);
+            if (MASTER_ADMIN.includes(authUser.email || "")) {
+               console.log("Master Admin detected, initial profile sync required.");
+            }
             setProfile(null);
           }
+          setConnectionError(null);
         } catch (err: any) {
           console.error("Profile fetch error:", err.code, err.message);
+          if (err.code === 'unavailable' || err.message.includes('offline')) {
+            setConnectionError("Firestore is unreachable. Operating in offline mode.");
+          }
           setProfile(null);
+          // Catch and rethrow with JSON Context for system diagnostics
+          try {
+            handleFirestoreError(err, OperationType.GET, `users/${authUser.uid}`);
+          } catch (e) {
+            // Error logged by handleFirestoreError
+          }
         }
       } else {
         setProfile(null);

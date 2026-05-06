@@ -43,6 +43,7 @@ import AdminUserRequests from './pages/admin/AdminUserRequests';
 import AdminNotifications from './pages/admin/AdminNotifications';
 import AdminBroadcasts from './pages/admin/AdminBroadcasts';
 import AdminHistory from './pages/admin/AdminHistory';
+import AdminRoyalties from './pages/admin/AdminRoyalties';
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -134,6 +135,7 @@ function AppContent() {
             <Route path="users" element={<AdminUsers />} />
             <Route path="finance" element={<AdminFinance />} />
             <Route path="withdrawals" element={<AdminWithdrawals />} />
+            <Route path="royalties" element={<AdminRoyalties />} />
             <Route path="artists" element={<AdminArtists />} />
             <Route path="labels" element={<AdminLabels />} />
             <Route path="oac" element={<AdminOAC />} />

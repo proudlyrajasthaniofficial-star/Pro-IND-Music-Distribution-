@@ -6,8 +6,20 @@ service cloud.firestore {
     // HELPERS
     // -------------------------------------------------------------------------
     
+    // -------------------------------------------------------------------------
+    // HELPERS & VALIDATION BLUEPRINTS
+    // -------------------------------------------------------------------------
+    
     function isSignedIn() {
       return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
     function isOwner(userId) {
@@ -15,32 +27,47 @@ service cloud.firestore {
     }
 
     // MASTER ADMIN BYPASS
-    // These users have TOTAL authority over the database.
     function isMasterAdmin() {
       return isSignedIn() && (
-        request.auth.token.email == "musicdistributionindia.in@gmail.com" || 
-        request.auth.token.email == "summyskji@gmail.com"
+        request.auth.token.email.lower() == "musicdistributionindia.in@gmail.com" || 
+        request.auth.token.email.lower() == "summyskji@gmail.com" ||
+        request.auth.token.email.lower() == "admin@musicdistributionindia.in"
       );
     }
 
-    // Role-based Admin check (lookup in users collection)
+    // Role-based Admin check
     function isAdmin() {
-      return isMasterAdmin() || (
-        isSignedIn() && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'artist') == 'admin'
+      return isSignedIn() && (
+        isMasterAdmin() || (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        )
       );
-    }
-
-    function isUser(uid) {
-      return isSignedIn() && request.auth.uid == uid;
     }
 
     function incoming() { return request.resource.data; }
     function existing() { return resource.data; }
 
+    // VALIDATION HELPERS
+    function isValidWithdrawal(data) {
+      return data.userId == request.auth.uid &&
+             data.userEmail is string &&
+             data.amount is number && data.amount >= 500 &&
+             data.method in ['UPI', 'BANK'] &&
+             data.status == 'pending' &&
+             data.createdAt == request.time;
+    }
+
+    function isValidTransaction(data) {
+      return data.userId is string &&
+             data.amount is number &&
+             data.type in ['earning', 'withdrawal'] &&
+             data.status in ['pending', 'completed', 'failed'] &&
+             data.createdAt == request.time;
+    }
+
     // -------------------------------------------------------------------------
-    // GLOBAL BYPASS - Evaluated first for efficiency
+    // GLOBAL BYPASS
     // -------------------------------------------------------------------------
     match /{document=**} {
       allow read, write: if isMasterAdmin();
@@ -51,10 +78,10 @@ service cloud.firestore {
     // -------------------------------------------------------------------------
 
     match /users/{userId} {
-      allow get: if isUser(userId) || isAdmin();
+      allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isUser(userId) && incoming().role == 'artist';
-      allow update: if isUser(userId) || isAdmin();
+      allow create: if isOwner(userId) && incoming().get('role', 'artist') == 'artist';
+      allow update: if (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'planId'])) || isAdmin();
       allow delete: if isAdmin();
     }
 
@@ -79,8 +106,18 @@ service cloud.firestore {
     }
 
     match /transactions/{txId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAdmin() || (isOwner(incoming().userId) && isValidTransaction(incoming()));
+      allow update, delete: if isAdmin();
+    }
+
+    match /withdrawals/{wId} {
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidWithdrawal(incoming()) && isValidId(wId);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /system_notifications/{nId} {
@@ -94,12 +131,6 @@ service cloud.firestore {
       allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow create, delete: if isAdmin();
-    }
-
-    match /withdrawals/{wId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn();
-      allow update, delete: if isAdmin();
     }
 
     match /oac_requests/{id} {
@@ -140,7 +171,13 @@ service cloud.firestore {
     }
 
     match /royalty_reports/{id} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /royalty_entries/{id} {
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow write: if isAdmin();
     }
   }
