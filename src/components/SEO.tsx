@@ -23,9 +23,12 @@ const SEO: React.FC<SEOProps> = ({
   const siteTitle = title.includes('IND Distribution') ? title : `${title} | IND Distribution`;
 
   return (
-    <Helmet>
+    <Helmet
+      htmlAttributes={{ lang: 'en' }}
+    >
       {/* Standard Metadata */}
       <title>{siteTitle}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="IND Distribution" />

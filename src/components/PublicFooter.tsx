@@ -15,7 +15,10 @@ import { cn } from '../lib/utils';
 
 const PublicFooter = () => {
   return (
-    <footer className="relative py-32 px-6 bg-[#020617] border-t border-white/5 overflow-hidden text-left">
+    <footer 
+      role="contentinfo"
+      className="relative py-32 px-6 bg-[#020617] border-t border-white/5 overflow-hidden text-left"
+    >
       {/* Subtle Gradient Backgrounds */}
       <div className="absolute top-0 left-1/4 w-[40rem] h-[40rem] bg-brand-blue/10 blur-[160px] rounded-full pointer-events-none mix-blend-screen"></div>
       <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-neon-purple/10 blur-[140px] rounded-full pointer-events-none mix-blend-screen"></div>
@@ -43,21 +46,26 @@ const PublicFooter = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { icon: Instagram, color: "hover:bg-pink-500/20 hover:text-pink-400 hover:border-pink-500/30", label: "Instagram" },
-                { icon: Youtube, color: "hover:bg-red-600/20 hover:text-red-400 hover:border-red-600/30", label: "YouTube" },
-                { icon: MessageCircle, color: "hover:bg-[#25D366]/20 hover:text-[#25D366] hover:border-[#25D366]/30", label: "WhatsApp" },
-                { icon: Apple, color: "hover:bg-white/10 hover:text-white hover:border-white/20", label: "Apple" }
+                { icon: Instagram, color: "hover:bg-pink-500/20 hover:text-pink-400 hover:border-pink-500/30", label: "Instagram", url: "https://instagram.com/musicdistributionindia" },
+                { icon: Youtube, color: "hover:bg-red-600/20 hover:text-red-400 hover:border-red-600/30", label: "YouTube", url: "https://youtube.com/@musicdistributionindia" },
+                { icon: MessageCircle, color: "hover:bg-[#25D366]/20 hover:text-[#25D366] hover:border-[#25D366]/30", label: "WhatsApp", url: "https://wa.me/917742789827" },
+                { icon: Apple, color: "hover:bg-white/10 hover:text-white hover:border-white/20", label: "Apple", url: "#" }
               ].map((social, idx) => (
-                <motion.div 
+                <motion.a 
                   key={idx}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Follow us on ${social.label}`}
                   whileHover={{ y: -8, scale: 1.1, rotate: 5 }}
                   className={cn(
                     "w-14 h-14 rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 transition-all cursor-pointer backdrop-blur-2xl shadow-lg",
                     social.color
                   )}
+                  style={{ WebkitBackdropFilter: 'blur(20px)' }}
                 >
                   <social.icon className="w-6 h-6" />
-                </motion.div>
+                </motion.a>
               ))}
             </div>
           </div>

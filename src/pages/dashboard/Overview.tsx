@@ -210,8 +210,8 @@ export default function Overview() {
                   </div>
                   <div className="flex-1 text-left">
                     <div className="flex items-center gap-3">
-                      <p className="font-black uppercase tracking-tight text-sm md:text-base">{n.title}</p>
-                      <span className="text-[9px] font-bold opacity-40 uppercase">{new Date(n.createdAt).toLocaleDateString()}</span>
+                      <p className="font-black uppercase tracking-tight text-xs md:text-base">{n.title}</p>
+                      <span className="text-[8px] md:text-[9px] font-bold opacity-40 uppercase shrink-0">{new Date(n.createdAt).toLocaleDateString()}</span>
                     </div>
                     <p className="text-xs md:text-sm font-medium opacity-80 mt-1">{n.message}</p>
                   </div>
@@ -222,37 +222,37 @@ export default function Overview() {
         </AnimatePresence>
 
         {/* Mission Control Hub */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-12 px-2 md:px-0">
+        <div className="grid grid-cols-1 mb-12 px-0 md:px-0">
           {/* Main Stat Card (Vault) */}
-          <div className="lg:col-span-2">
-            <div className="bg-slate-950 rounded-[2rem] md:rounded-[3.5rem] p-6 md:p-12 shadow-premium-dark relative overflow-hidden group h-full">
+          <div className="w-full">
+            <div className="bg-slate-950 rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-12 shadow-premium-dark relative overflow-hidden group h-full border border-white/5">
               <div className="absolute inset-0 noise opacity-10 pointer-events-none"></div>
               <div className="absolute -top-48 -right-48 w-[40rem] h-[40rem] bg-brand-blue/20 blur-[150px] rounded-full group-hover:bg-brand-blue/30 transition-all duration-1000"></div>
               
               <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-8 md:mb-12">
+                <div className="flex items-center justify-between mb-6 md:mb-12">
                   <div className="flex items-center gap-3 md:gap-4">
                     <div className="w-10 h-10 md:w-14 md:h-14 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform">
                       <Wallet className="w-5 h-5 md:w-7 md:h-7 text-brand-blue" />
                     </div>
                     <div>
-                      <h3 className="text-[9px] md:text-xs font-black uppercase tracking-widest md:tracking-[0.3em] text-slate-500 mb-0.5 md:mb-1">Total Earnings</h3>
-                      <div className="flex items-center gap-1.5 md:gap-2">
-                        <span className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
-                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Available for Payout</span>
+                      <h3 className="text-[8px] md:text-xs font-black uppercase tracking-widest text-slate-500 mb-0.5">Total Earnings</h3>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
+                        <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-emerald-500/80">Available</span>
                       </div>
                     </div>
                   </div>
                   <div className="hidden sm:flex flex-col items-end text-white text-right">
                     <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
-                    <span className="text-[7px] md:text-[8px] font-bold text-slate-600 mt-0.5 md:mt-1 uppercase">Level 1 Distribution</span>
+                    <span className="text-[7px] md:text-[8px] font-bold text-slate-600 mt-0.5 uppercase">Level 1 Distribution</span>
                   </div>
                 </div>
 
                 <div className="flex-1 flex flex-col justify-center mb-8 md:mb-12">
-                    <div className="flex flex-col sm:flex-row items-baseline gap-1 md:gap-4 mb-2 md:mb-3 overflow-hidden">
-                       <span className="text-lg md:text-2xl font-black text-slate-500 uppercase">₹</span>
-                       <h2 className="text-3xl sm:text-7xl md:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] break-all lg:break-normal">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 md:gap-4 mb-4 md:mb-3 overflow-hidden">
+                       <span className="text-xs md:text-2xl font-black text-slate-500 uppercase">₹</span>
+                       <h2 className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] whitespace-normal break-words max-w-full">
                          {profile?.walletBalance?.toFixed(2) || "0.00"}
                        </h2>
                     </div>
@@ -282,97 +282,8 @@ export default function Overview() {
             </div>
           </div>
 
-          {/* System Event Log (Mission Control Feel) */}
-          <div className="bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-premium border border-slate-800 relative overflow-hidden flex flex-col h-full min-h-[300px]">
-            <div className="absolute top-0 right-0 p-4">
-               <div className="w-2 h-2 bg-brand-blue rounded-full animate-ping opacity-30"></div>
-            </div>
-            <div className="flex items-center gap-3 mb-6">
-               <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-brand-blue border border-white/5">
-                  <BarChart3 className="w-4 h-4" />
-               </div>
-               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Recent Activity</h3>
-            </div>
-            
-            <div className="flex-1 space-y-4 font-mono text-[10px] text-slate-400 overflow-y-auto custom-scrollbar pr-2">
-               <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">14:05</span>
-                  <p><span className="text-emerald-500 font-bold">[OK]</span> Server response 200. Data updated.</p>
-               </div>
-               <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">14:02</span>
-                  <p><span className="text-brand-blue font-bold">[MSG]</span> Metadata sent to Spotify server.</p>
-               </div>
-               <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">13:58</span>
-                  <p><span className="text-brand-purple font-bold">[LOG]</span> Processing track ISRC details.</p>
-               </div>
-               <div className="flex gap-3">
-                  <span className="text-brand-blue opacity-50">13:45</span>
-                  <p><span className="text-emerald-500 font-bold">[OK]</span> Apple Music portal connection verified.</p>
-               </div>
-               <div className="flex gap-3 opacity-40">
-                  <span className="text-brand-blue opacity-50">13:30</span>
-                  <p><span className="text-slate-500 font-bold">[SYS]</span> Daily dashboard data refresh.</p>
-               </div>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-white/5 space-y-4">
-               <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">System Speed</span>
-                  <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">Fast</span>
-               </div>
-               <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ duration: 2, repeat: Infinity }} className="w-1/3 h-full bg-brand-blue" />
-               </div>
-            </div>
-          </div>
         </div>
         
-        {/* Global Reach 3D Section */}
-        <motion.div 
-           initial={{ opacity: 0, scale: 0.98 }}
-           animate={{ opacity: 1, scale: 1 }}
-           className="relative bg-slate-900 rounded-[3rem] p-8 md:p-12 overflow-hidden shadow-2xl group border border-slate-800"
-        >
-           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0066FF_0%,transparent_100%)] blur-3xl"></div>
-           </div>
-           
-           <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
-              <div className="flex-1 text-left space-y-6">
-                 <div className="space-y-2">
-                    <h3 className="text-3xl md:text-5xl font-black font-display tracking-tight text-white uppercase italic">Global Listener <span className="text-brand-blue">Reach</span></h3>
-                    <p className="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-[0.2em]">Live listener data from territories across the world</p>
-                 </div>
-                 
-                 <div className="grid grid-cols-2 gap-4">
-                    {platformData.length > 0 ? platformData.slice(0, 4).map((plat, i) => (
-                      <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
-                         <p className="text-[8px] font-black uppercase tracking-widest text-slate-500 mb-1">{plat.name}</p>
-                         <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-white uppercase">{plat.streams} Streams</p>
-                         </div>
-                      </div>
-                    )) : (
-                      <div className="col-span-2 p-10 text-center border border-dashed border-white/10 rounded-2xl">
-                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Aggregate Global Data Loading...</p>
-                      </div>
-                    )}
-                 </div>
-                 
-                 <button className="px-8 py-3 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-white/5">
-                    View Analytics
-                 </button>
-              </div>
-              
-              <div className="w-full lg:w-[450px] aspect-square relative">
-                 <div className="absolute inset-0 bg-brand-blue/20 blur-[120px] rounded-full scale-75 animate-pulse"></div>
-                 {/* <GlobeBox /> */}
-              </div>
-           </div>
-        </motion.div>
-
         {/* 3D Quick Actions */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
            {[

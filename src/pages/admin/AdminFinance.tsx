@@ -11,10 +11,11 @@ import {
   addDoc, 
   writeBatch,
   getDoc,
-  serverTimestamp
+  serverTimestamp,
+  increment
 } from "firebase/firestore";
 import { db, auth } from "../../lib/firebase";
-import { Wallet, TrendingUp, ArrowUpRight, ArrowDownLeft, FileText, Plus, Search, CreditCard, RefreshCw } from "lucide-react";
+import { Wallet, TrendingUp, ArrowUpRight, ArrowDownLeft, FileText, Plus, Search, CreditCard, RefreshCw, Music } from "lucide-react";
 import { formatCurrency, cn, generateCustomId, formatDate } from "../../lib/utils";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";

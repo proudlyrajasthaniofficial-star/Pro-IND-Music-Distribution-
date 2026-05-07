@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import compression from "compression";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
@@ -12,7 +13,7 @@ import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
 import * as reqCtrl from "./controllers/requestController.ts";
 import * as cashfreeService from "./services/cashfreeService.ts";
-import { admin, adminDb } from "./services/firebaseAdmin.ts";
+import { admin, getAdminDb } from "./services/firebaseAdmin.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +40,7 @@ function setupCloudinary() {
 
 async function startServer() {
   const app = express();
+  app.use(compression());
   app.set("trust proxy", true);
   const PORT = 3000;
 
@@ -219,14 +221,14 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
 
         if (userId && planId) {
           try {
-            await adminDb.collection("users").doc(userId).update({
+            await getAdminDb().collection("users").doc(userId).update({
               planId: planId,
               lastPaymentId: event.data.payment.cf_payment_id,
               subscriptionStatus: 'active',
               updatedAt: admin.firestore.FieldValue.serverTimestamp()
             });
 
-            await adminDb.collection("subscriptions").add({
+            await getAdminDb().collection("subscriptions").add({
               userId,
               planId,
               status: "active",
@@ -356,9 +358,12 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
     console.log(`📦 Serving production build from: ${distPath}`);
     
     app.use(express.static(distPath, {
-      setHeaders: (res, path) => {
-        if (path.endsWith('.html')) {
-          res.setHeader('Cache-Control', 'no-cache');
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        } else {
+          // For JS, CSS, and other hashed assets
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
       }
     }));

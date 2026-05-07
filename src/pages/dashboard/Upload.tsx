@@ -75,6 +75,7 @@ const LANGUAGES = [
 
 const YEARS = Array.from({ length: 2070 - 2017 + 1 }, (_, i) => (2017 + i).toString());
 const PLATFORMS = [
+  { name: "All Stores", logo: "https://cdn-icons-png.flaticon.com/512/869/869123.png" },
   { name: "Facebook", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiT4AraHOBV5Z8hsEFIqSk-x4MH9Bq6HCvLcVy0BdUZfa05thWfnrXvS27CHv14oSQ9WCyahaXNoBChRgJ3B8GzDPOqUBKegOqo6bSIgxEHPq8-pDoIMidDxRzhN1Dbcp9AYtrpLOiOvvOlxVaTwmOKUWYfhLt0kKe0MSVwbsxM4W9tIH6Q_QXebieY-FQ/s225/1000625038.png" },
   { name: "YouTube Content ID", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQEP7K3_JFRWDwHOwB8zvSzwDvb2FHws9aZTtxDlOecHoh4acgXA58jJcJ0SuuJhc0Ins6RGcvL6fM-rXYv7Wzp1t-cYfu6Y35xqKmLDgasn-vadrwvlaMxvP4s-7udpvsgbIUu02xGVfgV8rgPHIsj3UvKRIYgXS9oXKFhLDBZvVlFQbkU6Z49rSEfw8/s390/1000625039.png" },
   { name: "YouTube Music", logo: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCBvvdrkwgOYchq85w_ntr8jgL_VnWuHbXE8D5xktwlb1RkHQKPEKu25m3pPXULu9r5ZkqUbmjZGh5hjBm-9e8SXeazxM-0_5gyItH6czSh3ZvtFewhHB-pRDvVoJv8lw11Z3qMmVj9TnCA6-hUkLF9yGJR2QdRUe-B9e0r4FHTRgV2sr_UHr6VfekCHM/s900/1000625040.jpg" },
@@ -425,12 +426,12 @@ export default function Upload() {
   return (
     <div className="max-w-6xl mx-auto py-6 md:py-10 pb-32 px-4 md:px-0">
       {/* Heavy Stepper - Responsive */}
-      <div className="flex items-center justify-between mb-8 md:mb-20 relative px-2 md:px-10 overflow-x-auto scrollbar-hide">
+      <div className="flex items-center justify-between mb-8 md:mb-20 relative px-2 md:px-10 overflow-x-auto scrollbar-hide py-4">
          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-slate-100 -translate-y-1/2 hidden md:block"></div>
          {STEPS.map((s, i) => (
             <div key={s} className={cn(
-              "relative z-10 flex flex-col items-center gap-1.5 md:gap-4 shrink-0 mx-2 md:mx-0",
-              step === i ? "opacity-100" : "opacity-40 md:opacity-100"
+              "relative z-10 flex flex-col items-center gap-1.5 md:gap-4 shrink-0 mx-4 md:mx-0",
+              step === i ? "opacity-100 scale-110 md:scale-100" : "opacity-40 md:opacity-100"
             )}>
                <motion.div 
                  animate={{ 

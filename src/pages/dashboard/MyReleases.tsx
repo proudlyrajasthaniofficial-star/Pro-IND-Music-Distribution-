@@ -136,19 +136,20 @@ export default function MyReleases() {
     <div className="space-y-12 pb-24">
       {/* Header with Search */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
-        <div>
+        <div className="text-center lg:text-left">
            <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight uppercase">Discography</h1>
            <p className="text-xs md:text-sm text-slate-400 font-medium">Manage and track your global catalog in high definition.</p>
         </div>
-        <div className="flex items-center gap-4 bg-white p-2 pl-4 md:pl-6 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-slate-50 w-full lg:w-auto">
-           <Search className="w-4 h-4 md:w-5 md:h-5 text-slate-300" />
+        <div className="flex items-center gap-3 md:gap-4 bg-white p-2 pl-4 md:pl-6 rounded-[1.5rem] md:rounded-[2.5rem] shadow-xl border border-slate-50 w-full lg:w-auto">
+           <Search className="w-4 h-4 md:w-5 md:h-5 text-slate-300 shrink-0" />
            <input 
              value={search}
              onChange={(e) => setSearch(e.target.value)}
-             placeholder="Search releases..."
-             className="bg-transparent border-none focus:ring-0 text-xs md:text-sm font-bold flex-1 md:min-w-[200px]"
+             placeholder="Search catalog..."
+             className="bg-transparent border-none focus:ring-0 text-[11px] md:text-sm font-bold flex-1"
+             aria-label="Search releases"
            />
-           <button className="w-10 h-10 md:w-12 md:h-12 bg-slate-950 text-white rounded-[1.2rem] md:rounded-3xl flex items-center justify-center hover:bg-brand-blue transition-colors">
+           <button className="w-10 h-10 md:w-12 md:h-12 bg-slate-950 text-white rounded-xl md:rounded-3xl flex items-center justify-center hover:bg-brand-blue transition-colors shrink-0">
               <Filter className="w-4 h-4 md:w-5 md:h-5" />
            </button>
         </div>
@@ -202,9 +203,9 @@ export default function MyReleases() {
                  className="bg-white p-6 md:p-8 rounded-[2.5rem] md:rounded-[4rem] shadow-sm border border-slate-100 group hover:shadow-3xl transition-all duration-700 relative flex flex-col"
                >
                   {/* Status Indicator */}
-                  <div className="absolute top-4 right-4 md:top-10 md:right-10 z-20">
+                  <div className="absolute top-3 right-3 md:top-10 md:right-10 z-20">
                      <span className={cn(
-                        "px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm backdrop-blur-md",
+                        "px-2 md:px-4 py-1.5 md:py-2 rounded-full text-[7px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm backdrop-blur-md",
                         STATUSES.find(s => s.id === release.status)?.color || "bg-slate-100 text-slate-500"
                      )}>
                         {release.status?.replace("_", " ")}

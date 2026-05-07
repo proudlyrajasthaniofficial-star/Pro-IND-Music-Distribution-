@@ -1,49 +1,50 @@
 import React, { lazy } from 'react';
-import Home from './pages/Home';
-import Features from './pages/Features';
-import Auth from './pages/Auth';
-import Founder from './pages/Founder';
-import SEOLandingPage from './pages/SEOLanding';
-import BlogList from './pages/BlogList';
-import BlogPost from './pages/BlogPost';
-import Success from './pages/checkout/Success';
-import Cancel from './pages/checkout/Cancel';
-import DashboardLayout from './components/DashboardLayout';
-import Overview from './pages/dashboard/Overview';
-import MyReleases from './pages/dashboard/MyReleases';
-import ReleaseDetails from './pages/dashboard/ReleaseDetails';
-import Upload from './pages/dashboard/Upload';
-import Artists from './pages/dashboard/Artists';
-import Labels from './pages/dashboard/Labels';
-import Wallet from './pages/dashboard/Wallet';
-import Profile from './pages/dashboard/Profile';
-import Support from './pages/dashboard/Support';
-import Requests from './pages/dashboard/Requests';
-import OACRequest from './pages/dashboard/OACRequest';
-import ContentID from './pages/dashboard/ContentID';
-import Reports from './pages/dashboard/Reports';
-import GrowthTools from './pages/dashboard/GrowthTools';
-import Subscription from './pages/dashboard/Subscription';
-import Terms from './pages/legal/Terms';
-import Refunds from './pages/legal/Refunds';
-import Contact from './pages/legal/Contact';
-import AdminLayout from './pages/admin/AdminLayout';
-import AdminHome from './pages/admin/AdminHome';
-import AdminReleases from './pages/admin/AdminReleases';
-import AdminReview from './pages/admin/AdminReview';
-import AdminUsers from './pages/admin/AdminUsers';
-import AdminFinance from './pages/admin/AdminFinance';
-import AdminWithdrawals from './pages/admin/AdminWithdrawals';
-import AdminArtists from './pages/admin/AdminArtists';
-import AdminLabels from './pages/admin/AdminLabels';
-import AdminOAC from './pages/admin/AdminOAC';
-import AdminContentID from './pages/admin/AdminContentID';
-import AdminSupport from './pages/admin/AdminSupport';
-import AdminUserRequests from './pages/admin/AdminUserRequests';
-import AdminNotifications from './pages/admin/AdminNotifications';
-import AdminBroadcasts from './pages/admin/AdminBroadcasts';
-import AdminHistory from './pages/admin/AdminHistory';
-import AdminRoyalties from './pages/admin/AdminRoyalties';
+const Home = lazy(() => import('./pages/Home'));
+const Features = lazy(() => import('./pages/Features'));
+const Auth = lazy(() => import('./pages/Auth'));
+const Founder = lazy(() => import('./pages/Founder'));
+const SEOLandingPage = lazy(() => import('./pages/SEOLanding'));
+const BlogList = lazy(() => import('./pages/BlogList'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Success = lazy(() => import('./pages/checkout/Success'));
+const Cancel = lazy(() => import('./pages/checkout/Cancel'));
+const Overview = lazy(() => import('./pages/dashboard/Overview'));
+const MyReleases = lazy(() => import('./pages/dashboard/MyReleases'));
+const ReleaseDetails = lazy(() => import('./pages/dashboard/ReleaseDetails'));
+const Upload = lazy(() => import('./pages/dashboard/Upload'));
+const Artists = lazy(() => import('./pages/dashboard/Artists'));
+const Labels = lazy(() => import('./pages/dashboard/Labels'));
+const Wallet = lazy(() => import('./pages/dashboard/Wallet'));
+const Profile = lazy(() => import('./pages/dashboard/Profile'));
+const Support = lazy(() => import('./pages/dashboard/Support'));
+const Requests = lazy(() => import('./pages/dashboard/Requests'));
+const OACRequest = lazy(() => import('./pages/dashboard/OACRequest'));
+const ContentID = lazy(() => import('./pages/dashboard/ContentID'));
+const Reports = lazy(() => import('./pages/dashboard/Reports'));
+const GrowthTools = lazy(() => import('./pages/dashboard/GrowthTools'));
+const Subscription = lazy(() => import('./pages/dashboard/Subscription'));
+const Terms = lazy(() => import('./pages/legal/Terms'));
+const Privacy = lazy(() => import('./pages/legal/Privacy'));
+const Refunds = lazy(() => import('./pages/legal/Refunds'));
+const Contact = lazy(() => import('./pages/legal/Contact'));
+const Sitemap = lazy(() => import('./pages/Sitemap'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
+const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
+const AdminReleases = lazy(() => import('./pages/admin/AdminReleases'));
+const AdminReview = lazy(() => import('./pages/admin/AdminReview'));
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminFinance = lazy(() => import('./pages/admin/AdminFinance'));
+const AdminWithdrawals = lazy(() => import('./pages/admin/AdminWithdrawals'));
+const AdminArtists = lazy(() => import('./pages/admin/AdminArtists'));
+const AdminLabels = lazy(() => import('./pages/admin/AdminLabels'));
+const AdminOAC = lazy(() => import('./pages/admin/AdminOAC'));
+const AdminContentID = lazy(() => import('./pages/admin/AdminContentID'));
+const AdminSupport = lazy(() => import('./pages/admin/AdminSupport'));
+const AdminUserRequests = lazy(() => import('./pages/admin/AdminUserRequests'));
+const AdminNotifications = lazy(() => import('./pages/admin/AdminNotifications'));
+const AdminBroadcasts = lazy(() => import('./pages/admin/AdminBroadcasts'));
+const AdminHistory = lazy(() => import('./pages/admin/AdminHistory'));
+const AdminRoyalties = lazy(() => import('./pages/admin/AdminRoyalties'));
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -51,9 +52,7 @@ import PageLoader from './components/ui/Loading';
 import { Toaster } from 'sonner';
 import CustomCursor from './components/ui/CustomCursor';
 
-// Dashboad Components - moved to imports
-// Legal Pages - moved to imports
-// Admin Pages - moved to imports
+import DashboardLayout from './components/DashboardLayout';
 
 function PrivateRoute({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) {
   const { user, loading, isAdmin } = useAuth();
@@ -112,13 +111,15 @@ function AppContent() {
           <Route path="/music-marketing" element={<Navigate to="/music-marketing-india" replace />} />
           
           <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/refunds" element={<Refunds />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/about" element={<Navigate to="/founder-developer" replace />} />
           <Route path="/pricing" element={<Navigate to="/#pricing" replace />} />
           <Route path="/checkout/success" element={<Success />} />
           <Route path="/checkout/cancel" element={<Cancel />} />
-          <Route path="/privacy-policy" element={<Navigate to="/terms" replace />} />
+          <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
           <Route path="/terms-conditions" element={<Navigate to="/terms" replace />} />
           
           {/* Auth Routes */}

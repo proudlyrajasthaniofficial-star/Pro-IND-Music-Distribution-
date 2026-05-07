@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 // Home Page - IND Music Distribution India
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { Link } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import SEO from "../components/SEO";
 import { 
   Music, 
@@ -28,11 +29,12 @@ import {
 import { cn } from "../lib/utils";
 import { LoadingSpinner } from "../components/ui/Loading";
 import { useAuth } from "../context/AuthContext";
-import IndianFeatures from "../components/IndianFeatures";
-import PricingSection from "../components/PricingSection";
-import GalaxyBackground from "../components/GalaxyBackground";
-import PublicFooter from "../components/PublicFooter";
 import NeuralGrid from "../components/ui/NeuralGrid";
+
+const IndianFeatures = lazy(() => import("../components/IndianFeatures"));
+const PricingSection = lazy(() => import("../components/PricingSection"));
+const GalaxyBackground = lazy(() => import("../components/GalaxyBackground"));
+const PublicFooter = lazy(() => import("../components/PublicFooter"));
 
 const PLATFORMS = [
   { name: "Spotify", gradient: "from-[#1DB954] to-[#1ed760]" },
@@ -92,7 +94,12 @@ export default function Home() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-4 md:px-6 py-4 flex items-center justify-between bg-[#0a0a0b]/80 backdrop-blur-2xl border-b border-white/5 mt-0 mx-auto max-w-full left-0 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+      <nav 
+        role="navigation"
+        aria-label="Main Navigation"
+        className="fixed top-0 w-full z-50 px-4 md:px-6 py-4 flex items-center justify-between bg-[#0a0a0b]/80 backdrop-blur-2xl border-b border-white/5 mt-0 mx-auto max-w-full left-0 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+        style={{ WebkitBackdropFilter: 'blur(40px)', backdropFilter: 'blur(40px)' }}
+      >
         <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
           <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-brand-blue to-indigo-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all">
             <Music className="text-white w-5 h-5 md:w-6 md:h-6" />
@@ -129,6 +136,8 @@ export default function Home() {
           {/* Mobile Menu Button */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -142,7 +151,8 @@ export default function Home() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-2xl border-b border-white/5 py-8 px-6 flex flex-col gap-6 md:hidden text-center"
+              className="fixed top-[72px] left-0 w-full min-h-[calc(100vh-72px)] bg-slate-950/98 backdrop-blur-3xl border-b border-white/5 py-12 px-6 flex flex-col gap-8 md:hidden text-center z-[60] overflow-y-auto"
+              style={{ WebkitBackdropFilter: 'blur(40px)', backdropFilter: 'blur(40px)' }}
             >
               {navLinks.map((link) => (
                 link.to ? (
@@ -242,7 +252,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="block text-white mb-2 md:mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                className="block text-white mb-2 md:mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] break-words lg:break-normal"
               >
                 INDIAN ARTISTS
               </motion.span>
@@ -250,7 +260,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4, duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-2 md:py-4 block"
+                className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-2 md:py-4 block break-words lg:break-normal"
               >
                 KA ASLI BHAROSA
               </motion.span>
@@ -342,6 +352,8 @@ export default function Home() {
                     <img 
                       src={platform.url} 
                       alt={platform.name} 
+                      loading="lazy"
+                      decoding="async"
                       className="h-10 md:h-12 lg:h-14 w-auto max-w-[100px] md:max-w-[140px] object-contain transition-all duration-500 rounded relative z-10" 
                       referrerPolicy="no-referrer"
                     />
@@ -355,7 +367,9 @@ export default function Home() {
 
       {/* Indian Power Features Section */}
       <div className="bg-[#020617]">
-        <IndianFeatures />
+        <Suspense fallback={<div className="h-96 flex items-center justify-center"><LoadingSpinner /></div>}>
+          <IndianFeatures />
+        </Suspense>
       </div>
 
       {/* Features - Bento Grid */}
@@ -507,7 +521,9 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <PricingSection />
+      <Suspense fallback={<div className="h-96 flex items-center justify-center"><LoadingSpinner /></div>}>
+        <PricingSection />
+      </Suspense>
 
       {/* Contact Section */}
       <section id="contact" className="py-32 px-6 relative overflow-hidden bg-[#020617]">
@@ -594,8 +610,9 @@ export default function Home() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Full Name</label>
+                       <label htmlFor="full-name" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Full Name</label>
                       <input 
+                        id="full-name"
                         required
                         type="text" 
                         placeholder="John Doe" 
@@ -603,8 +620,9 @@ export default function Home() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Email Address</label>
+                      <label htmlFor="email-address" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Email Address</label>
                       <input 
+                        id="email-address"
                         required
                         type="email" 
                         placeholder="john@example.com" 
@@ -613,9 +631,9 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Subject Domain</label>
+                      <label htmlFor="subject-domain" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Subject Domain</label>
                      <div className="relative">
-                        <select className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-brand-blue/50 focus:bg-white/10 outline-none transition-all font-medium text-slate-300 appearance-none">
+                        <select id="subject-domain" className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:border-brand-blue/50 focus:bg-white/10 outline-none transition-all font-medium text-slate-300 appearance-none">
                           <option className="bg-slate-900">Account Support</option>
                           <option className="bg-slate-900">Distribution Query</option>
                           <option className="bg-slate-900">Royalties & Payments</option>
@@ -625,8 +643,9 @@ export default function Home() {
                      </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Vocalize Message</label>
+                    <label htmlFor="message" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2 italic">Vocalize Message</label>
                     <textarea 
+                      id="message"
                       required
                       rows={4} 
                       placeholder="How can we help you?" 
@@ -654,7 +673,9 @@ export default function Home() {
         </div>
       </section>
 
-      <PublicFooter />
+      <Suspense fallback={<div className="h-20 bg-[#020617]" />}>
+        <PublicFooter />
+      </Suspense>
     </div>
   );
 }

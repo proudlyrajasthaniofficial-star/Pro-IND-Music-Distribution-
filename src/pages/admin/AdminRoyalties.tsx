@@ -293,11 +293,11 @@ export default function AdminRoyalties() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
         {/* User Sidebar / Selection */}
         <div className="lg:col-span-4 space-y-6">
-           <div className="bg-[#1E293B] border border-white/5 rounded-[2.5rem] p-8 space-y-6">
-              <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
+           <div className="bg-[#1E293B] border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 space-y-6">
+              <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
                  <Users className="text-brand-blue w-5 h-5" /> Artist Registry
               </h3>
               
@@ -307,11 +307,11 @@ export default function AdminRoyalties() {
                    placeholder="SEARCH CID / EMAIL..."
                    value={searchQuery}
                    onChange={e => setSearchQuery(e.target.value)}
-                   className="w-full bg-slate-900/50 border border-white/5 pl-14 pr-6 py-5 rounded-2xl text-[10px] font-black text-white focus:border-brand-blue transition-all outline-none"
+                   className="w-full bg-slate-900/50 border border-white/5 pl-14 pr-6 py-4 md:py-5 rounded-2xl text-[10px] font-black text-white focus:border-brand-blue transition-all outline-none"
                  />
               </div>
 
-              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-3 max-h-[400px] lg:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {filteredUsers.map(user => (
                   <div key={user.id} className="p-5 bg-slate-900/50 rounded-2xl border border-white/5 hover:border-brand-blue/30 transition-all group">
                      <div className="flex items-center justify-between gap-4">
@@ -403,40 +403,40 @@ export default function AdminRoyalties() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-4xl bg-[#1E293B] border border-white/5 rounded-[3rem] p-10 md:p-16 shadow-3xl overflow-hidden"
+              className="relative w-full max-w-4xl bg-[#1E293B] border border-white/5 rounded-[2rem] md:rounded-[3rem] p-6 sm:p-10 md:p-16 shadow-3xl overflow-y-auto max-h-[90vh] custom-scrollbar"
             >
               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/10 blur-[150px] -mr-48 -mt-48" />
               
-              <div className="relative space-y-10">
+              <div className="relative space-y-6 md:space-y-10">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Upload <span className="text-emerald-500">Royalty Report</span></h2>
-                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-2">Deploying credits to: {reportForm.targetUserName}</p>
+                  <div className="text-left">
+                    <h2 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter">Upload <span className="text-emerald-500">Royalty Report</span></h2>
+                    <p className="text-slate-500 text-[8px] md:text-[10px] font-black uppercase tracking-widest mt-2 truncate max-w-[200px] sm:max-w-none">Artist: {reportForm.targetUserName}</p>
                   </div>
-                  <button onClick={() => setUploadModalOpen(false)} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-white/10 transition-colors">
-                     <AlertCircle className="w-6 h-6 text-slate-500" />
+                  <button onClick={() => setUploadModalOpen(false)} className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/5 rounded-xl md:rounded-2xl hover:bg-white/10 transition-colors shrink-0 outline-none">
+                     <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-slate-500" />
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Fiscal Month</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                  <div className="space-y-3 md:space-y-4 text-left">
+                    <label className="text-[9px] md:text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Fiscal Month</label>
                     <select 
                       value={reportForm.month}
                       onChange={e => setReportForm({...reportForm, month: e.target.value})}
-                      className="w-full bg-slate-900 border border-white/5 p-6 rounded-2xl text-sm font-bold text-white focus:border-brand-blue outline-none"
+                      className="w-full bg-slate-900 border border-white/5 p-4 md:p-6 rounded-2xl text-xs md:text-sm font-bold text-white focus:border-brand-blue outline-none"
                     >
                       {["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map(m => (
                         <option key={m} value={m}>{m}</option>
                       ))}
                     </select>
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Fiscal Year</label>
+                  <div className="space-y-3 md:space-y-4 text-left">
+                    <label className="text-[9px] md:text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Fiscal Year</label>
                     <select 
                       value={reportForm.year}
                       onChange={e => setReportForm({...reportForm, year: e.target.value})}
-                      className="w-full bg-slate-900 border border-white/5 p-6 rounded-2xl text-sm font-bold text-white focus:border-brand-blue outline-none"
+                      className="w-full bg-slate-900 border border-white/5 p-4 md:p-6 rounded-2xl text-xs md:text-sm font-bold text-white focus:border-brand-blue outline-none"
                     >
                       {["2024", "2025", "2026", "2027"].map(y => (
                         <option key={y} value={y}>{y}</option>
@@ -445,23 +445,23 @@ export default function AdminRoyalties() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase text-brand-blue tracking-widest ml-4">Total Royalty Amount (INR)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                  <div className="space-y-3 md:space-y-4 text-left">
+                    <label className="text-[9px] md:text-[10px] font-black uppercase text-brand-blue tracking-widest ml-4">Royalty Amount (INR)</label>
                     <input 
                       type="number"
                       placeholder="₹ 0.00"
                       value={reportForm.totalAmount}
                       onChange={e => setReportForm({...reportForm, totalAmount: e.target.value})}
-                      className="w-full bg-slate-900 border border-white/5 p-6 rounded-2xl text-2xl font-black text-emerald-400 focus:border-emerald-500 outline-none placeholder:text-slate-800"
+                      className="w-full bg-slate-900 border border-white/5 p-4 md:p-6 rounded-2xl text-lg md:text-2xl font-black text-emerald-400 focus:border-emerald-500 outline-none placeholder:text-slate-800"
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Source Platform</label>
+                  <div className="space-y-3 md:space-y-4 text-left">
+                    <label className="text-[9px] md:text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Source Platform</label>
                     <select 
                       value={reportForm.source}
                       onChange={e => setReportForm({...reportForm, source: e.target.value})}
-                      className="w-full bg-slate-900 border border-white/5 p-6 rounded-2xl text-sm font-bold text-white focus:border-brand-blue outline-none"
+                      className="w-full bg-slate-900 border border-white/5 p-4 md:p-6 rounded-2xl text-xs md:text-sm font-bold text-white focus:border-brand-blue outline-none"
                     >
                       <option>All Stores</option>
                       <option>Spotify</option>
@@ -472,14 +472,14 @@ export default function AdminRoyalties() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Official Document Source</label>
+                <div className="space-y-3 md:space-y-4 text-left">
+                  <label className="text-[9px] md:text-[10px] font-black uppercase text-slate-500 tracking-widest ml-4">Official Document Source</label>
                   {!reportForm.fileName ? (
-                    <label className="group relative flex flex-col items-center justify-center w-full h-48 bg-slate-900/50 border-2 border-dashed border-white/5 rounded-[2.5rem] hover:border-brand-blue/50 transition-all cursor-pointer overflow-hidden">
+                    <label className="group relative flex flex-col items-center justify-center w-full h-32 md:h-48 bg-slate-900/50 border-2 border-dashed border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] hover:border-brand-blue/50 transition-all cursor-pointer overflow-hidden">
                        <div className="absolute inset-0 bg-brand-blue/0 group-hover:bg-brand-blue/5 transition-colors" />
-                       <Upload className="w-10 h-10 text-slate-700 group-hover:text-brand-blue group-hover:scale-110 transition-all mb-4" />
-                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Drop or Click to Stage Document</p>
-                       <p className="text-[9px] font-bold text-slate-700 mt-2">XML, CSV, PDF, XLSX accepted</p>
+                       <Upload className="w-8 h-8 md:w-10 md:h-10 text-slate-700 group-hover:text-brand-blue group-hover:scale-110 transition-all mb-2 md:mb-4" />
+                       <p className="text-[8px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">Stage Document</p>
+                       <p className="text-[7px] md:text-[9px] font-bold text-slate-700 mt-1 uppercase">XML, CSV, PDF, XLSX</p>
                        <input 
                          type="file" 
                          className="hidden" 
@@ -488,19 +488,19 @@ export default function AdminRoyalties() {
                        />
                     </label>
                   ) : (
-                    <div className="bg-slate-900 border border-emerald-500/30 p-8 rounded-[2.5rem] flex items-center justify-between group">
-                       <div className="flex items-center gap-6">
-                          <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
-                             <FileText className="text-emerald-500 w-6 h-6" />
+                    <div className="bg-slate-900 border border-emerald-500/30 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex items-center justify-between group">
+                       <div className="flex items-center gap-4 md:gap-6 min-w-0">
+                          <div className="w-10 h-10 md:w-14 md:h-14 bg-emerald-500/10 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0">
+                             <FileText className="text-emerald-500 w-5 h-5 md:w-6 md:h-6" />
                           </div>
-                          <div>
-                             <p className="text-xs font-black text-white truncate max-w-[200px]">{reportForm.fileName}</p>
-                             <p className="text-[9px] font-bold text-emerald-500/50 uppercase tracking-widest">{reportForm.fileType || "Application Data"}</p>
+                          <div className="min-w-0">
+                             <p className="text-[10px] md:text-xs font-black text-white truncate max-w-[150px] md:max-w-[200px]">{reportForm.fileName}</p>
+                             <p className="text-[8px] md:text-[9px] font-bold text-emerald-500/50 uppercase tracking-widest truncate">{reportForm.fileType || "Application Data"}</p>
                           </div>
                        </div>
                        <button 
                          onClick={() => setReportForm(prev => ({ ...prev, fileName: "", fileData: null, csvData: "" }))}
-                         className="p-3 bg-white/5 text-slate-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all"
+                         className="p-2 md:p-3 bg-white/5 text-slate-500 rounded-lg md:rounded-xl hover:bg-rose-500 hover:text-white transition-all shrink-0"
                        >
                           <AlertCircle className="w-4 h-4" />
                        </button>
@@ -511,10 +511,10 @@ export default function AdminRoyalties() {
                 <button 
                   disabled={processing}
                   onClick={handleProcessCSV}
-                  className="w-full py-6 bg-brand-blue text-white rounded-2xl font-black text-[12px] uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
+                  className="w-full py-4 md:py-6 bg-brand-blue text-white rounded-xl md:rounded-2xl font-black text-[10px] md:text-[12px] uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3"
                 >
                   {processing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                  {processing ? "Synchronizing Ledger..." : "DEPLOY ROYALTIES & UPDATE WALLET"}
+                  {processing ? "Syncing..." : "DEPLOY ROYALTIES"}
                 </button>
               </div>
             </motion.div>

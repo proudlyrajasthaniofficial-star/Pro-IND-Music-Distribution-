@@ -266,14 +266,14 @@ export default function WalletPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D1117] text-white p-6 md:p-12 space-y-12 pb-32 font-sans">
-      <header className="space-y-2">
-        <div className="flex items-center gap-3 text-cyan-400">
+    <div className="min-h-screen bg-[#0D1117] text-white p-4 md:p-12 space-y-8 md:space-y-12 pb-32 font-sans overflow-x-hidden">
+      <header className="space-y-4 text-center md:text-left">
+        <div className="flex items-center justify-center md:justify-start gap-3 text-cyan-400">
           <Wallet className="w-6 h-6" />
-          <span className="text-xs font-black uppercase tracking-[0.3em]">Treasury Ops</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Treasury Ops</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter">IND <span className="text-cyan-400">WALLET</span></h1>
-        <p className="text-slate-500 max-w-xl font-medium">Manage your global music royalties, track platform earnings, and process payouts securely.</p>
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase break-words">IND <span className="text-cyan-400">WALLET</span></h1>
+        <p className="text-slate-500 max-w-xl font-medium mx-auto md:mx-0">Manage your global music royalties, track platform earnings, and process payouts securely.</p>
       </header>
 
       {/* Summary Section */}
@@ -292,7 +292,8 @@ export default function WalletPage() {
           <motion.div 
             variants={itemVariants}
             key={i} 
-            className="bg-[#161B22]/60 backdrop-blur-md border border-white/5 rounded-3xl p-8 relative overflow-hidden group hover:border-white/10 transition-colors shadow-2xl"
+            className="bg-[#161B22]/60 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 relative overflow-hidden group hover:border-white/10 transition-colors shadow-2xl"
+            style={{ WebkitBackdropFilter: 'blur(12px)' }}
           >
             <div className="relative z-10 space-y-4">
               <div className="flex items-center justify-between">
@@ -304,8 +305,8 @@ export default function WalletPage() {
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{stat.label}</p>
                 <h3 className={cn(
-                  "text-3xl font-black tracking-tight",
-                  stat.label === "Pending Vault" && stat.value > 0 ? "text-yellow-400" : "text-white"
+                   "text-2xl md:text-3xl font-black tracking-tight",
+                   stat.label === "Pending Vault" && stat.value > 0 ? "text-yellow-400" : "text-white"
                 )}>{formatCurrency(stat.value)}</h3>
               </div>
             </div>
@@ -319,12 +320,12 @@ export default function WalletPage() {
         {/* Left Column: Chart & Form */}
         <div className="lg:col-span-2 space-y-12">
           {/* Earnings Analytics */}
-          <section className="bg-[#161B22]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-3xl">
+          <section className="bg-[#161B22]/80 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-6 md:p-12 space-y-6 md:space-y-8 shadow-3xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <h2 className="text-2xl font-black uppercase tracking-tight flex items-center gap-3">
-                <TrendingUp className="text-cyan-400" /> Revenue Stream
+              <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight flex items-center gap-3">
+                <TrendingUp className="text-cyan-400 w-5 h-5 md:w-6 md:h-6" /> Revenue Stream
               </h2>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3 md:gap-4">
                 {platformData.map((p) => (
                    <div key={p.name} className="flex items-center gap-2">
                       <div className={cn(
@@ -376,23 +377,23 @@ export default function WalletPage() {
           </section>
 
           {/* Transaction History Overhaul */}
-          <section className="space-y-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/5 pb-8">
-              <h2 className="text-3xl font-black uppercase tracking-tighter">Ledger <span className="text-slate-600">Sync</span></h2>
-              <div className="flex gap-4">
+          <section className="space-y-6 md:space-y-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/5 pb-6 md:pb-8">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter">Ledger <span className="text-slate-600">Sync</span></h2>
+              <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                 <button 
                   onClick={exportCSV}
-                  className="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white text-white hover:text-black transition-all"
+                  className="w-full sm:w-auto px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white text-white hover:text-black transition-all"
                 >
                   Export CSV
                 </button>
-                <div className="flex bg-[#161B22] p-1 rounded-2xl border border-white/5">
+                <div className="flex bg-[#161B22] p-1 rounded-2xl border border-white/5 w-full sm:w-auto overflow-x-auto scrollbar-hide">
                   {(['all', 'earning', 'withdrawal'] as const).map(f => (
                     <button 
                       key={f}
                       onClick={() => setFilter(f)}
                       className={cn(
-                        "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                        "flex-1 sm:flex-none px-4 md:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
                         filter === f ? "bg-cyan-500 text-black shadow-lg shadow-cyan-900/40" : "text-slate-500 hover:text-white"
                       )}
                     >
@@ -410,30 +411,30 @@ export default function WalletPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   key={tx.id} 
-                  className="bg-[#161B22]/40 border border-white/5 p-6 rounded-3xl flex items-center justify-between group hover:bg-[#161B22] transition-all"
+                  className="bg-[#161B22]/40 border border-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] flex flex-row items-center justify-between gap-4 group hover:bg-[#161B22] transition-all"
                 >
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-3 md:gap-6 min-w-0">
                     <div className={cn(
-                      "w-12 h-12 rounded-2xl flex items-center justify-center",
+                      "w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0",
                       tx.type === 'earning' ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
                     )}>
-                      {tx.type === 'earning' ? <TrendingUp className="w-6 h-6" /> : <ArrowRight className={cn("w-6 h-6", tx.type === 'withdrawal' && "rotate-45")} />}
+                      {tx.type === 'earning' ? <TrendingUp className="w-5 h-5 md:w-6 md:h-6" /> : <ArrowRight className={cn("w-5 h-5 md:w-6 md:h-6", tx.type === 'withdrawal' && "rotate-45")} />}
                     </div>
-                    <div>
-                      <p className="text-sm font-black tracking-tight group-hover:text-cyan-400 transition-colors uppercase">{tx.notes || tx.description || 'System Entry'}</p>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+                    <div className="min-w-0">
+                      <p className="text-xs md:text-sm font-black tracking-tight group-hover:text-cyan-400 transition-colors uppercase truncate">{tx.notes || tx.description || 'System Entry'}</p>
+                      <p className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 truncate">
                         {tx.period || `${tx.month || ''} ${tx.year || ''}`} • {formatDate(tx.createdAt)}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <p className={cn(
-                      "text-lg font-black font-display",
+                      "text-sm md:text-lg font-black font-display",
                       tx.type === 'earning' || tx.type === 'add' ? "text-emerald-400" : "text-rose-400"
                     )}>
                       {tx.type === 'earning' || tx.type === 'add' ? "+" : "-"}{formatCurrency(tx.amount)}
                     </p>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-600 block mt-1">SECURED</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-600 hidden sm:block mt-1">SECURED</span>
                   </div>
                 </motion.div>
               ))}
@@ -511,52 +512,53 @@ export default function WalletPage() {
         </div>
       </div>
 
-      {/* Withdrawal Overlay Form */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0D1117]/95 backdrop-blur-2xl z-[100] flex items-center justify-center p-6 overflow-y-auto"
-          >
-            <motion.div 
-              initial={{ y: 50, opacity: 0, scale: 0.9 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 50, opacity: 0, scale: 0.9 }}
-              className="bg-[#161B22] w-full max-w-2xl rounded-[3rem] p-8 md:p-14 border border-white/10 relative shadow-3xl"
-            >
-              <button 
-                onClick={() => setShowForm(false)}
-                className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors"
+          {/* Withdrawal Overlay Form */}
+          <AnimatePresence>
+            {showForm && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-[#0D1117]/95 backdrop-blur-2xl z-[100] flex items-center justify-center p-4 md:p-6 overflow-y-auto"
+                style={{ WebkitBackdropFilter: 'blur(40px)' }}
               >
-                <Plus className="w-8 h-8 rotate-45" />
-              </button>
-
-              <div className="space-y-12">
-                <header className="space-y-4">
-                  <div className="w-20 h-20 bg-cyan-500 rounded-[2rem] flex items-center justify-center text-black shadow-2xl shadow-cyan-500/20">
-                    <ArrowUpRight className="w-10 h-10" />
-                  </div>
-                  <h2 className="text-3xl font-black uppercase tracking-tight">VAULT DISBURSEMENT</h2>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Authorized Protocol IND-FIN-001</p>
-                </header>
-
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Withdrawal Volume (INR)</label>
-                    <div className="relative">
-                      <span className="absolute left-8 top-1/2 -translate-y-1/2 text-4xl font-black text-cyan-400/30 font-display">₹</span>
-                      <input 
-                        required
-                        type="number"
-                        min="500"
-                        value={amount}
-                        onChange={e => setAmount(e.target.value)}
-                        className="w-full bg-[#0D1117] border border-white/5 rounded-[2rem] py-8 pl-16 pr-8 text-5xl font-black font-display text-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all placeholder:text-white/5"
-                        placeholder="0.00"
-                      />
-                    </div>
+                <motion.div 
+                  initial={{ y: 50, opacity: 0, scale: 0.9 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: 50, opacity: 0, scale: 0.9 }}
+                  className="bg-[#161B22] w-full max-w-2xl rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-14 border border-white/10 relative shadow-3xl"
+                >
+                  <button 
+                    onClick={() => setShowForm(false)}
+                    className="absolute top-6 right-6 md:top-8 md:right-8 text-slate-500 hover:text-white transition-colors p-2"
+                  >
+                    <Plus className="w-6 h-6 md:w-8 md:h-8 rotate-45" />
+                  </button>
+    
+                  <div className="space-y-8 md:space-y-12">
+                    <header className="space-y-3">
+                      <div className="w-16 h-16 md:w-20 md:h-20 bg-cyan-500 rounded-2xl md:rounded-[2rem] flex items-center justify-center text-black shadow-2xl shadow-cyan-500/20">
+                        <ArrowUpRight className="w-8 h-8 md:w-10 md:h-10" />
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">VAULT DISBURSEMENT</h2>
+                      <p className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Authorized Protocol IND-FIN-001</p>
+                    </header>
+    
+                    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Withdrawal Volume (INR)</label>
+                        <div className="relative">
+                          <span className="absolute left-6 md:left-8 top-1/2 -translate-y-1/2 text-2xl md:text-4xl font-black text-cyan-400/30 font-display">₹</span>
+                          <input 
+                            required
+                            type="number"
+                            min="500"
+                            value={amount}
+                            onChange={e => setAmount(e.target.value)}
+                            className="w-full bg-[#0D1117] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] py-6 md:py-8 pl-12 md:pl-16 pr-6 md:pr-8 text-3xl md:text-5xl font-black font-display text-cyan-500 focus:ring-4 focus:ring-cyan-500/10 outline-none transition-all placeholder:text-white/5"
+                            placeholder="0.00"
+                          />
+                        </div>
                     <div className="flex justify-between px-6 pt-2">
                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Available Balance: {formatCurrency(profile?.walletBalance || 0)}</p>
                        <button 
@@ -564,7 +566,7 @@ export default function WalletPage() {
                         onClick={() => setAmount(Math.floor(profile?.walletBalance || 0).toString())}
                         className="text-[10px] font-black text-cyan-400 uppercase tracking-widest hover:underline"
                        >
-                        MAX IMUM
+                        MAXIMUM
                        </button>
                     </div>
                   </div>
@@ -597,18 +599,36 @@ export default function WalletPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-6">
-                     {method === "BANK" ? (
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <input required placeholder="BANK NAME" className="bg-[#0D1117] border-white/5 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none text-white w-full uppercase" value={bankDetails.bankName} onChange={e => setBankDetails({...bankDetails, bankName: e.target.value})} />
-                          <input required placeholder="ACCOUNT HOLDER NAME" className="bg-[#0D1117] border-white/5 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none text-white w-full uppercase" value={bankDetails.accountHolder} onChange={e => setBankDetails({...bankDetails, accountHolder: e.target.value})} />
-                          <input required placeholder="ACCOUNT NUMBER" className="bg-[#0D1117] border-white/5 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none text-white w-full uppercase" value={bankDetails.accountNumber} onChange={e => setBankDetails({...bankDetails, accountNumber: e.target.value})} />
-                          <input required placeholder="CONFIRM ACCOUNT NUMBER" className="bg-[#0D1117] border-white/5 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none text-white w-full uppercase" value={bankDetails.confirmAccountNumber} onChange={e => setBankDetails({...bankDetails, confirmAccountNumber: e.target.value})} />
-                          <input required placeholder="IFSC CODE" className="bg-[#0D1117] border-white/5 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none text-white w-full uppercase" value={bankDetails.ifscCode.toUpperCase()} onChange={e => setBankDetails({...bankDetails, ifscCode: e.target.value})} />
-                       </div>
-                     ) : (
-                       <input required placeholder="ENTER UPI ID (e.g., example@upi)" className="bg-[#0D1117] border-white/5 p-6 rounded-2xl text-xl font-black tracking-tight outline-none text-cyan-400 w-full text-center" value={upiId} onChange={e => setUpiId(e.target.value)} />
-                     )}
+                  <div className="space-y-4 md:space-y-6">
+                    {method === "BANK" ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-slate-500 uppercase ml-2">Bank Name</label>
+                          <input required placeholder="E.G. HDFC BANK" className="bg-[#0D1117] border border-white/5 px-5 py-4 rounded-2xl text-[11px] font-black tracking-widest outline-none text-white w-full uppercase focus:border-cyan-500/50 transition-colors" value={bankDetails.bankName} onChange={e => setBankDetails({...bankDetails, bankName: e.target.value})} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-slate-500 uppercase ml-2">Holder Name</label>
+                          <input required placeholder="NAME ON ACCOUNT" className="bg-[#0D1117] border border-white/5 px-5 py-4 rounded-2xl text-[11px] font-black tracking-widest outline-none text-white w-full uppercase focus:border-cyan-500/50 transition-colors" value={bankDetails.accountHolder} onChange={e => setBankDetails({...bankDetails, accountHolder: e.target.value})} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-slate-500 uppercase ml-2">Account Number</label>
+                          <input required placeholder="1234567890" className="bg-[#0D1117] border border-white/5 px-5 py-4 rounded-2xl text-[11px] font-black tracking-widest outline-none text-white w-full uppercase focus:border-cyan-500/50 transition-colors" value={bankDetails.accountNumber} onChange={e => setBankDetails({...bankDetails, accountNumber: e.target.value})} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-slate-500 uppercase ml-2">Confirm Number</label>
+                          <input required placeholder="RE-ENTER NUMBER" className="bg-[#0D1117] border border-white/5 px-5 py-4 rounded-2xl text-[11px] font-black tracking-widest outline-none text-white w-full uppercase focus:border-cyan-500/50 transition-colors" value={bankDetails.confirmAccountNumber} onChange={e => setBankDetails({...bankDetails, confirmAccountNumber: e.target.value})} />
+                        </div>
+                        <div className="space-y-1.5 sm:col-span-2">
+                          <label className="text-[9px] font-black text-slate-500 uppercase ml-2">IFSC Code</label>
+                          <input required placeholder="HDFC0001234" className="bg-[#0D1117] border border-white/5 px-5 py-4 rounded-2xl text-[11px] font-black tracking-widest outline-none text-white w-full uppercase focus:border-cyan-500/50 transition-colors" value={bankDetails.ifscCode.toUpperCase()} onChange={e => setBankDetails({...bankDetails, ifscCode: e.target.value})} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <label className="text-center block text-[10px] font-black text-slate-500 uppercase tracking-widest">Virtual Payment Address</label>
+                        <input required placeholder="ENTER UPI ID (e.g., example@upi)" className="bg-[#0D1117] border border-white/5 p-6 rounded-2xl text-lg md:text-xl font-black tracking-tight outline-none text-cyan-400 w-full text-center focus:border-cyan-500/50 transition-colors" value={upiId} onChange={e => setUpiId(e.target.value)} />
+                      </div>
+                    )}
                   </div>
 
                   <button 

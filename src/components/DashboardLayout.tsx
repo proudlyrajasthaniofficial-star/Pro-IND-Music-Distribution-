@@ -127,7 +127,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans">
+    <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans relative">
       <SEO title="Artist Dashboard" description="Manage your music distribution, assets, and royalties with IND Distribution." />
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
@@ -137,20 +137,21 @@ export default function DashboardLayout() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-40 lg:hidden"
+            style={{ WebkitBackdropFilter: 'blur(4px)' }}
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-100 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] lg:relative transform",
+        "fixed inset-y-0 left-0 z-50 w-[280px] sm:w-[320px] bg-white border-r border-slate-100 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] lg:relative transform",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        <div className="h-full flex flex-col p-8 bg-white relative">
+        <div className="h-full flex flex-col p-6 md:p-8 bg-white relative">
           {/* Logo Section */}
-          <div className="flex items-center justify-between mb-12">
-            <Link to="/dashboard" className="flex items-center gap-4 group">
+          <div className="flex items-center justify-between mb-8 md:mb-12">
+            <Link to="/dashboard" className="flex items-center gap-3 md:gap-4 group">
               <div className="w-12 h-12 bg-slate-950 rounded-[1.25rem] flex items-center justify-center rotate-6 group-hover:rotate-0 transition-all duration-700 shadow-2xl shadow-slate-950/20 relative overflow-hidden">
                 <div className="absolute inset-0 bg-brand-blue/20 animate-pulse"></div>
                 <Zap className="text-white w-6 h-6 fill-brand-blue stroke-brand-blue relative z-10" />
@@ -173,7 +174,7 @@ export default function DashboardLayout() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1.5 overflow-y-auto pr-4 -mr-4 custom-scrollbar">
+          <nav className="flex-1 space-y-1 overflow-y-auto pr-4 -mr-4 custom-scrollbar pb-12">
             {NAV_ITEMS.map((item, index) => {
               const isActive = location.pathname === item.path;
               return (
@@ -186,7 +187,7 @@ export default function DashboardLayout() {
                   <Link 
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-4 px-6 py-4 rounded-[1.5rem] transition-all duration-700 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden",
+                      "flex items-center gap-4 px-6 py-4.5 rounded-[1.5rem] transition-all duration-700 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden min-h-[56px]",
                       isActive 
                         ? "bg-slate-950 text-white shadow-premium-dark active-nav" 
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -281,56 +282,27 @@ export default function DashboardLayout() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 h-full relative">
         <NeuralGrid />
-        {/* System Status Ticker */}
-        <div className="bg-slate-950 text-white h-8 flex items-center overflow-hidden border-b border-white/5 relative z-30">
-          <div className="flex items-center gap-4 px-4 bg-brand-blue h-full font-black text-[8px] uppercase tracking-[0.2em] relative z-10">
-            <Activity className="w-3 h-3" /> System Status
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <motion.div 
-              animate={{ x: [0, -1000] }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              className="flex items-center gap-12 whitespace-nowrap text-[9px] font-bold text-slate-500 uppercase tracking-widest pl-6"
-            >
-              {[
-                "• All systems operational // Fast distribution active",
-                "• Spotify data refreshing: Analytics updating",
-                "• Apple Music Trending: Metadata sync complete",
-                "• Distribution network online",
-                "• All systems running smoothly",
-                "• Payment Gateway [Razorpay/Stripe] Online"
-              ].map((msg, i) => <span key={i}>{msg}</span>)}
-              {/* Duplicate for seamless loop */}
-              {[
-                "• All systems operational // Fast distribution active",
-                "• Spotify data refreshing: Analytics updating",
-                "• Apple Music Trending: Metadata sync complete",
-                "• Distribution network online",
-                "• All systems running smoothly",
-                "• Payment Gateway [Razorpay/Stripe] Online"
-              ].map((msg, i) => <span key={i + 10}>{msg}</span>)}
-            </motion.div>
-          </div>
-        </div>
-
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-brand-blue/5 blur-[150px] -translate-y-1/2 translate-x-1/2 rounded-full pointer-events-none"></div>
 
-      <header className="h-16 lg:h-24 flex items-center justify-between px-3 md:px-8 lg:px-12 relative z-20 backdrop-blur-sm border-b border-slate-100/50">
-        <div className="flex items-center gap-2 lg:gap-8 flex-1">
+      <header className="h-20 lg:h-24 flex items-center justify-between px-4 md:px-8 lg:px-12 relative z-20 backdrop-blur-lg border-b border-slate-100/50 flex-shrink-0" style={{ WebkitBackdropFilter: 'blur(20px)', backdropFilter: 'blur(20px)' }}>
+        <div className="flex items-center gap-3 lg:gap-8 flex-1 min-w-0">
           <button 
+            autoFocus
+            aria-label="Toggle Sidebar"
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 lg:p-4 bg-white rounded-xl shadow-premium border border-slate-50 text-slate-400 transition-all hover:text-slate-900 group lg:hidden"
+            className="p-3 bg-white rounded-xl shadow-premium border border-slate-50 text-slate-500 transition-all hover:text-slate-900 group lg:hidden shrink-0 min-w-[48px] min-h-[48px] flex items-center justify-center"
           >
-            <Menu className="w-5 h-5 transition-transform group-active:scale-95" />
+            <Menu className="w-6 h-6 transition-transform group-active:scale-95" />
           </button>
           
           <div className="flex-1 max-w-sm lg:w-[28rem] xl:w-[32rem]">
-            <div className="flex items-center bg-slate-50/50 backdrop-blur-md p-1.5 lg:p-3 px-3 lg:px-6 rounded-xl lg:rounded-[2rem] border border-slate-100 gap-2 lg:gap-4 transition-all focus-within:ring-2 focus-within:ring-brand-blue/20">
-              <Search className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+            <div className="flex items-center bg-slate-50/50 backdrop-blur-md p-2 lg:p-3 px-3 lg:px-6 rounded-xl lg:rounded-[2rem] border border-slate-100 gap-2 lg:gap-4 transition-all focus-within:ring-2 focus-within:ring-brand-blue/20" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+              <Search className="w-4 h-4 text-slate-300 shrink-0" />
               <input 
                 placeholder="Search..."
-                className="bg-transparent border-none focus:ring-0 text-[9px] md:text-[10px] font-black uppercase tracking-widest w-full placeholder:text-slate-300 py-1"
+                className="bg-transparent border-none focus:ring-0 text-[10px] md:text-[11px] font-black uppercase tracking-widest w-full placeholder:text-slate-300 py-1"
+                aria-label="Search releases"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     navigate(`/dashboard/releases?q=${(e.target as HTMLInputElement).value}`);
@@ -341,7 +313,7 @@ export default function DashboardLayout() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-6 ml-2 md:ml-4">
+        <div className="flex items-center gap-2 md:gap-3 lg:gap-6 ml-2 md:ml-4 flex-shrink-0">
           <div className="hidden xl:flex items-center gap-2 mr-4">
                <div className="flex -space-x-3">
                   {[1, 2, 3].map(i => (
@@ -359,7 +331,7 @@ export default function DashboardLayout() {
             <div className="relative">
               <button 
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="relative w-10 h-10 lg:w-14 lg:h-14 bg-white rounded-xl lg:rounded-[1.5rem] flex items-center justify-center text-slate-400 hover:text-slate-950 shadow-xl border border-slate-50 transition-all hover:-translate-y-1 group"
+                className="relative w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-xl lg:rounded-[1.5rem] flex items-center justify-center text-slate-400 hover:text-slate-950 shadow-xl border border-slate-50 transition-all hover:-translate-y-1 group min-w-[48px]"
               >
                 <Bell className="w-5 h-5 lg:w-6 lg:h-6 transition-transform group-hover:rotate-12" />
                 {unreadCount > 0 && (
@@ -447,7 +419,7 @@ export default function DashboardLayout() {
             
             <Link 
               to="/dashboard/upload"
-              className="px-4 py-3 lg:px-8 lg:py-4 bg-slate-950 text-white rounded-xl lg:rounded-[1.5rem] font-black text-[10px] lg:text-[11px] uppercase tracking-widest shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] flex items-center gap-2 lg:gap-3 active:scale-95 transition-all group"
+              className="px-5 py-3 lg:px-8 lg:py-4 bg-slate-950 text-white rounded-xl lg:rounded-[1.5rem] font-black text-[10px] lg:text-[11px] uppercase tracking-widest shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] flex items-center gap-2 lg:gap-3 active:scale-95 transition-all group min-h-[48px]"
             >
               <span className="hidden sm:inline">Upload Track</span>
               <span className="sm:hidden">Upload</span>
@@ -462,7 +434,7 @@ export default function DashboardLayout() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            className="p-3 md:p-8 lg:p-12 pt-4 max-w-7xl mx-auto w-full"
+            className="p-3 md:p-8 lg:p-12 pb-32 pt-4 max-w-7xl mx-auto w-full"
           >
              <Outlet />
           </motion.div>

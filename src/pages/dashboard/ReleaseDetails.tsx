@@ -223,6 +223,61 @@ export default function ReleaseDetails() {
             </section>
           </div>
 
+          <section className="bg-slate-50 p-8 md:p-10 rounded-[3.5rem] border border-slate-100 space-y-8 shadow-inner">
+             <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-3">
+                   <Download className="w-4 h-4" /> Master Digital Artifacts
+                </h3>
+             </div>
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <button 
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = release.audioUrl;
+                    link.download = `${release.title}_Master.wav`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="flex items-center justify-between p-6 bg-white rounded-3xl border border-slate-100 hover:shadow-xl transition-all group"
+                >
+                   <div className="flex items-center gap-4 text-left">
+                      <div className="w-12 h-12 bg-brand-blue/10 text-brand-blue rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Music className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Audio Master</p>
+                        <p className="text-sm font-bold text-slate-700">Studio High Fidelity</p>
+                      </div>
+                   </div>
+                   <Download className="w-5 h-5 text-slate-300 group-hover:text-brand-blue transition-colors" />
+                </button>
+
+                <button 
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = release.coverUrl;
+                    link.download = `${release.title}_Artwork.jpg`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="flex items-center justify-between p-6 bg-white rounded-3xl border border-slate-100 hover:shadow-xl transition-all group"
+                >
+                   <div className="flex items-center gap-4 text-left">
+                      <div className="w-12 h-12 bg-brand-purple/10 text-brand-purple rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <ImageIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Cover Art</p>
+                        <p className="text-sm font-bold text-slate-700">3000x3000px HD</p>
+                      </div>
+                   </div>
+                   <Download className="w-5 h-5 text-slate-300 group-hover:text-brand-purple transition-colors" />
+                </button>
+             </div>
+          </section>
+
           <section className="bg-white p-10 rounded-[3.5rem] shadow-xl border border-slate-50 space-y-8">
              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
                 <Info className="w-4 h-4" /> Transmission Meta-data

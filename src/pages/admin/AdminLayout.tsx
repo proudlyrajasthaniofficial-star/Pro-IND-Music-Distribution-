@@ -91,7 +91,7 @@ export default function AdminLayout() {
       {/* Primary Navigation */}
       <aside className={cn(
         "fixed inset-y-0 left-0 bg-[#1E293B] border-r border-slate-800 z-[110] transition-all duration-500 ease-in-out overflow-hidden shadow-2xl",
-        isSidebarOpen ? "w-80" : "w-0 lg:w-24"
+        isSidebarOpen ? "w-[280px] md:w-80" : "w-0 lg:w-24"
       )}>
         <div className="flex flex-col h-full py-10">
           {/* Brand Identity */}
@@ -152,19 +152,19 @@ export default function AdminLayout() {
       {/* Main Content Arena */}
       <main className={cn(
         "transition-all duration-500 min-h-screen",
-        isSidebarOpen ? "lg:pl-80" : "lg:pl-24"
+        isSidebarOpen ? "lg:pl-[280px] xl:pl-80" : "lg:pl-24"
       )}>
         {/* Arena Header */}
-        <header className="sticky top-0 z-[90] bg-[#0F172A]/80 backdrop-blur-xl border-b border-white/5 px-8 md:px-12 py-8 flex items-center justify-between font-display">
+        <header className="sticky top-0 z-[90] bg-[#0F172A]/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-12 py-4 md:py-8 flex items-center justify-between font-display">
            <button 
               onClick={() => setSidebarOpen(!isSidebarOpen)} 
-              className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-white hover:bg-white/10 transition-colors"
+              className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/5 rounded-xl md:rounded-2xl text-white hover:bg-white/10 transition-colors shrink-0"
            >
-              {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isSidebarOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
            </button>
 
-           <div className="flex items-center gap-8">
-              <div className="hidden lg:flex items-center bg-white/5 border border-white/10 p-3 px-6 rounded-2xl gap-4 w-96">
+           <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+              <div className="hidden lg:flex items-center bg-white/5 border border-white/10 p-3 px-6 rounded-2xl gap-4 w-64 xl:w-96">
                 <Search className="w-4 h-4 text-slate-500" />
                 <input 
                   placeholder="Global Metadata Search..."
@@ -180,18 +180,18 @@ export default function AdminLayout() {
                  <p className="text-xs font-black text-white uppercase tracking-tight">{profile?.displayName || 'Administrator'}</p>
                  <p className="text-[10px] text-brand-blue font-bold uppercase tracking-widest">System Node Alpha</p>
               </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-brand-blue to-blue-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-blue-900/40 hover:rotate-6 transition-all ring-4 ring-white/5 cursor-pointer overflow-hidden">
+              <div className="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-brand-blue to-blue-600 rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-blue-900/40 hover:rotate-6 transition-all ring-2 md:ring-4 ring-white/5 cursor-pointer overflow-hidden shrink-0">
                  {profile?.photoURL ? (
                     <img src={profile.photoURL} className="w-full h-full object-cover" />
                  ) : (
-                    <ShieldCheck className="w-7 h-7" />
+                    <ShieldCheck className="w-5 h-5 md:w-7 md:h-7" />
                  )}
               </div>
            </div>
         </header>
 
         {/* Content Portal */}
-        <div className="px-8 md:px-12 py-12 max-w-7xl mx-auto">
+        <div className="px-4 md:px-12 py-8 md:py-12 max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>

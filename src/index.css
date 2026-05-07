@@ -38,10 +38,14 @@
 
 .glass {
   @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
 }
 
 .glass-dark {
   @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl text-white;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
 }
 
 .noise {
