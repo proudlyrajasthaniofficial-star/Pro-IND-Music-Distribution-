@@ -1,4 +1,25 @@
 User-agent: *
 Allow: /
 
+# Important folders
+Allow: /assets/
+Allow: /images/
+Allow: /uploads/
+
+# Block private/admin areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /private/
+Disallow: /auth/
+
+# Prevent duplicate or unnecessary crawling
+Disallow: /*?*
+Disallow: /tmp/
+Disallow: /test/
+
+# Sitemap location
 Sitemap: https://musicdistributionindia.online/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 2
