@@ -1,7 +1,31 @@
 User-agent: *
 Allow: /
-Disallow: /dashboard/
-Disallow: /admin/
-Disallow: /api/
 
+# Important folders
+Allow: /assets/
+Allow: /images/
+Allow: /uploads/
+Allow: /css/
+Allow: /js/
+
+# Block unnecessary/private areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /register/
+Disallow: /api/
+Disallow: /private/
+Disallow: /tmp/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /cdn-cgi/
+
+# Prevent duplicate/search parameter crawling
+Disallow: /*?*
+
+# Sitemap URL
 Sitemap: https://musicdistributionindia.online/sitemap.xml
+Sitemap: https://www.musicdistributionindia.online/sitemap.xml
+
+# Main host
+Host: https://musicdistributionindia.online
