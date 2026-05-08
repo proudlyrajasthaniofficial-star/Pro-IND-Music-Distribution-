@@ -1,34 +1,37 @@
-# robots.txt for Music Distribution India
-# Website: https://musicdistributionindia.online
-
 User-agent: *
+
+# Allow important assets
 Allow: /
-
-# Important folders
+Allow: /wp-content/uploads/
 Allow: /assets/
-Allow: /images/
-Allow: /uploads/
+Allow: /*.js$
+Allow: /*.css$
 
-# Block sensitive/admin areas
+# Block admin/system/private areas
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /private/
 Disallow: /api/
-Disallow: /config/
-Disallow: /login/
-Disallow: /register/
-Disallow: /checkout/
-Disallow: /payment/
-Disallow: /user/
-
-# Prevent duplicate/search pages indexing
-Disallow: /search
-Disallow: /*?*
-Disallow: /tag/
+Disallow: /cgi-bin/
 Disallow: /tmp/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /core/
+Disallow: /search
+Disallow: /trackback/
+Disallow: /404
+Disallow: /thank-you/
+
+# Block parameters & duplicate pages
+Disallow: /*?*
+Disallow: /*&*
+
+# Allow search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
 
 # Sitemap
 Sitemap: https://musicdistributionindia.online/sitemap.xml
-
-# Optional Crawl Delay
-Crawl-delay: 5
