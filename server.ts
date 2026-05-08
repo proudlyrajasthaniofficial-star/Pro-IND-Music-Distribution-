@@ -86,15 +86,30 @@ async function startServer() {
       },
     },
     crossOriginEmbedderPolicy: false,
-    frameguard: false,
     crossOriginResourcePolicy: { policy: "cross-origin" }
   }));
 
   // CORS Configuration
   app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://musicdistributionindia.online', 'https://www.musicdistributionindia.online'] 
-      : true,
+    origin: (origin, callback) => {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const allowedOrigins = isProduction 
+        ? ['https://musicdistributionindia.online', 'https://www.musicdistributionindia.online'] 
+        : [/https:\/\/ais-(dev|pre)-.*\.run\.app/, /http:\/\/localhost:\d+/];
+      
+      if (!origin) return callback(null, true);
+      
+      const isAllowed = allowedOrigins.some(pattern => {
+        if (pattern instanceof RegExp) return pattern.test(origin);
+        return pattern === origin;
+      });
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-webhook-signature', 'x-webhook-timestamp'],
     credentials: true,
@@ -105,18 +120,21 @@ async function startServer() {
   app.set("trust proxy", 1);
   const PORT = 3000;
 
-  // Global Rate Limiting (Skip for webhooks)
-  app.use('/api/', (req, res, next) => {
-    if (req.path.toLowerCase().includes('/cashfree/webhook')) {
+  // Global Rate Limiting (Applied to all routes except webhooks)
+  app.use((req, res, next) => {
+    const rawPath = req.path || "";
+    if (rawPath.toLowerCase().includes('/webhook')) {
       return next();
     }
+    // Skip for static assets that are handled by express.static if needed, 
+    // but globalLimiter is generally fine for all non-api as well
     globalLimiter(req, res, next);
   });
 
   // Body Parsing & Sanitization
   app.use((req, res, next) => {
     const rawPath = req.path || "";
-    const isWebhook = rawPath.toLowerCase().includes("/api/cashfree/webhook");
+    const isWebhook = rawPath.toLowerCase().includes("/webhook");
     
     if (isWebhook) {
       next();
@@ -167,7 +185,7 @@ async function startServer() {
 
   // Explicit handlers for sitemap and robots to ensure correct content headers
   // We place these BEFORE express.static to ensure headers are correctly set
-  app.get("/sitemap.xml", (req, res) => {
+  app.get("/sitemap.xml", globalLimiter, (req, res) => {
     const sitemapPath = path.join(process.cwd(), "public", "sitemap.xml");
     const distSitemap = path.join(process.cwd(), "dist", "sitemap.xml");
     const target = fs.existsSync(sitemapPath) ? sitemapPath : distSitemap;
@@ -458,7 +476,7 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
       }
     }));
 
-    app.get("*", (req, res) => {
+    app.get("*", globalLimiter, (req, res) => {
       const indexPath = path.join(distPath, "index.html");
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);

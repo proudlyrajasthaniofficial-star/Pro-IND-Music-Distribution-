@@ -10,7 +10,6 @@ if (apiKey && apiSecret) {
     apiKey,
     apiSecret
   });
-  console.log('✅ [Mailjet] Client initialized with API Key:', apiKey.substring(0, 4) + '...');
 } else {
   console.warn('⚠️ [Mailjet] API keys are missing. Email service will run in simulation mode.');
 }
