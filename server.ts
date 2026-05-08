@@ -6,6 +6,7 @@ import compression from "compression";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
+import rateLimit from "express-rate-limit";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
 import * as userCtrl from "./controllers/userController.ts";
@@ -368,7 +369,14 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
       }
     }));
 
-    app.get("*", (req, res) => {
+    const spaFallbackLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per window
+      standardHeaders: true,
+      legacyHeaders: false,
+    });
+
+    app.get("*", spaFallbackLimiter, (req, res) => {
       const indexPath = path.join(distPath, "index.html");
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
