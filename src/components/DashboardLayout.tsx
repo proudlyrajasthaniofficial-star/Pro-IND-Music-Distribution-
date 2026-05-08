@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { 
-  LayoutDashboard, Upload, Music, Wallet, User, LogOut, Bell, Search, Settings, 
-  Shield, MessageSquare, Globe, Youtube, FileText, ShieldAlert, ChevronRight, 
-  Plus, Zap, Menu, X, LifeBuoy, Clock, CheckCircle2, Sparkles, ShieldCheck, Activity 
+  LayoutDashboard, 
+  Upload, 
+  Music, 
+  Wallet, 
+  User, 
+  LogOut,
+  Bell,
+  Search,
+  Settings,
+  Shield,
+  MessageSquare,
+  Globe,
+  Youtube,
+  FileText,
+  ShieldAlert,
+  ChevronRight,
+  Plus,
+  Zap,
+  Menu,
+  X,
+  LifeBuoy,
+  Clock,
+  CheckCircle2,
+  Sparkles,
+  ShieldCheck,
+  Activity
 } from "lucide-react";
 import { auth, db, handleFirestoreError, OperationType } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
@@ -36,140 +59,382 @@ export default function DashboardLayout() {
   const { user, profile, isAdmin } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile default closed
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, "user_notifications"), where("userId", "==", user.uid), limit(20));
+    const q = query(
+      collection(db, "user_notifications"),
+      where("userId", "==", user.uid),
+      limit(20)
+    );
+    
     const unsubscribe = onSnapshot(q, (snap) => {
       setNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     }, (err) => {
       handleFirestoreError(err, OperationType.GET, "user_notifications");
     });
+
     return unsubscribe;
   }, [user]);
 
   const markAsRead = async (id: string) => {
-    try { await updateDoc(doc(db, "user_notifications", id), { read: true }); } 
-    catch (err) { console.error("Failed to mark notification as read:", err); }
+    try {
+      await updateDoc(doc(db, "user_notifications", id), { read: true });
+    } catch (err) {
+      console.error("Failed to mark notification as read:", err);
+    }
   };
 
   const markAllAsRead = async () => {
     if (!user || unreadCount === 0) return;
     try {
       const batch = writeBatch(db);
-      notifications.filter(n => !n.read).forEach(n => { batch.update(doc(db, "user_notifications", n.id), { read: true }); });
+      notifications.filter(n => !n.read).forEach(n => {
+        batch.update(doc(db, "user_notifications", n.id), { read: true });
+      });
       await batch.commit();
       toast.success("Notifications cleared.");
-    } catch (err) { toast.error("Error updating notifications."); }
+    } catch (err) {
+      toast.error("Error updating notifications.");
+    }
   };
 
-  useEffect(() => {
+  // Close sidebar on navigation on mobile
+  React.useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
+
+  // Handle window resize
+  React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) setIsSidebarOpen(true);
-      else setIsSidebarOpen(false);
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      }
     };
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial check
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    if (window.innerWidth < 1024) setIsSidebarOpen(false);
-  }, [location.pathname]);
-
-  const handleLogout = async () => { await auth.signOut(); navigate("/"); };
+  const handleLogout = async () => {
+    await auth.signOut();
+    navigate("/");
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden font-sans relative">
       <SEO title="Artist Dashboard" description="Manage your music distribution, assets, and royalties with IND Distribution." />
-      
-      {/* Mobile Overlay */}
+      {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
-        {isSidebarOpen && window.innerWidth < 1024 && (
+        {isSidebarOpen && (
           <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setIsSidebarOpen(false)}
             className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-40 lg:hidden"
+            style={{ WebkitBackdropFilter: 'blur(4px)' }}
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar - Adjusted for mobile width */}
+      {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-[280px] bg-white border-r border-slate-100 transition-transform duration-300 lg:relative lg:translate-x-0",
-        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        "fixed inset-y-0 left-0 z-50 w-[280px] sm:w-[320px] bg-white border-r border-slate-100 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] lg:relative transform",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        <div className="h-full flex flex-col p-6 bg-white overflow-y-auto">
-          <div className="flex items-center justify-between mb-8">
-            <Link to="/dashboard" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg relative overflow-hidden">
-                <Zap className="text-white w-5 h-5 fill-brand-blue stroke-brand-blue relative z-10" />
+        <div className="h-full flex flex-col p-6 md:p-8 bg-white relative">
+          {/* Logo Section */}
+          <div className="flex items-center justify-between mb-8 md:mb-12">
+            <Link to="/dashboard" className="flex items-center gap-3 md:gap-4 group">
+              <div className="w-12 h-12 bg-slate-950 rounded-[1.25rem] flex items-center justify-center rotate-6 group-hover:rotate-0 transition-all duration-700 shadow-2xl shadow-slate-950/20 relative overflow-hidden">
+                <div className="absolute inset-0 bg-brand-blue/20 animate-pulse"></div>
+                <Zap className="text-white w-6 h-6 fill-brand-blue stroke-brand-blue relative z-10" />
               </div>
-              <span className="font-display text-xl font-black tracking-tighter uppercase text-slate-800">IND<span className="text-brand-blue">.</span></span>
+              <div className="flex flex-col">
+                <span className="font-display text-2xl font-black tracking-tighter uppercase leading-none text-slate-800">IND<span className="text-brand-blue drop-shadow-[0_0_8px_rgba(0,102,255,0.4)]">.</span></span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400">Music Distribution</span>
+                  <div className="h-[1px] w-4 bg-slate-100"></div>
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-brand-blue animae-pulse">Live</span>
+                </div>
+              </div>
             </Link>
-            <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2 text-slate-400"><X /></button>
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="lg:hidden p-3 bg-slate-50 rounded-xl text-slate-400"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <nav className="flex-1 space-y-1">
-            {NAV_ITEMS.map((item) => (
+          {/* Navigation */}
+          <nav className="flex-1 space-y-1 overflow-y-auto pr-4 -mr-4 custom-scrollbar pb-12">
+            {NAV_ITEMS.map((item, index) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
+                >
+                  <Link 
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-4 px-6 py-4.5 rounded-[1.5rem] transition-all duration-700 font-black text-[11px] uppercase tracking-widest group relative overflow-hidden min-h-[56px]",
+                      isActive 
+                        ? "bg-slate-950 text-white shadow-premium-dark active-nav" 
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div 
+                        layoutId="sidebar-active-scan"
+                        className="absolute inset-0 bg-linear-to-r from-brand-blue/20 to-transparent pointer-events-none"
+                      />
+                    )}
+                    <item.icon className={cn(
+                      "w-5 h-5 transition-all duration-500 group-hover:scale-110 relative z-10", 
+                      isActive ? "text-brand-blue scale-110 drop-shadow-[0_0_8px_rgba(0,102,255,0.6)]" : "text-slate-400 group-hover:text-brand-blue"
+                    )} />
+                    <span className="relative z-10">{item.label}</span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-nav-glow"
+                        className="absolute right-4 w-1 h-1 bg-brand-blue rounded-full shadow-[0_0_10px_2px_rgba(59,130,246,0.6)]"
+                      />
+                    )}
+                  </Link>
+                </motion.div>
+              );
+            })}
+
+            {isAdmin && (
               <Link 
-                key={item.label} to={item.path}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-black text-[10px] uppercase tracking-widest",
-                  location.pathname === item.path ? "bg-slate-950 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
-                )}
+                to="/admin"
+                onClick={() => {
+                  if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                }}
+                className="flex items-center gap-4 px-6 py-5 rounded-[1.5rem] bg-brand-purple/5 text-brand-purple mt-8 font-black text-[11px] uppercase tracking-[0.2em] border border-brand-purple/10 hover:bg-brand-purple hover:text-white transition-all shadow-xl shadow-purple-500/5 group"
               >
-                <item.icon className={cn("w-4 h-4", location.pathname === item.path ? "text-brand-blue" : "text-slate-400")} />
-                {item.label}
+                <div className="w-8 h-8 rounded-xl bg-brand-purple/20 flex items-center justify-center group-hover:bg-white/20">
+                  <Shield className="w-4 h-4" />
+                </div>
+                Portal Admin
               </Link>
-            ))}
+            )}
           </nav>
 
-          <div className="mt-auto pt-6 border-t border-slate-50 space-y-4">
-             <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-rose-500 text-[10px] font-black uppercase tracking-widest">
-               <LogOut className="w-4 h-4" /> Logout
+          {/* User Section Bottom */}
+          <div className="mt-auto pt-6 border-t border-slate-50 flex flex-col gap-4">
+             <Link 
+               to="/dashboard/profile"
+               className="flex items-center gap-3 p-3 bg-slate-50 rounded-[2rem] hover:bg-slate-100 transition-all group"
+             >
+                <div className="w-12 h-12 rounded-[1.25rem] bg-slate-950 flex items-center justify-center text-white font-black text-sm relative shadow-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-linear-to-br from-brand-blue/20 to-brand-purple/20"></div>
+                  <span className="relative z-10">{profile?.displayName?.[0] || 'U'}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-800 truncate">{profile?.displayName || 'Authorized User'}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Account Verified</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-300 mr-2 group-hover:translate-x-1 transition-transform" />
+             </Link>
+             
+             <div className="bg-slate-50 rounded-2xl p-4 flex flex-col gap-3 group relative overflow-hidden">
+                <div className="absolute inset-0 noise opacity-[0.03]"></div>
+                <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-3 h-3 text-brand-blue" />
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Security Status</span>
+                   </div>
+                   <Activity className="w-3 h-3 text-emerald-500 animate-pulse" />
+                </div>
+                <div className="flex items-center justify-between">
+                   <span className="text-[10px] font-black uppercase tracking-tight text-slate-900">Premium Member</span>
+                   <span className="text-[8px] font-bold text-slate-400">v1.2.0</span>
+                </div>
+             </div>
+
+             <button 
+               onClick={handleLogout}
+               className="flex items-center gap-4 px-6 py-4 w-full text-slate-400 hover:text-rose-500 transition-all text-[11px] font-black uppercase tracking-widest group"
+             >
+               <div className="w-8 h-8 rounded-xl flex items-center justify-center group-hover:bg-rose-50">
+                  <LogOut className="w-4 h-4" />
+               </div>
+               Logout Session
              </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 h-full relative">
         <NeuralGrid />
-        
-        {/* Header - Fixed overlapping issues on mobile */}
-        <header className="h-16 lg:h-20 flex items-center justify-between px-4 md:px-8 bg-white/80 backdrop-blur-md border-b border-slate-100 z-30 shrink-0">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <button onClick={() => setIsSidebarOpen(true)} className="p-2 lg:hidden text-slate-500"><Menu /></button>
-            <div className="flex-1 max-w-[200px] sm:max-w-xs">
-              <div className="flex items-center bg-slate-50 p-2 px-3 rounded-lg border border-slate-100 gap-2">
-                <Search className="w-3 h-3 text-slate-300" />
-                <input placeholder="Search..." className="bg-transparent border-none focus:ring-0 text-[10px] uppercase w-full" />
-              </div>
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-brand-blue/5 blur-[150px] -translate-y-1/2 translate-x-1/2 rounded-full pointer-events-none"></div>
+
+      <header className="h-20 lg:h-24 flex items-center justify-between px-4 md:px-8 lg:px-12 relative z-20 backdrop-blur-lg border-b border-slate-100/50 flex-shrink-0" style={{ WebkitBackdropFilter: 'blur(20px)', backdropFilter: 'blur(20px)' }}>
+        <div className="flex items-center gap-3 lg:gap-8 flex-1 min-w-0">
+          <button 
+            autoFocus
+            aria-label="Toggle Sidebar"
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-3 bg-white rounded-xl shadow-premium border border-slate-50 text-slate-500 transition-all hover:text-slate-900 group lg:hidden shrink-0 min-w-[48px] min-h-[48px] flex items-center justify-center"
+          >
+            <Menu className="w-6 h-6 transition-transform group-active:scale-95" />
+          </button>
+          
+          <div className="flex-1 max-w-sm lg:w-[28rem] xl:w-[32rem]">
+            <div className="flex items-center bg-slate-50/50 backdrop-blur-md p-2 lg:p-3 px-3 lg:px-6 rounded-xl lg:rounded-[2rem] border border-slate-100 gap-2 lg:gap-4 transition-all focus-within:ring-2 focus-within:ring-brand-blue/20" style={{ WebkitBackdropFilter: 'blur(10px)' }}>
+              <Search className="w-4 h-4 text-slate-300 shrink-0" />
+              <input 
+                placeholder="Search..."
+                className="bg-transparent border-none focus:ring-0 text-[10px] md:text-[11px] font-black uppercase tracking-widest w-full placeholder:text-slate-300 py-1"
+                aria-label="Search releases"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/dashboard/releases?q=${(e.target as HTMLInputElement).value}`);
+                  }
+                }}
+              />
             </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 ml-2">
-            <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="p-2 text-slate-400 relative">
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && <span className="absolute top-1 right-1 w-2 h-2 bg-brand-blue rounded-full border-2 border-white" />}
-            </button>
-            <Link to="/dashboard/upload" className="bg-slate-950 text-white p-2 sm:px-4 sm:py-2 rounded-lg flex items-center gap-2 transition-transform active:scale-95">
-              <Plus className="w-4 h-4 text-brand-blue" />
-              <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest">Upload</span>
+        <div className="flex items-center gap-2 md:gap-3 lg:gap-6 ml-2 md:ml-4 flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-2 mr-4">
+               <div className="flex -space-x-3">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-10 h-10 rounded-full border-4 border-white bg-slate-100 flex items-center justify-center text-[10px] font-black group hover:z-30 transition-all hover:scale-110 cursor-pointer overflow-hidden">
+                       <img src={`https://picsum.photos/seed/artist${i}/100/100`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    </div>
+                  ))}
+               </div>
+               <div className="flex flex-col ml-2">
+                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest leading-none">Collaborators</span>
+                  <span className="text-[9px] font-bold text-slate-500 uppercase mt-1">Synced & Online</span>
+               </div>
+            </div>
+
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className="relative w-12 h-12 lg:w-14 lg:h-14 bg-white rounded-xl lg:rounded-[1.5rem] flex items-center justify-center text-slate-400 hover:text-slate-950 shadow-xl border border-slate-50 transition-all hover:-translate-y-1 group min-w-[48px]"
+              >
+                <Bell className="w-5 h-5 lg:w-6 lg:h-6 transition-transform group-hover:rotate-12" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-2 right-2 lg:top-4 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-brand-blue rounded-full border-2 lg:border-4 border-white shadow-sm animate-pulse"></span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsNotificationsOpen(false)}></div>
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-4 w-80 md:w-96 bg-white rounded-[2rem] shadow-4xl border border-slate-100 z-50 overflow-hidden"
+                    >
+                      <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                        <h4 className="text-sm font-black uppercase tracking-widest">Notifications</h4>
+                        {unreadCount > 0 && (
+                          <button 
+                            onClick={markAllAsRead}
+                            className="text-[9px] font-black text-brand-blue uppercase hover:underline"
+                          >
+                            Clear All
+                          </button>
+                        )}
+                      </div>
+                      <div className="max-h-[25rem] overflow-y-auto custom-scrollbar">
+                        {notifications.map((n) => (
+                          <div 
+                            key={n.id} 
+                            onClick={() => {
+                              markAsRead(n.id);
+                              if (n.type === 'request') {
+                                window.location.href = '/dashboard/requests';
+                              }
+                            }}
+                            className={cn(
+                              "p-6 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors flex gap-4 items-start relative group",
+                              !n.read && "bg-brand-blue/5"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm",
+                              n.type === 'request' ? "bg-amber-100 text-amber-600" : "bg-brand-blue/10 text-brand-blue"
+                            )}>
+                              {n.type === 'request' ? <Clock className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={cn("text-xs uppercase tracking-tight", n.read ? "font-bold text-slate-500" : "font-black text-slate-900")}>
+                                {n.title}
+                              </p>
+                              <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                {n.message}
+                              </p>
+                              <span className="text-[9px] font-bold text-slate-300 mt-2 block uppercase tracking-widest">
+                                {new Date(n.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            {!n.read && (
+                              <div className="w-1.5 h-1.5 bg-brand-blue rounded-full mt-2 shrink-0"></div>
+                            )}
+                          </div>
+                        ))}
+                        {notifications.length === 0 && (
+                          <div className="p-12 text-center">
+                            <Bell className="w-10 h-10 text-slate-100 mx-auto mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">No notifications found.</p>
+                          </div>
+                        )}
+                      </div>
+                      <Link 
+                        to="/dashboard/support" 
+                        className="block p-4 text-center text-[10px] font-black uppercase tracking-widest bg-slate-50 hover:bg-slate-100 text-slate-400 transition-colors"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
+                        Help & Support Center
+                      </Link>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            <Link 
+              to="/dashboard/upload"
+              className="px-5 py-3 lg:px-8 lg:py-4 bg-slate-950 text-white rounded-xl lg:rounded-[1.5rem] font-black text-[10px] lg:text-[11px] uppercase tracking-widest shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] flex items-center gap-2 lg:gap-3 active:scale-95 transition-all group min-h-[48px]"
+            >
+              <span className="hidden sm:inline">Upload Track</span>
+              <span className="sm:hidden">Upload</span>
+              <Plus className="w-4 h-4 text-brand-blue group-hover:scale-125 transition-transform" />
             </Link>
           </div>
         </header>
 
-        {/* Viewport Container - Fixing Scroll and Padding for Mobile */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide">
+        {/* Viewport Container */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide perspective-1000">
           <motion.div 
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="p-4 md:p-8 lg:p-10 pb-24 max-w-7xl mx-auto w-full"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+            className="p-3 md:p-8 lg:p-12 pb-32 pt-4 max-w-7xl mx-auto w-full"
           >
              <Outlet />
           </motion.div>
@@ -177,4 +442,4 @@ export default function DashboardLayout() {
       </main>
     </div>
   );
-        }
+}

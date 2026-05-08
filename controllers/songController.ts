@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 import emailEmitter from '../events/emailEvents.ts';
+import { SongUploadSchema, SongStatusUpdateSchema, PaymentSuccessSchema } from '../lib/validation.ts';
+import logger from '../lib/logger.ts';
 
 /**
  * Song Controller Logic
@@ -8,22 +10,24 @@ import emailEmitter from '../events/emailEvents.ts';
 
 export const uploadSong = async (req: Request, res: Response) => {
   try {
-    const { email, name, songName } = req.body;
-
-    // ... Logic to handle file storage and DB entry ...
+    const validatedData = SongUploadSchema.parse(req.body);
+    const { email, name, songName } = validatedData;
 
     // Trigger Notification
     emailEmitter.emit('SONG_UPLOADED', { email, name, songName });
 
+    logger.info("Song upload event triggered", { email, songName });
     res.status(202).json({ message: 'Submission received. Analyzing metadata.' });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    logger.error("Song upload error", { error: error.errors || error.message });
+    res.status(400).json({ error: error.errors || 'Invalid upload data' });
   }
 };
 
 export const updateStatus = async (req: Request, res: Response) => {
   try {
-    const { email, name, songName, status, reason } = req.body;
+    const validatedData = SongStatusUpdateSchema.parse(req.body);
+    const { email, name, songName, status, reason } = validatedData;
 
     // Trigger Notifications based on status
     switch (status) {
@@ -41,23 +45,26 @@ export const updateStatus = async (req: Request, res: Response) => {
         break;
     }
 
+    logger.info("Song status update triggered", { email, songName, status });
     res.json({ message: `Protocol ${status.toUpperCase()} initiated and artist notified.` });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    logger.error("Status update error", { error: error.errors || error.message });
+    res.status(400).json({ error: error.errors || 'Invalid status update data' });
   }
 };
 
 export const processPayment = async (req: Request, res: Response) => {
   try {
-    const { email, name, amount, txId } = req.body;
-
-    // ... Handle payment gateway logic ...
+    const validatedData = PaymentSuccessSchema.parse(req.body);
+    const { email, name, amount, txId } = validatedData;
 
     // Trigger Notification
     emailEmitter.emit('PAYMENT_SUCCESS', { email, name, amount, txId });
 
+    logger.info("Payment success event triggered", { email, amount, txId });
     res.json({ message: 'Payment confirmed. Invoice dispatched.' });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    logger.error("Payment processing error", { error: error.errors || error.message });
+    res.status(400).json({ error: error.errors || 'Invalid payment data' });
   }
 };

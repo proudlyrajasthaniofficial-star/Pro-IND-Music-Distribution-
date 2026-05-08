@@ -1,37 +1,7 @@
 User-agent: *
-
-# Allow important assets
 Allow: /
-Allow: /wp-content/uploads/
-Allow: /assets/
-Allow: /*.js$
-Allow: /*.css$
-
-# Block admin/system/private areas
-Disallow: /admin/
 Disallow: /dashboard/
-Disallow: /private/
+Disallow: /admin/
 Disallow: /api/
-Disallow: /cgi-bin/
-Disallow: /tmp/
-Disallow: /config/
-Disallow: /includes/
-Disallow: /core/
-Disallow: /search
-Disallow: /trackback/
-Disallow: /404
-Disallow: /thank-you/
 
-# Block parameters & duplicate pages
-Disallow: /*?*
-Disallow: /*&*
-
-# Allow search engines
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-# Sitemap
 Sitemap: https://musicdistributionindia.online/sitemap.xml

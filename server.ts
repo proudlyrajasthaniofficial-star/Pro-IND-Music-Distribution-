@@ -8,6 +8,13 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { v2 as cloudinary } from "cloudinary";
+import helmet from "helmet";
+import cors from "cors";
+// @ts-ignore
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
+import logger from "./lib/logger.ts";
+import { globalLimiter, authLimiter, uploadLimiter, paymentLimiter } from "./middleware/security.ts";
 import * as userCtrl from "./controllers/userController.ts";
 import * as songCtrl from "./controllers/songController.ts";
 import * as financeCtrl from "./controllers/financeController.ts";
@@ -31,18 +38,99 @@ function setupCloudinary() {
       api_secret: apiSecret,
       secure: true
     });
-    console.log("✅ Cloudinary Configured");
+    logger.info("Cloudinary Configured");
     return true;
   }
-  console.warn("⚠️ Cloudinary Config Missing Keys - Signing might fail");
+  logger.warn("Cloudinary Config Missing Keys - Signing might fail");
   return false;
 }
 
 async function startServer() {
   const app = express();
+  
+  // Security Headers
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'", 
+          "'unsafe-inline'", 
+          "'unsafe-eval'", 
+          "https://checkout.cashfree.com", 
+          "https://sdk.cashfree.com", 
+          "https://*.firebase.com", 
+          "https://*.googleapis.com", 
+          "https://*.google.com",
+          "https://*.gstatic.com",
+          "https://*.cloudinary.com"
+        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://*.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "https://*.firebaseusercontent.com", "https://*.googleusercontent.com", "https://*.cloudinary.com", "https://*.google.com", "https://*.gstatic.com"],
+        connectSrc: [
+          "'self'", 
+          "https://*.cashfree.com", 
+          "https://*.googleapis.com", 
+          "https://firestore.googleapis.com", 
+          "https://*.firebase.io", 
+          "https://*.cloudinary.com", 
+          "https://*.google-analytics.com", 
+          "wss://*.run.app",
+          "https://*.google.com"
+        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'", "https://res.cloudinary.com"],
+        frameSrc: ["'self'", "https://checkout.cashfree.com", "https://sdk.cashfree.com", "https://*.google.com"],
+        frameAncestors: ["'self'", "https://*.run.app", "https://*.google.com", "https://ai.studio", "https://*.googleusercontent.com"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    frameguard: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  }));
+
+  // CORS Configuration
+  app.use(cors({
+    origin: process.env.NODE_ENV === 'production' 
+      ? ['https://musicdistributionindia.online', 'https://www.musicdistributionindia.online'] 
+      : true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-webhook-signature', 'x-webhook-timestamp'],
+    credentials: true,
+  }));
+
+  // Compression and Proxy
   app.use(compression());
-  app.set("trust proxy", true);
+  app.set("trust proxy", 1);
   const PORT = 3000;
+
+  // Global Rate Limiting (Skip for webhooks)
+  app.use('/api/', (req, res, next) => {
+    if (req.path.toLowerCase().includes('/cashfree/webhook')) {
+      return next();
+    }
+    globalLimiter(req, res, next);
+  });
+
+  // Body Parsing & Sanitization
+  app.use((req, res, next) => {
+    const rawPath = req.path || "";
+    const isWebhook = rawPath.toLowerCase().includes("/api/cashfree/webhook");
+    
+    if (isWebhook) {
+      next();
+    } else {
+      express.json({ limit: '1mb' })(req, res, (err) => {
+        if (err) return res.status(400).json({ error: "Invalid JSON payload" });
+        next();
+      });
+    }
+  });
+
+  // Sanitization: Scope to API routes ONLY
+  app.use('/api', mongoSanitize());
+  app.use('/api', xss());
 
   // move logger to the top for better debugging
   app.use((req, res, next) => {
@@ -51,20 +139,28 @@ async function startServer() {
       const duration = Date.now() - start;
       const isWebhook = req.url.includes('webhook');
       if (isWebhook || res.statusCode >= 400) {
-        console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${res.statusCode} - ${duration}ms`);
+        logger.info(`${req.method} ${req.url} ${res.statusCode} - ${duration}ms`, {
+          ip: req.ip,
+          userAgent: req.get('user-agent')
+        });
       }
     });
     next();
   });
 
   setupCloudinary();
+  // Redirect logic: Skip for development domains
   app.use((req, res, next) => {
     const isHttps = req.headers["x-forwarded-proto"] === "https";
-    const isProd = process.env.NODE_ENV === "production" || req.hostname.includes("musicdistributionindia.online");
-    const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1";
+    const hostname = req.hostname;
+    // Only redirect if explicitly on our custom domain and not HTTPS, 
+    // or if we are in production and not behind a local/dev domain
+    const isCustomDomain = hostname.includes("musicdistributionindia.online");
+    const isDevSubdomain = hostname.includes("ais-dev-") || hostname.includes("ais-pre-") || hostname.includes("localhost") || hostname.includes("127.0.0.1");
     
-    if (isProd && !isHttps && !isLocalhost) {
-      return res.redirect(301, `https://${req.get("host")}${req.url}`);
+    if (isCustomDomain && !isDevSubdomain && !isHttps && process.env.NODE_ENV === "production") {
+      const targetHost = process.env.APP_URL ? new URL(process.env.APP_URL).host : hostname;
+      return res.redirect(301, `https://${targetHost}${req.url}`);
     }
     next();
   });
@@ -121,20 +217,13 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   app.use(express.static(path.join(__dirname, "public")));
 
   // JSON Body Parser (except for webhooks)
-  app.use((req, res, next) => {
-    const rawPath = req.path || "";
-    const isWebhook = rawPath.toLowerCase().includes("/api/cashfree/webhook");
-    
-    if (isWebhook) {
-      console.log(`⚓ WEBHOOK_ROUTING: ${req.method} ${rawPath}`);
-      next();
-    } else {
-      express.json()(req, res, next);
-    }
-  });
+  // Already handled above by the limited parser, but keeping a fallback if needed for other non-path specific checks
+  // Removing redundant parser that was causing issues
+  // app.use((req, res, next) => { ... })
+
 
   // Cashfree Order Creation Endpoint
-  app.post("/api/cashfree/create-order", async (req, res) => {
+  app.post("/api/cashfree/create-order", paymentLimiter, async (req, res) => {
     try {
       const { planId, amount, userId, customerEmail, customerPhone } = req.body;
       if (!planId || !amount || !userId) {
@@ -158,20 +247,19 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
         environment
       });
     } catch (error: any) {
-      console.error("Cashfree Order Error:", error.message);
+      logger.error("Cashfree Order Error", { message: error.message });
       res.status(500).json({ 
-        error: error.message || "Cashfree Order Creation Failed", 
-        details: error.message 
+        error: "Cashfree Order Creation Failed"
       });
     }
   });
 
   // Cashfree Webhook Endpoint (GET for pings/health checks)
   app.get("/api/cashfree/webhook", (req, res) => {
-    console.log(`⚓ WEBHOOK_GET: ping received from ${req.ip}`);
+    logger.info("Cashfree Webhook Ping", { ip: req.ip });
     res.json({ 
       status: "active", 
-      message: "Cashfree Webhook Endpoint is online. Please use POST for actual webhooks from Cashfree.",
+      message: "Cashfree Webhook Endpoint is online.",
       domain: "musicdistributionindia.online",
       serverTime: new Date().toISOString()
     });
@@ -187,37 +275,39 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
     const signature = req.headers["x-webhook-signature"] as string;
     const timestamp = req.headers["x-webhook-timestamp"] as string;
     
-    console.log(`⚓ WEBHOOK_POST: signature=${!!signature}, timestamp=${!!timestamp}, body_len=${req.body?.length || 0}`);
-    
     if (!signature || !timestamp) {
-      console.warn("⚠️ WEBHOOK_POST: Missing signature or timestamp header. Returning 200 for check.");
-      return res.status(200).json({ status: "ok", message: "Endpoint active, but credentials missing for processing" });
+      logger.warn("Cashfree Webhook: Missing signature or timestamp header");
+      return res.status(200).json({ status: "ok", message: "Endpoint active" });
     }
 
     try {
       const rawBody = req.body && req.body.length > 0 ? req.body.toString() : "";
       
       if (!rawBody) {
-        console.error("❌ WEBHOOK_POST: Empty body");
+        logger.error("Cashfree Webhook: Empty body");
         return res.status(400).send("Empty body");
       }
 
       const isValid = cashfreeService.verifyCashfreeWebhook(rawBody, signature, timestamp);
 
       if (!isValid) {
-          console.error("❌ WEBHOOK_POST: Invalid Signature Match");
+          logger.error("Cashfree Webhook: Invalid Signature Match");
           return res.status(400).send("Invalid signature");
       }
 
       const event = JSON.parse(rawBody);
-      console.log(`⚓ WEBHOOK_EVENT: ${event.type}`);
+      logger.info("Cashfree Webhook Event", { type: event.type });
       
       if (event.type === "PAYMENT_SUCCESS_WEBHOOK") {
         const order = event.data.order;
         const userId = order.order_tags?.userId;
         const planId = order.order_tags?.planId;
 
-        console.log(`💳 WEBHOOK_PAYMENT_SUCCESS: ${event.data.payment.cf_payment_id} for user ${userId}, plan ${planId}`);
+        logger.info("Payment Success via Webhook", { 
+          paymentId: event.data.payment.cf_payment_id, 
+          userId, 
+          planId 
+        });
 
         if (userId && planId) {
           try {
@@ -238,19 +328,19 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
               createdAt: admin.firestore.FieldValue.serverTimestamp(),
             });
 
-            console.log(`✅ WEBHOOK_DB_SUCCESS: Reference ${userId} updated`);
+            logger.info("Webhook DB Update Success", { userId });
           } catch (dbError: any) {
-            console.error(`❌ WEBHOOK_DB_ERROR: ${dbError.message}`);
+            logger.error("Webhook DB Update Error", { message: dbError.message });
           }
         } else {
-          console.error("❌ WEBHOOK_DATA_MISSING: userId or planId not in tags", { tags: order.order_tags });
+          logger.error("Webhook Data Missing tags", { tags: order.order_tags });
         }
       }
 
-      res.json({ success: true, message: "Webhook processed" });
+      res.json({ success: true });
     } catch (err: any) {
-      console.error(`❌ WEBHOOK_FATAL_ERROR: ${err.message}`);
-      return res.status(500).send(`Webhook Error: ${err.message}`);
+      logger.error("Webhook Fatal Error", { message: err.message });
+      return res.status(500).send("Webhook processing error");
     }
   });
 
@@ -271,7 +361,7 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   });
 
   // Cloudinary Signing Endpoint (High Priority)
-  app.post("/api/cloudinary-sign", (req, res) => {
+  app.post("/api/cloudinary-sign", uploadLimiter, (req, res) => {
     try {
       const apiKey = (process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_KEY)?.trim();
       const apiSecret = (process.env.CLOUDINARY_API_SECRET || process.env.CLOUDINARY_SECRET)?.trim();
@@ -279,9 +369,9 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
       const uploadPreset = (process.env.CLOUDINARY_UPLOAD_PRESET || process.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ml_default")?.trim();
       
       if (!apiKey || !apiSecret || !cloudName) {
-        console.error("❌ Cloudinary Config Missing:", { hasKey: !!apiKey, hasSecret: !!apiSecret, cloudName });
+        logger.error("Cloudinary Config Missing", { cloudName });
         return res.status(500).json({ 
-          error: "Cloudinary is not configured on the server. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in settings." 
+          error: "Cloudinary is not configured on the server." 
         });
       }
 
@@ -303,7 +393,7 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
         uploadPreset
       });
     } catch (error: any) {
-      console.error("Cloudinary signing error:", error);
+      logger.error("Cloudinary signing error", { message: error.message });
       res.status(500).json({ error: "Failed to generate upload signature." });
     }
   });
@@ -315,11 +405,11 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   });
 
   // --- AUTOMATED NOTIFICATION ENDPOINTS ---
-  app.post("/api/auth/signup", userCtrl.signup);
-  app.post("/api/auth/verify", userCtrl.verifyEmail);
-  app.post("/api/releases/upload-notify", songCtrl.uploadSong);
-  app.post("/api/admin/releases/update-status-notify", songCtrl.updateStatus);
-  app.post("/api/billing/process-payment", songCtrl.processPayment);
+  app.post("/api/auth/signup", authLimiter, userCtrl.signup);
+  app.post("/api/auth/verify", authLimiter, userCtrl.verifyEmail);
+  app.post("/api/releases/upload-notify", uploadLimiter, songCtrl.uploadSong);
+  app.post("/api/admin/releases/update-status-notify", authLimiter, songCtrl.updateStatus);
+  app.post("/api/billing/process-payment", paymentLimiter, songCtrl.processPayment);
   
   // Finance Endpoints
   app.post("/api/finance/royalty-alert", financeCtrl.addRoyalty);

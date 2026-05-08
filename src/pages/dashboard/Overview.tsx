@@ -250,9 +250,9 @@ export default function Overview() {
                 </div>
 
                 <div className="flex-1 flex flex-col justify-center mb-8 md:mb-12">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 md:gap-4 mb-4 md:mb-3 overflow-hidden">
-                       <span className="text-xs md:text-2xl font-black text-slate-500 uppercase">₹</span>
-                       <h2 className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] whitespace-normal break-words max-w-full">
+                    <div className="flex items-baseline gap-2 md:gap-4 mb-4 md:mb-3 flex-wrap">
+                       <span className="text-xl md:text-2xl font-black text-slate-500 uppercase">₹</span>
+                       <h2 className="text-5xl md:text-8xl lg:text-9xl font-black font-display tracking-tighter bg-linear-to-b from-white via-white to-slate-500 text-transparent bg-clip-text drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
                          {profile?.walletBalance?.toFixed(2) || "0.00"}
                        </h2>
                     </div>

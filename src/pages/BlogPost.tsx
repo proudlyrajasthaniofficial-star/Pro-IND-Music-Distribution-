@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import { BLOG_POSTS } from '../constants/blogData';
 import PublicNavbar from '../components/PublicNavbar';
 import PublicFooter from '../components/PublicFooter';
+import SanitizedHTML from '../components/SanitizedHTML';
 import { ArrowLeft, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 
 const BlogPost = () => {
@@ -110,13 +111,14 @@ const BlogPost = () => {
 
             {/* Content Container */}
             <div className="lg:col-span-11">
-              <article 
+              <SanitizedHTML 
                 className="prose prose-slate prose-lg max-w-none 
                   prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:uppercase prose-h2:font-display prose-h2:mt-16
                   prose-p:text-slate-600 prose-p:leading-relaxed prose-p:text-xl
                   prose-li:text-slate-600 prose-li:text-xl
                   prose-strong:text-slate-900 prose-strong:font-black"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                html={post.content}
+                tag="article"
               />
 
               <div className="mt-24 pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
