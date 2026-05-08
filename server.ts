@@ -3,7 +3,6 @@ dotenv.config();
 
 import express from "express";
 import compression from "compression";
-import rateLimit from "express-rate-limit";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
@@ -185,15 +184,7 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   });
 
   // POST handler for actual Cashfree events
-  const cashfreeWebhookLimiter = rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    max: 120, // limit each IP to 120 requests per window
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: "Too many webhook requests, please try again later." },
-  });
-
-  app.post("/api/cashfree/webhook", cashfreeWebhookLimiter, express.raw({ type: "*/*" }), async (req, res) => {
+  app.post("/api/cashfree/webhook", express.raw({ type: "*/*" }), async (req, res) => {
     const signature = req.headers["x-webhook-signature"] as string;
     const timestamp = req.headers["x-webhook-timestamp"] as string;
     
