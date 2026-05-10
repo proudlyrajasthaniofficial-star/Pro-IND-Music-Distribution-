@@ -14,21 +14,6 @@ export async function uploadToCloudinary(
   file: File, 
   onProgress?: (progress: number) => void
 ): Promise<string> {
-  // 0. File Validation
-  const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB limit
-  const ALLOWED_TYPES = [
-    'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/flac', 
-    'image/jpeg', 'image/png', 'image/webp'
-  ];
-
-  if (file.size > MAX_FILE_SIZE) {
-    throw new Error(`File size too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Maximum allowed is 150MB.`);
-  }
-
-  if (!ALLOWED_TYPES.includes(file.type) && !file.name.toLowerCase().endsWith('.wav')) {
-    throw new Error(`Unsupported file type: ${file.type || 'unknown'}. Please upload WAV, MP3, or high-res images.`);
-  }
-
   // 1. Get signature from backend
   console.log("📝 Requesting upload signature...");
   const signResponse = await fetch("/api/cloudinary-sign", {

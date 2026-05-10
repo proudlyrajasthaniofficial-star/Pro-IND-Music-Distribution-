@@ -3,12 +3,9 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // -------------------------------------------------------------------------
-    // GLOBAL SAFETY NET
+    // HELPERS
     // -------------------------------------------------------------------------
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
+    
     // -------------------------------------------------------------------------
     // HELPERS & VALIDATION BLUEPRINTS
     // -------------------------------------------------------------------------
@@ -83,28 +80,28 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId) && isValidId(userId) && incoming().get('role', 'artist') == 'artist';
+      allow create: if isOwner(userId) && incoming().get('role', 'artist') == 'artist';
       allow update: if (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'planId'])) || isAdmin();
       allow delete: if isAdmin();
     }
 
     match /releases/{releaseId} {
       allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && isValidId(releaseId) && incoming().userId == request.auth.uid;
+      allow create: if isSignedIn();
       allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
     }
 
     match /artists/{artistId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidId(artistId) && incoming().userId == request.auth.uid;
+      allow create: if isSignedIn();
       allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow delete: if isAdmin();
     }
 
     match /labels/{labelId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidId(labelId) && incoming().userId == request.auth.uid;
+      allow create: if isSignedIn();
       allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
     }
 

@@ -1,7 +1,5 @@
 import mailjet from '../lib/mailjetClient.ts';
 import * as templates from '../templates/emailTemplates.ts';
-import { escapeHTML } from '../lib/sanitizer.ts';
-import logger from '../lib/logger.ts';
 
 /**
  * IND Distribution - Transactional Email Service (Mailjet Edition)
@@ -24,27 +22,23 @@ export class EmailService {
    * Main send function with Mailjet integration
    */
   public static async sendEmail({ to, name, subject, htmlContent }: SendEmailParams) {
-    // Sanitize basic fields
-    const safeTo = to?.trim().toLowerCase();
-    const safeName = escapeHTML(name || 'Valued Artist');
-    const safeSubject = escapeHTML(subject);
-
     // Validate From Email
     if (!this.fromEmail || !this.fromEmail.includes('@')) {
-      logger.error('EmailService: SENDER email is invalid or missing "@"', { fromEmail: this.fromEmail });
+      console.error('❌ [EmailService] SENDER email is invalid or missing "@":', this.fromEmail);
       return { success: false, error: 'Misconfigured sender email' };
     }
-    if (!safeTo || !safeTo.includes('@')) {
-      logger.error('EmailService: Invalid recipient email address', { to: safeTo });
+    if (!to || !to.includes('@')) {
+      console.error('❌ [EmailService] Invalid recipient email address:', to);
       return { success: false, error: 'Invalid recipient email' };
     }
 
     if (!mailjet) {
-      logger.warn('EmailService: Mailjet client not initialized. Email simulation mode active.', { subject: safeSubject, to: safeTo });
+      console.warn('⚠️ [EmailService] Mailjet client not initialized. Email simulation mode active.');
+      console.log(`[SIMULATION] Sending "${subject}" to ${name} (${to})`);
       return { success: true, simulated: true };
     }
 
-    // Inject APP_URL into templates if they contain placeholders (Safe as APP_URL is environment controlled)
+    // Inject APP_URL into templates if they contain placeholders
     const finalHtml = htmlContent.replace(/{{APP_URL}}/g, process.env.APP_URL || 'https://musicdistributionindia.online');
 
     try {
@@ -57,25 +51,25 @@ export class EmailService {
             },
             To: [
               {
-                Email: safeTo,
-                Name: safeName
+                Email: to,
+                Name: name || 'Valued Artist'
               }
             ],
-            Subject: safeSubject,
+            Subject: subject,
             HTMLPart: finalHtml
           }
         ]
       });
       
-      logger.info('EmailService: Email sent successfully', { to: safeTo, subject: safeSubject });
+      console.log(`✅ [EmailService] Email sent to ${to}`);
       return { success: true, response: response.body };
     } catch (error: any) {
       const errorDetail = error.response?.body || error.message;
-      logger.error('EmailService: Failed to send email', { 
-        to: safeTo, 
-        error: errorDetail,
-        statusCode: error.statusCode 
-      });
+      console.error(`❌ [EmailService] Failed to send email to ${to}:`, JSON.stringify(errorDetail, null, 2));
+      
+      if (error.statusCode === 400) {
+        console.warn('💡 [Tip] Status Code 400 often means the "From" email is not verified in your Mailjet account or the request body is malformed.');
+      }
       
       return { success: false, error: errorDetail };
     }
@@ -84,164 +78,139 @@ export class EmailService {
   // --- Specialized Triggers (User-Facing) ---
 
   public static async sendWelcomeEmail(email: string, name: string) {
-    const safeName = escapeHTML(name);
     return this.sendEmail({
       to: email,
       name,
       subject: 'Welcome to IND Distribution 🎵',
-      htmlContent: templates.getWelcomeTemplate(safeName),
+      htmlContent: templates.getWelcomeTemplate(name),
     });
   }
 
   public static async sendVerificationEmail(email: string, name: string, otp: string) {
-    // OTP is handled as numeric, but let's be safe
-    const safeOtp = escapeHTML(otp);
     return this.sendEmail({
       to: email,
       name,
       subject: 'Identity Verification Protocol',
-      htmlContent: templates.getVerificationTemplate(safeOtp),
+      htmlContent: templates.getVerificationTemplate(otp),
     });
   }
 
   public static async sendUploadConfirmation(email: string, name: string, songName: string) {
-    const safeSongName = escapeHTML(songName);
     return this.sendEmail({
       to: email,
       name,
-      subject: `We received your song 🎧: ${safeSongName}`,
-      htmlContent: templates.getUploadConfirmationTemplate(safeSongName),
+      subject: `We received your song 🎧: ${songName}`,
+      htmlContent: templates.getUploadConfirmationTemplate(songName),
     });
   }
 
   public static async sendApprovalEmail(email: string, name: string, songName: string) {
-    const safeSongName = escapeHTML(songName);
     return this.sendEmail({
       to: email,
       name,
-      subject: `Your song is approved ✅: ${safeSongName}`,
-      htmlContent: templates.getApprovalTemplate(safeSongName),
+      subject: `Your song is approved ✅: ${songName}`,
+      htmlContent: templates.getApprovalTemplate(songName),
     });
   }
 
   public static async sendRejectionEmail(email: string, name: string, songName: string, reason: string) {
-    const safeSongName = escapeHTML(songName);
-    const safeReason = escapeHTML(reason);
     return this.sendEmail({
       to: email,
       name,
-      subject: `Your song was rejected ❌: ${safeSongName}`,
-      htmlContent: templates.getRejectionTemplate(safeSongName, safeReason),
+      subject: `Your song was rejected ❌: ${songName}`,
+      htmlContent: templates.getRejectionTemplate(songName, reason),
     });
   }
 
   public static async sendCorrectionRequired(email: string, name: string, songName: string, notes: string) {
-    const safeSongName = escapeHTML(songName);
-    const safeNotes = escapeHTML(notes);
     return this.sendEmail({
       to: email,
       name,
-      subject: `Action Required: Fix your release ⚠️ - ${safeSongName}`,
-      htmlContent: templates.getCorrectionRequiredTemplate(safeSongName, safeNotes),
+      subject: `Action Required: Fix your release ⚠️ - ${songName}`,
+      htmlContent: templates.getCorrectionRequiredTemplate(songName, notes),
     });
   }
 
   public static async sendLiveSuccessEmail(email: string, name: string, songName: string) {
-    const safeSongName = escapeHTML(songName);
     return this.sendEmail({
       to: email,
       name,
-      subject: `Your song is LIVE 🚀: ${safeSongName}`,
-      htmlContent: templates.getLiveSuccessTemplate(safeSongName),
+      subject: `Your song is LIVE 🚀: ${songName}`,
+      htmlContent: templates.getLiveSuccessTemplate(songName),
     });
   }
 
   public static async sendRoyaltyAdded(email: string, name: string, amount: string, period: string) {
-    const safeAmount = escapeHTML(amount);
-    const safePeriod = escapeHTML(period);
     return this.sendEmail({
       to: email,
       name,
       subject: 'You received earnings 💰',
-      htmlContent: templates.getRoyaltyAddedTemplate(safeAmount, safePeriod),
+      htmlContent: templates.getRoyaltyAddedTemplate(amount, period),
     });
   }
 
   public static async sendWithdrawalApproved(email: string, name: string, amount: string) {
-    const safeAmount = escapeHTML(amount);
     return this.sendEmail({
       to: email,
       name,
       subject: 'Withdrawal Approved ✅',
-      htmlContent: templates.getWithdrawalApprovedTemplate(safeAmount),
+      htmlContent: templates.getWithdrawalApprovedTemplate(amount),
     });
   }
 
   public static async sendWithdrawalCompleted(email: string, name: string, amount: string, txId: string) {
-    const safeAmount = escapeHTML(amount);
-    const safeTxId = escapeHTML(txId);
     return this.sendEmail({
       to: email,
       name,
       subject: 'Payment Sent 💸',
-      htmlContent: templates.getWithdrawalCompletedTemplate(safeAmount, safeTxId),
+      htmlContent: templates.getWithdrawalCompletedTemplate(amount, txId),
     });
   }
 
   public static async sendRequestSubmittedConfirmation(email: string, name: string, type: string) {
-    const safeType = escapeHTML(type);
     return this.sendEmail({
       to: email,
       name,
       subject: 'We received your request',
-      htmlContent: templates.getRequestSubmittedTemplate(safeType),
+      htmlContent: templates.getRequestSubmittedTemplate(type),
     });
   }
 
   public static async sendRequestUpdate(email: string, name: string, type: string, status: 'Approved' | 'Rejected' | 'Completed', details?: string) {
-    const safeType = escapeHTML(type);
-    const safeStatus = escapeHTML(status);
-    const safeDetails = details ? escapeHTML(details) : undefined;
     return this.sendEmail({
       to: email,
       name,
-      subject: `Request Status Update: ${safeStatus}`,
-      htmlContent: templates.getRequestUpdateTemplate(safeType, status, safeDetails),
+      subject: `Request Status Update: ${status}`,
+      htmlContent: templates.getRequestUpdateTemplate(type, status, details),
     });
   }
 
   // --- Specialized Triggers (Admin-Facing) ---
 
   public static async notifyAdminNewUpload(userName: string, songName: string) {
-    const safeUserName = escapeHTML(userName);
-    const safeSongName = escapeHTML(songName);
     return this.sendEmail({
       to: this.adminEmail,
       name: 'System Admin',
       subject: 'New Release Submitted for Review 🎵',
-      htmlContent: templates.getAdminNewUploadTemplate(safeUserName, safeSongName),
+      htmlContent: templates.getAdminNewUploadTemplate(userName, songName),
     });
   }
 
   public static async notifyAdminWithdrawalRequest(userName: string, amount: string) {
-    const safeUserName = escapeHTML(userName);
-    const safeAmount = escapeHTML(amount);
     return this.sendEmail({
       to: this.adminEmail,
       name: 'System Admin',
       subject: 'New Withdrawal Requested 💰',
-      htmlContent: templates.getAdminWithdrawalRequestTemplate(safeUserName, safeAmount),
+      htmlContent: templates.getAdminWithdrawalRequestTemplate(userName, amount),
     });
   }
 
   public static async notifyAdminNewRequest(userName: string, type: string) {
-    const safeUserName = escapeHTML(userName);
-    const safeType = escapeHTML(type);
     return this.sendEmail({
       to: this.adminEmail,
       name: 'System Admin',
       subject: 'New User Request Submitted 🔔',
-      htmlContent: `<p>User <strong>${safeUserName}</strong> has submitted a new request: <strong>${safeType}</strong></p>`,
+      htmlContent: `<p>User <strong>${userName}</strong> has submitted a new request: <strong>${type}</strong></p>`,
     });
   }
 }

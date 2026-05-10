@@ -5,7 +5,6 @@ import SEO from '../components/SEO';
 import { SEO_PAGES_CONTENT } from '../constants/seoContent';
 import PublicNavbar from '../components/PublicNavbar';
 import PublicFooter from '../components/PublicFooter';
-import SanitizedHTML from '../components/SanitizedHTML';
 import { ArrowRight, CheckCircle2, Music, Zap, Globe, ShieldCheck } from 'lucide-react';
 
 const SEOLandingPage = () => {
@@ -80,7 +79,10 @@ const SEOLandingPage = () => {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16">
           {/* Article Side */}
           <div className="lg:col-span-8">
-            <SanitizedHTML 
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
               className="prose prose-slate prose-lg max-w-none 
                 prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:uppercase prose-h2:font-display prose-h2:mt-16
                 prose-h3:text-2xl prose-h3:font-black prose-h3:tracking-tight prose-h3:mt-10 prose-h3:text-slate-800
@@ -88,7 +90,7 @@ const SEOLandingPage = () => {
                 prose-li:text-slate-600 prose-li:text-lg
                 prose-strong:text-slate-900 prose-strong:font-black
                 prose-img:rounded-3xl prose-img:shadow-2xl"
-              html={pageContent.content}
+              dangerouslySetInnerHTML={{ __html: pageContent.content }}
             />
 
             {/* FAQ Section if available */}

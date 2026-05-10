@@ -28,7 +28,6 @@ import {
   UserPlus
 } from "lucide-react";
 import { toast } from "sonner";
-import SanitizedHTML from "../../components/SanitizedHTML";
 import { cn } from "../../lib/utils";
 import { INDIAN_GENRES } from "../../lib/constants";
 
@@ -125,12 +124,12 @@ export default function Upload() {
       const bitsPerSample = view.getUint16(34, true);
 
       if (sampleRate !== 44100 && sampleRate !== 48000) {
-        setAudioValidation({ valid: false, error: `Invalid Sample Rate: ${Number(sampleRate)}Hz. Standard is 44100Hz.` });
+        setAudioValidation({ valid: false, error: `Invalid Sample Rate: ${sampleRate}Hz. Standard is 44100Hz.` });
       } else if (bitsPerSample !== 16 && bitsPerSample !== 24) {
-        setAudioValidation({ valid: false, error: `Invalid Bit Depth: ${Number(bitsPerSample)}-bit. Standard is 16-bit.` });
+        setAudioValidation({ valid: false, error: `Invalid Bit Depth: ${bitsPerSample}-bit. Standard is 16-bit.` });
       } else {
         setAudioValidation({ valid: true });
-        toast.success(`Audio Verified: ${Number(sampleRate)}Hz / ${Number(bitsPerSample)}-bit WAV detected.`);
+        toast.success(`Audio Verified: ${sampleRate}Hz / ${bitsPerSample}-bit WAV detected.`);
       }
     };
     reader.readAsArrayBuffer(file.slice(0, 44));
@@ -821,7 +820,7 @@ export default function Upload() {
                            </div>
                            {audioPreviewUrl && (
                              <div className="bg-slate-50 p-4 rounded-3xl shadow-sm border border-slate-100">
-                               <audio controls src={audioPreviewUrl.startsWith('blob:') || audioPreviewUrl.startsWith('http') ? audioPreviewUrl : ''} className="w-full h-12" />
+                               <audio controls src={audioPreviewUrl} className="w-full h-12" />
                              </div>
                            )}
                         </div>
@@ -851,8 +850,8 @@ export default function Upload() {
                    <div className="max-w-xl mx-auto space-y-8">
                       <div className="relative group aspect-square rounded-[4rem] overflow-hidden shadow-2xl border-4 border-slate-50">
                          <input type="file" accept="image/jpeg,image/png" onChange={e => setCoverFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
-                         {coverPreviewUrl ? (
-                           <img src={coverPreviewUrl.startsWith('blob:') || coverPreviewUrl.startsWith('http') ? coverPreviewUrl : ''} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                         {coverFile ? (
+                           <img src={URL.createObjectURL(coverFile)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                          ) : (
                            <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-6">
                               <div className="w-20 h-20 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center text-brand-purple">
@@ -944,13 +943,13 @@ export default function Upload() {
                         <p className="text-slate-400 font-medium">Verify your digital artifact before final transmission.</p>
                       </div>
                       <div className="w-24 h-24 rounded-[2rem] overflow-hidden shadow-2xl border-2 border-white shrink-0">
-                         {coverPreviewUrl && <img src={coverPreviewUrl.startsWith('blob:') || coverPreviewUrl.startsWith('http') ? coverPreviewUrl : ''} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
+                         {coverPreviewUrl && <img src={coverPreviewUrl} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
                       </div>
                    </div>
                    {audioPreviewUrl && (
                       <div className="w-full bg-slate-50 p-4 rounded-3xl shadow-sm border border-slate-100">
                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2 px-2">Master Audio Preview</p>
-                         <audio controls src={audioPreviewUrl.startsWith('blob:') || audioPreviewUrl.startsWith('http') ? audioPreviewUrl : ''} className="w-full h-12" />
+                         <audio controls src={audioPreviewUrl} className="w-full h-12" />
                       </div>
                    )}
 
@@ -1001,7 +1000,7 @@ export default function Upload() {
                             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-4">Master Audio Lyrics</p>
                             <div className="bg-slate-50 p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] max-h-[250px] overflow-y-auto scrollbar-hide">
                                <p className="text-xs font-medium text-slate-500 italic leading-relaxed whitespace-pre-wrap">
-                                  <SanitizedHTML html={watchAll.lyrics || "No lyrics provided for this release."} tag="span" />
+                                  {watchAll.lyrics || "No lyrics provided for this release."}
                                </p>
                             </div>
                          </div>
