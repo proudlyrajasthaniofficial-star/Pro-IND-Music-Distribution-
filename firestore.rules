@@ -29,9 +29,9 @@ service cloud.firestore {
     // MASTER ADMIN BYPASS
     function isMasterAdmin() {
       return isSignedIn() && (
-        request.auth.token.email.lower() == "musicdistributionindia.in@gmail.com" || 
-        request.auth.token.email.lower() == "summyskji@gmail.com" ||
-        request.auth.token.email.lower() == "admin@musicdistributionindia.in"
+        request.auth.token.email.lowerCase() == "musicdistributionindia.in@gmail.com" || 
+        request.auth.token.email.lowerCase() == "summyskji@gmail.com" ||
+        request.auth.token.email.lowerCase() == "admin@musicdistributionindia.in"
       );
     }
 
@@ -106,15 +106,15 @@ service cloud.firestore {
     }
 
     match /transactions/{txId} {
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
       allow create: if isAdmin() || (isOwner(incoming().userId) && isValidTransaction(incoming()));
       allow update, delete: if isAdmin();
     }
 
     match /withdrawals/{wId} {
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
       allow create: if isSignedIn() && isValidWithdrawal(incoming()) && isValidId(wId);
       allow update: if isAdmin();
       allow delete: if isAdmin();
@@ -176,8 +176,8 @@ service cloud.firestore {
     }
 
     match /royalty_entries/{id} {
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
       allow write: if isAdmin();
     }
   }

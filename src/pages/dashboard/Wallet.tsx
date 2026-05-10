@@ -60,7 +60,7 @@ export default function WalletPage() {
   const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState<"all" | "earning" | "withdrawal">("all");
 
-  const fetchData = async () => {
+  useEffect(() => {
     if (!user) return;
     setLoading(true);
     
@@ -68,7 +68,6 @@ export default function WalletPage() {
     const tQ = query(
       collection(db, "transactions"),
       where("userId", "==", user.uid)
-      // Removed orderBy to avoid index requirement; sorting in memo
     );
 
     const unsubscribeT = onSnapshot(tQ, (snapshot) => {
@@ -110,15 +109,6 @@ export default function WalletPage() {
     return () => {
       unsubscribeT();
       unsubscribeW();
-    };
-  };
-
-  useEffect(() => {
-    const unsub = fetchData();
-    return () => {
-      if (typeof unsub === 'function') {
-        (unsub as () => void)();
-      }
     };
   }, [user]);
 
@@ -169,7 +159,6 @@ export default function WalletPage() {
       toast.success("Withdrawal request submitted successfully.");
       setAmount("");
       setShowForm(false);
-      fetchData();
     } catch (err: any) {
       console.error("Withdrawal Error:", err);
       toast.error("Submission failed. Security rules might be blocking this request.");
