@@ -55,7 +55,12 @@ export async function uploadToCloudinary(
   // 3. Perform upload
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
+    
+    // Use 'auto' resource_type so Cloudinary detects correctly (image vs video/audio)
     xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
+
+    // Add a reasonable timeout for large files (30 minutes)
+    xhr.timeout = 1800000; 
 
     if (onProgress) {
       xhr.upload.onprogress = (e) => {
@@ -68,15 +73,24 @@ export async function uploadToCloudinary(
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        const response: CloudinaryResponse = JSON.parse(xhr.responseText);
-        resolve(response.secure_url);
+        try {
+          const response: CloudinaryResponse = JSON.parse(xhr.responseText);
+          resolve(response.secure_url);
+        } catch (e) {
+          reject(new Error("Invalid JSON response from Cloudinary"));
+        }
       } else {
-        const error = JSON.parse(xhr.responseText);
-        reject(new Error(error.error?.message || "Upload failed"));
+        try {
+          const error = JSON.parse(xhr.responseText);
+          reject(new Error(error.error?.message || `Upload failed with status ${xhr.status}`));
+        } catch (e) {
+          reject(new Error(`Upload failed with status ${xhr.status}`));
+        }
       }
     };
 
-    xhr.onerror = () => reject(new Error("Network error during upload"));
+    xhr.ontimeout = () => reject(new Error("Upload timed out after 30 minutes. Please check your connection."));
+    xhr.onerror = () => reject(new Error("Network error during upload. Please check your internet connection."));
     xhr.send(formData);
   });
 }

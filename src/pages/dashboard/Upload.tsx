@@ -95,12 +95,14 @@ export default function Upload() {
   const { releaseId } = useParams();
   const [step, setStep] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [isBackgroundUploading, setIsBackgroundUploading] = useState<{ audio: boolean; cover: boolean }>({ audio: false, cover: false });
   const [formError, setFormError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: { current: number, name: string } }>({});
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(PLATFORMS.map(p => p.name));
   const [existingRelease, setExistingRelease] = useState<any>(null);
   
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioValidation, setAudioValidation] = useState<{ valid: boolean; error?: string } | null>(null);
 
   const validateAudio = (file: File) => {
@@ -134,11 +136,84 @@ export default function Upload() {
     };
     reader.readAsArrayBuffer(file.slice(0, 44));
   };
+
   const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
   const [existingAudioUrl, setExistingAudioUrl] = useState<string | null>(null);
   const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+
+  // Background Audio Upload
+  useEffect(() => {
+    let active = true;
+    if (audioFile && audioValidation?.valid) {
+      const upload = async () => {
+        setIsBackgroundUploading(prev => ({ ...prev, audio: true }));
+        try {
+          const url = await uploadToCloudinary(audioFile, (progress) => {
+            if (active) {
+              setUploadProgress(prev => ({ 
+                ...prev, 
+                audio: { current: progress, name: "Master Audio" }
+              }));
+            }
+          });
+          if (active) {
+            setAudioUrl(url);
+            toast.success("Master Audio Asset Sync Complete");
+          }
+        } catch (err: any) {
+          if (active) {
+            console.error("Audio Upload error:", err);
+            toast.error("Audio Transmission Failed: " + (err.message || "Unknown error"));
+          }
+        } finally {
+          if (active) {
+            setIsBackgroundUploading(prev => ({ ...prev, audio: false }));
+          }
+        }
+      };
+      upload();
+    }
+    return () => { active = false; };
+  }, [audioFile, audioValidation]);
+
+  // Background Cover Upload
+  useEffect(() => {
+    let active = true;
+    if (coverFile) {
+      const upload = async () => {
+        setIsBackgroundUploading(prev => ({ ...prev, cover: true }));
+        try {
+          const url = await uploadToCloudinary(coverFile, (progress) => {
+            if (active) {
+              setUploadProgress(prev => ({ 
+                ...prev, 
+                cover: { current: progress, name: "Cover Art" }
+              }));
+            }
+          });
+          if (active) {
+            setCoverUrl(url);
+            toast.success("Visual Anchor Asset Sync Complete");
+          }
+        } catch (err: any) {
+          if (active) {
+            console.error("Cover Upload error:", err);
+            toast.error("Cover Transmission Failed: " + (err.message || "Unknown error"));
+          }
+        } finally {
+          if (active) {
+            setIsBackgroundUploading(prev => ({ ...prev, cover: false }));
+          }
+        }
+      };
+      upload();
+    }
+    return () => { active = false; };
+  }, [coverFile]);
 
   useEffect(() => {
     if (audioFile) {
@@ -278,52 +353,32 @@ export default function Upload() {
 
   const onSubmit = async (data: any) => {
     setFormError(null);
-    if (!audioFile && !existingAudioUrl) {
-      setFormError("Please upload an audio file first.");
-      setStep(4);
+    
+    const finalAudioUrl = audioUrl || existingAudioUrl;
+    const finalCoverUrl = coverUrl || existingCoverUrl;
+
+    if (!finalAudioUrl) {
+      if (isBackgroundUploading.audio) {
+        setFormError("Audio is still uploading. Please wait...");
+      } else {
+        setFormError("Please upload an audio file first.");
+        setStep(4);
+      }
       return;
     }
-    if (!coverFile && !existingCoverUrl) {
-      setFormError("Please upload cover art first.");
-      setStep(5);
+    if (!finalCoverUrl) {
+      if (isBackgroundUploading.cover) {
+        setFormError("Cover art is still uploading. Please wait...");
+      } else {
+        setFormError("Please upload cover art first.");
+        setStep(5);
+      }
       return;
     }
     if (!user) return;
     
     setIsUploading(true);
-    setUploadProgress({}); // Reset progress map
     try {
-      const uploadPromises: Promise<any>[] = [];
-      let coverUrl = existingCoverUrl;
-      let audioUrl = existingAudioUrl;
-
-      // 1. Prepare Cover Upload
-      if (coverFile) {
-        uploadPromises.push(
-          uploadToCloudinary(coverFile, (progress) => {
-            setUploadProgress(prev => ({ 
-              ...prev, 
-              cover: { current: progress, name: "Cover Art" }
-            }));
-          }).then(url => coverUrl = url)
-        );
-      }
-
-      // 2. Prepare Audio Upload
-      if (audioFile) {
-        uploadPromises.push(
-          uploadToCloudinary(audioFile, (progress) => {
-            setUploadProgress(prev => ({ 
-              ...prev, 
-              audio: { current: progress, name: "Master Audio" }
-            }));
-          }).then(url => audioUrl = url)
-        );
-      }
-
-      // Execute uploads in parallel
-      await Promise.all(uploadPromises);
-
       const generateCustomId = (title: string) => {
         const sanitized = title.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10).toUpperCase();
         const num = Math.floor(100000 + Math.random() * 900000);
@@ -343,8 +398,8 @@ export default function Upload() {
         label: data.labelName, 
         releaseDate: data.releaseDate,
         releaseTime: data.releaseTime,
-        audioUrl,
-        coverUrl,
+        audioUrl: finalAudioUrl,
+        coverUrl: finalCoverUrl,
         status: "pending", 
         platforms: selectedPlatforms,
         metadata: data,
@@ -425,6 +480,62 @@ export default function Upload() {
 
   return (
     <div className="max-w-6xl mx-auto py-6 md:py-10 pb-32 px-4 md:px-0">
+      {/* Global Background Upload Progress Bar */}
+      <AnimatePresence>
+        {(isBackgroundUploading.audio || isBackgroundUploading.cover) && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] w-full max-w-lg px-4"
+          >
+            <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-3xl text-white space-y-4">
+               <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                     <div className="w-8 h-8 bg-brand-blue rounded-xl flex items-center justify-center animate-pulse">
+                        <Zap className="w-4 h-4" />
+                     </div>
+                     <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-widest">Background Transmission</h4>
+                        <p className="text-[8px] font-bold text-slate-400 uppercase">Syncing Creative Assets to Global Catalog</p>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <span className="text-xs font-black font-mono text-brand-blue">
+                        {Math.round(
+                          ((isBackgroundUploading.audio ? uploadProgress.audio?.current || 0 : 100) + 
+                           (isBackgroundUploading.cover ? uploadProgress.cover?.current || 0 : 100)) / 2
+                        )}%
+                     </span>
+                  </div>
+               </div>
+               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ 
+                      width: `${((isBackgroundUploading.audio ? uploadProgress.audio?.current || 0 : 100) + 
+                                (isBackgroundUploading.cover ? uploadProgress.cover?.current || 0 : 100)) / 2}%` 
+                    }}
+                    className="h-full bg-linear-to-r from-brand-blue to-emerald-400"
+                  />
+               </div>
+               <div className="flex gap-4">
+                  {isBackgroundUploading.audio && (
+                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-400">
+                       <Music className="w-3 h-3" /> Audio: {Math.round(uploadProgress.audio?.current || 0)}%
+                    </div>
+                  )}
+                  {isBackgroundUploading.cover && (
+                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-400">
+                       <ImageIcon className="w-3 h-3" /> Art: {Math.round(uploadProgress.cover?.current || 0)}%
+                    </div>
+                  )}
+               </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Heavy Stepper - Responsive */}
       <div className="flex items-center justify-between mb-8 md:mb-20 relative px-2 md:px-10 overflow-x-auto scrollbar-hide py-4">
          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-slate-100 -translate-y-1/2 hidden md:block"></div>
@@ -787,8 +898,11 @@ export default function Upload() {
                               accept=".mp3,.wav" 
                               onChange={e => {
                                  const file = e.target.files?.[0] || null;
-                                 setAudioFile(file);
-                                 if (file) validateAudio(file);
+                                 if (file) {
+                                   setAudioFile(file);
+                                   setAudioUrl(null); // Reset when new file selected
+                                   validateAudio(file);
+                                 }
                               }} 
                               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                          />
@@ -814,7 +928,15 @@ export default function Upload() {
                            <div className="p-6 bg-slate-900 rounded-3xl flex items-center justify-between shadow-2xl">
                               <div className="flex items-center gap-4">
                                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white"><Music className="w-5 h-5" /></div>
-                                 <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                                 <div className="flex flex-col text-left">
+                                   <span className="text-xs font-bold text-white uppercase tracking-widest">{audioFile ? "Audio Loaded Successfully" : "Using Existing Master"}</span>
+                                   {isBackgroundUploading.audio && (
+                                     <span className="text-[8px] font-black text-emerald-400 uppercase tracking-widest animate-pulse">Background Upload: {Math.round(uploadProgress.audio?.current || 0)}%</span>
+                                   )}
+                                   {!isBackgroundUploading.audio && (audioUrl || existingAudioUrl) && (
+                                     <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1"><Check className="w-2 h-2" /> Asset Ready</span>
+                                   )}
+                                 </div>
                               </div>
                               <button type="button" onClick={() => { setAudioFile(null); setExistingAudioUrl(null); setAudioPreviewUrl(null); }} className="text-white/40 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
                            </div>
@@ -849,11 +971,30 @@ export default function Upload() {
                    </div>
                    <div className="max-w-xl mx-auto space-y-8">
                       <div className="relative group aspect-square rounded-[4rem] overflow-hidden shadow-2xl border-4 border-slate-50">
-                         <input type="file" accept="image/jpeg,image/png" onChange={e => setCoverFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
-                         {coverFile ? (
-                           <img src={URL.createObjectURL(coverFile)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                         ) : (
-                           <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-6">
+                         <input type="file" accept="image/jpeg,image/png" onChange={e => {
+                            const file = e.target.files?.[0] || null;
+                            if (file) {
+                              setCoverFile(file);
+                              setCoverUrl(null); // Reset when new file selected
+                            }
+                          }} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
+                          {coverFile ? (
+                            <div className="w-full h-full relative">
+                              <img src={URL.createObjectURL(coverFile)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                              {isBackgroundUploading.cover && (
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-4">
+                                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full" />
+                                  <p className="text-[10px] font-black text-white uppercase tracking-widest">Uploading {Math.round(uploadProgress.cover?.current || 0)}%</p>
+                                </div>
+                              )}
+                              {coverUrl && !isBackgroundUploading.cover && (
+                                <div className="absolute top-6 right-6 bg-emerald-500 text-white p-2 rounded-full shadow-2xl border-2 border-white">
+                                  <Check className="w-4 h-4" />
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-6">
                               <div className="w-20 h-20 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center text-brand-purple">
                                  <ImageIcon className="w-10 h-10" />
                               </div>
@@ -861,8 +1002,8 @@ export default function Upload() {
                                  <p className="text-sm font-black font-display uppercase tracking-widest">Transmit Image Data</p>
                                  <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase">3000 x 3000 • 1:1 • JPG/PNG</p>
                               </div>
-                           </div>
-                         )}
+                            </div>
+                          )}
                       </div>
                       <div className="pt-8 flex justify-center gap-6">
                         <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500">Back</button>
@@ -1028,10 +1169,22 @@ export default function Upload() {
                       </div>
                    </div>
 
-                   <div className="pt-12 flex flex-col sm:flex-row justify-center gap-6">
-                      <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500 py-6 px-12 md:py-6 md:px-12 w-full sm:w-auto">Return to Edit</button>
-                      <button type="submit" className="btn-premium btn-glow py-6 px-16 md:px-24 text-base md:text-lg font-black tracking-tighter shadow-2xl animate-pulse w-full sm:w-auto">DEPLOY MASTER RELEASE</button>
-                   </div>
+                    <div className="pt-12 flex flex-col sm:flex-row justify-center gap-6">
+                       <button type="button" onClick={prevStep} className="btn-premium glass text-slate-500 py-6 px-12 md:py-6 md:px-12 w-full sm:w-auto">Return to Edit</button>
+                       <button 
+                         type="submit" 
+                         disabled={isBackgroundUploading.audio || isBackgroundUploading.cover}
+                         className={cn(
+                           "btn-premium py-6 px-16 md:px-24 text-base md:text-lg font-black tracking-tighter shadow-2xl animate-pulse w-full sm:w-auto",
+                           (isBackgroundUploading.audio || isBackgroundUploading.cover) ? "bg-slate-300 text-slate-500 cursor-not-allowed opacity-50" : "btn-glow bg-brand-blue text-white"
+                         )}
+                       >
+                         { (isBackgroundUploading.audio || isBackgroundUploading.cover) 
+                           ? "WAITING FOR ASSETS..." 
+                           : "DEPLOY MASTER RELEASE"
+                         }
+                       </button>
+                    </div>
                 </motion.div>
              )}
 
