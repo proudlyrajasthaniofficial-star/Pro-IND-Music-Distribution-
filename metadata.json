@@ -1,6 +1,6 @@
 {
-  "name": "IND Music Distribution India ",
-  "description": "Professional platform for artists featuring cash-free payments, subscription management, and performance dashboards.",
+  "name": "IND Music Distribution India",
+  "description": "Professional music distribution platform for Indian artists featuring automated releases, royalty tracking, and performance analytics.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

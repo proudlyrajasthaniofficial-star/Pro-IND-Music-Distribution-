@@ -80,8 +80,57 @@ export default function Home() {
       <div className="absolute inset-0 noise opacity-[0.03] z-[1] pointer-events-none"></div>
       <NeuralGrid />
       <SEO 
-        title="IND Music Distribution India | #1 Music Distribution | Release & Earn"
-        description="Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!"
+        title="IND Music: Best Music Distribution in India | 100% Royalties"
+        description="Distribute your music to JioSaavn, Wynk, Spotify & more. Keep 100% royalties. Fast ISRC/UPC generation and CRBT setup for Indian artists."
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "IND Music Distribution India",
+          "url": "https://musicdistributionindia.online",
+          "logo": "https://musicdistributionindia.online/logo.png",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-7742789827",
+            "contactType": "customer service",
+            "email": "musicdistributionindia.in@gmail.com"
+          },
+          "sameAs": [
+            "https://www.instagram.com/musicdistributionindia",
+            "https://www.youtube.com/@musicdistributionindia"
+          ]
+        }}
+      />
+      <SEO 
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I distribute music to JioSaavn and Wynk?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Simply upload your track to the IND Music platform. We handle the technical delivery, provide your ISRC and UPC codes, and ensure your music goes live on JioSaavn and Wynk within days."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does IND Music take a percentage of my royalties?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. At IND Music, Indian independent artists keep 100% of their earnings from Spotify, Apple Music, and other DSPs. We charge zero commission on your royalties."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How fast is the music approval process?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Our dedicated team reviews every release within 24 hours to ensure everything is perfect for global distribution."
+              }
+            }
+          ]
+        }}
       />
       {/* Floating WhatsApp Button */}
       <a 
@@ -244,7 +293,7 @@ export default function Home() {
               className="inline-flex items-center gap-3 px-4 md:px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-6 md:mb-10 cursor-pointer shadow-[0_0_30px_rgba(37,99,235,0.2)]"
             >
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_10px_rgba(37,99,235,0.8)]"></div>
-              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/80">Indian Artists ke liye Professional Music Distribution</span>
+              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/80">India's Fastest Music Aggregator for Independent Artists</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-[9.5rem] font-black font-display tracking-tight leading-[0.9] md:leading-[0.8] uppercase mb-8 md:mb-12">
@@ -254,7 +303,7 @@ export default function Home() {
                 transition={{ delay: 0.2, duration: 1, ease: [0.23, 1, 0.32, 1] }}
                 className="block text-white mb-2 md:mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] break-words lg:break-normal"
               >
-                INDIAN ARTISTS
+                100% ROYALTIES.
               </motion.span>
               <motion.span 
                 initial={{ opacity: 0, x: -20 }}
@@ -262,7 +311,7 @@ export default function Home() {
                 transition={{ delay: 0.4, duration: 1, ease: [0.23, 1, 0.32, 1] }}
                 className="bg-gradient-to-r from-brand-blue via-white to-brand-purple text-transparent bg-clip-text animate-gradient py-2 md:py-4 block break-words lg:break-normal"
               >
-                KA ASLI BHAROSA
+                FAST DISTRIBUTION.
               </motion.span>
             </h1>
 
@@ -272,8 +321,8 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 1 }}
               className="text-sm md:text-xl text-slate-400 font-medium max-w-3xl mx-auto mb-12 md:mb-20 leading-relaxed px-4 uppercase tracking-widest"
             >
-              IND Music Distribution India ka sabse trusted platform hai independent artists ke liye. 
-              Apna music 250+ platforms par distribute karein jaise Spotify, Apple Music, aur JioSaavn.
+              Stop waiting for labels. Upload your music to JioSaavn, Wynk, and Spotify in under 24 hours. 
+              We provide official ISRC and UPC codes. Keep every rupee you earn. Pure distribution. No commission.
             </motion.p>
 
             <motion.div 

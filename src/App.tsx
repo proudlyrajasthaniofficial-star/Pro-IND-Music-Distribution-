@@ -28,6 +28,7 @@ const Privacy = lazy(() => import('./pages/legal/Privacy'));
 const Refunds = lazy(() => import('./pages/legal/Refunds'));
 const Contact = lazy(() => import('./pages/legal/Contact'));
 const Sitemap = lazy(() => import('./pages/Sitemap'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
 const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 const AdminReleases = lazy(() => import('./pages/admin/AdminReleases'));
@@ -51,6 +52,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import PageLoader from './components/ui/Loading';
 import { Toaster } from 'sonner';
 import CustomCursor from './components/ui/CustomCursor';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 import DashboardLayout from './components/DashboardLayout';
 
@@ -82,6 +84,7 @@ function AppContent() {
           <Route path="/founder" element={<Navigate to="/founder-developer" replace />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/platforms" element={<SEOLandingPage />} />
           
           {/* SEO Landing Pages (The Core 10) */}
           <Route path="/best-music-distribution-india" element={<SEOLandingPage />} />
@@ -168,7 +171,8 @@ function AppContent() {
             <Route path="subscription" element={<Subscription />} />
           </Route>
 
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </React.Suspense>
     </Router>
@@ -177,10 +181,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <CustomCursor />
       <Toaster position="top-right" expand={false} richColors />
       <AppContent />
-    </>
+    </ErrorBoundary>
   );
 }

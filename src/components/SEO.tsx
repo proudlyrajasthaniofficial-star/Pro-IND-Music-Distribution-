@@ -13,10 +13,10 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({
   title = 'IND Distribution | #1 Music Distribution India | Release & Earn',
-  description = 'Start your Indian Music Distribution journey today. Release songs on Gaana & JioSaavn for free. Keep 100% royalties and upload unlimited music. Start now!',
-  keywords = 'music distribution India, free music distribution India, how to release song in India, Indian music distribution platform, free gaana release India, JioSaavn song release process, Spotify earnings India, upload song on Spotify India, caller tune release India, best music distributor India, release song online India, music distribution for independent artists India, cheap music distribution India, Wynk music upload India, Apple Music India distribution, gaana app song upload, earn money from music India, independent artist India music release, digital music distribution India, music release service India, musicdistributionindia, Musicdistributionindia.in, Music-Distribution-India, musicdistributionindia.com, musicdistributionindia.online',
-  image = 'https://musicdistributionindia.in/og-image.jpg',
-  url = 'https://musicdistributionindia.in',
+  description = 'India\'s fastest music distribution platform for independent artists. Distribute music to JioSaavn, Wynk, Spotify & more. Keep 100% royalties. ISRC & UPC included.',
+  keywords = 'music distribution India, ISRC code India, UPC registration, JioSaavn distribution, Wynk music upload, Spotify for artists India, caller tune setup CRBT, music aggregation India, digital streaming platform distribution, independent artist royalties India, best music distributor India, register song for CRBT, music distribution india online, music distribution india aggregation',
+  image = 'https://musicdistributionindia.online/og-image.jpg',
+  url = 'https://musicdistributionindia.online',
   type = 'website',
   schema
 }) => {

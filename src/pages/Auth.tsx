@@ -284,12 +284,8 @@ export default function Auth() {
       </motion.div>
 
       {/* Floor Footer */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-8 opacity-30">
-        <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">Encryption: SHA-256</span>
-        <div className="w-1.5 h-1.5 bg-slate-800 rounded-full"></div>
-        <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">Region: IND-01</span>
-        <div className="w-1.5 h-1.5 bg-slate-800 rounded-full"></div>
-        <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">Nexus Network v4.2</span>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-8 opacity-20">
+        <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em]">© {new Date().getFullYear()} IND Music Distribution India</span>
       </div>
     </div>
   );

@@ -15,8 +15,14 @@ import * as reqCtrl from "./controllers/requestController.ts";
 import * as cashfreeService from "./services/cashfreeService.ts";
 import { admin, getAdminDb } from "./services/firebaseAdmin.ts";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Support both ESM (tsx) and CommonJS (bundled)
+const _filename = (typeof import.meta !== 'undefined' && import.meta.url) 
+  ? fileURLToPath(import.meta.url) 
+  : (path.join(process.cwd(), 'server.ts'));
+
+const _dirname = (typeof import.meta !== 'undefined' && import.meta.url)
+  ? path.dirname(_filename)
+  : (process.cwd());
 
 // Cloudinary Configuration (Lazy init to prevent crash on missing keys)
 function setupCloudinary() {
@@ -118,7 +124,7 @@ Sitemap: https://musicdistributionindia.online/sitemap.xml`;
   });
 
   // Explicitly serve static files from public directory
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(path.join(_dirname, "public")));
 
   // JSON Body Parser (except for webhooks)
   app.use((req, res, next) => {
