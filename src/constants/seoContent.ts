@@ -14,81 +14,422 @@ export interface SEOContent {
 
 export const SEO_PAGES_CONTENT: Record<string, SEOContent> = {
   "best-music-distribution-india": {
-    title: "Best Music Distribution India | #1 Music Distribution Service",
-    h1: "Best Music Distribution India – Complete Guide for Independent Artists",
-    description: "Looking for the Best Music Distribution India? Release your music on Gaana, Spotify, and JioSaavn with IND Distribution. Start your global music career today.",
-    keywords: ["music distribution India", "free music distribution India", "how to release song in India", "Indian music distribution platform", "free gaana release India", "JioSaavn song release process", "Spotify earnings India", "upload song on Spotify India", "caller tune release India", "best music distributor India", "release song online India", "music distribution for independent artists India", "cheap music distribution India", "Wynk music upload India", "Apple Music India distribution", "gaana app song upload", "earn money from music India", "independent artist India music release", "digital music distribution India", "music release service India", "musicdistributionindia", "Musicdistributionindia.in", "Music-Distribution-India", "musicdistributionindia.com", "musicdistributionindia.online"],
+    title: "Best Music Distribution India | Spotify, JioSaavn & YouTube Distribution",
+    h1: "Best Music Distribution Service in India for Independent Artists (2026)",
+    description: "Looking for the best music distribution service in India? Learn how Indian artists and labels distribute music on Spotify, JioSaavn, Apple Music, Instagram, YouTube Music and more while earning royalties globally.",
+    keywords: ["best music distribution india", "music distribution india", "indian music distribution", "spotify music distribution india", "digital music distribution india", "music distributor for indian artists", "upload music on spotify india", "release music worldwide", "youtube content id india", "caller tune distribution india", "indian music industry", "independent artists india", "record label distribution india", "best music distributor for independent artists india", "how to distribute songs on spotify from india", "indian music distribution company for labels", "upload punjabi songs on spotify", "distribute music on jiosaavn india", "music distribution platform with caller tunes india"],
     content: `
-      <p>India ka music scene ab sirf Bollywood tak limited nahi raha. Aaj independent artists, rappers, singers, producers aur labels digital platforms ki help se apna music worldwide release kar rahe hain. Agar aap bhi apna music duniya tak pahunchana chahte hain, to aapko ek reliable music distribution platform India ki zarurat hogi.</p>
-      
-      <p>Music distribution ka matlab hota hai aapke songs ko major streaming platforms tak pahunchana—jaise Spotify, Apple Music, JioSaavn, Gaana, Wynk Music aur YouTube Music. Pehle ye kaam sirf record labels karte the, lekin ab independent artists bhi directly apna music release kar sakte hain. India mein ab talent ki kami nahi hai, lekin right distribution channel na hone ki wajah se bahut saare artists peeche reh jate hain. Is guide mein hum detail mein baat karenge ki kaise aap best music distribution platform choose kar sakte hain.</p>
+      <p>The Indian music industry has changed completely.</p>
+
+      <p>Earlier, artists needed:</p>
+      <ul>
+        <li>Bollywood connections</li>
+        <li>big record labels</li>
+        <li>TV promotion</li>
+        <li>radio networks</li>
+        <li>expensive studio marketing</li>
+      </ul>
+
+      <p>Now none of that is mandatory.</p>
+      <p>Independent artists across India are getting millions of streams using digital music distribution.</p>
+      <p>Artists from Punjab, Haryana, Rajasthan, Uttar Pradesh, Delhi, Maharashtra, Tamil Nadu, Kerala, Bengal and Northeast India are growing globally through Spotify, YouTube Music, Apple Music, Instagram Reels and JioSaavn.</p>
+      <p>The biggest reason is digital music distribution.</p>
+
+      <p>A professional music distribution platform allows artists to:</p>
+      <ul>
+        <li>release songs globally</li>
+        <li>collect royalties</li>
+        <li>monetize YouTube videos</li>
+        <li>distribute caller tunes</li>
+        <li>protect copyrights</li>
+        <li>grow Spotify audiences</li>
+        <li>create artist brands</li>
+      </ul>
+
+      <p>But most Indian artists still choose the wrong distributor.</p>
+      <p>That causes:</p>
+      <ul>
+        <li>delayed releases</li>
+        <li>frozen royalties</li>
+        <li>fake copyright claims</li>
+        <li>missing payments</li>
+        <li>rejected releases</li>
+        <li>poor support</li>
+        <li>catalog issues</li>
+      </ul>
+
+      <p>Choosing the right music distribution service in India directly affects your music career.</p>
 
       <h2>What is Music Distribution?</h2>
-      <p>Music distribution ek digital process hai jisme aap apne audio files (songs), metadata (title, artist name, genre) aur artwork ko ek distribution platform par upload karte ho. Ye platform aapke music ko multiple streaming services par publish karta hai. Basically, distributor ek "bridge" ki tarah kaam karta hai artist aur streaming apps ke beech mein.</p>
+      <p>Music distribution means sending your songs to digital streaming platforms and music stores.</p>
+      <p>A distributor acts as the bridge between artists and platforms.</p>
+      <p>Without a distributor, your music usually cannot appear officially on major platforms.</p>
       
-      <p>Jab aap ek distributor jaise <strong>Music Distribution India</strong> ya global giants like TuneCore aur DistroKid use karte ho, to aapka music globally live ho jata hai. Iska sabse bada fayda ye hai ki aapko har stream par paise milte hain, jise hum 'Royalties' kehte hain. India ke context mein, regions like Punjab, Haryana, aur South India se independent music ka boom aaya hai, aur aaj har koi apne sapno ko poora kar raha hai.</p>
-
-      <h2>How It Works (Step-by-Step)</h2>
+      <p>A music distribution company delivers songs to:</p>
       <ul>
-        <li><strong>Account Create Karo:</strong> Sabse pehle aapko platform par sign up karna hoga. India mein local platforms use karna better hota hai for easier payment payouts.</li>
-        <li><strong>Song Upload Karo:</strong> Hamesha high-quality audio file (WAV format, 44.1kHz, 16-bit) use karein. MP3 distribution ke liye suitable nahi hoti.</li>
-        <li><strong>Metadata Fill Karo:</strong> Song ka naam, artist name, language, genre aur release date enter karein. SEO ke liye accurate metadata bahut zaroori hai.</li>
-        <li><strong>Album Artwork Add Karo:</strong> Minimum 3000x3000px square image upload karein. Low resolution images stores reject kar sakte hain.</li>
-        <li><strong>Platforms Select Karo:</strong> Aap decide kar sakte ho ki aapko kahan kahan release karna hai—Spotify, JioSaavn, Gaana, Apple Music, etc.</li>
-        <li><strong>Release Date Set Karo:</strong> Release date se kam se kam 2-3 hafte pehle upload karein taki promotion ka time mile.</li>
-        <li><strong>Publish & Earn:</strong> Song live hone ke baad audience build karein aur royalties earn karna start karein.</li>
+        <li>Spotify</li>
+        <li>Apple Music</li>
+        <li>JioSaavn</li>
+        <li>YouTube Music</li>
+        <li>Instagram Music</li>
+        <li>Facebook Music</li>
+        <li>Amazon Music</li>
+        <li>Wynk Music</li>
+        <li>Gaana</li>
+        <li>TikTok</li>
+        <li>Deezer</li>
+        <li>Tidal</li>
+        <li>Snapchat</li>
+      </ul>
+      <p>Once your music is uploaded, streaming platforms pay royalties.</p>
+      <p>The distributor collects the money and sends earnings to the artist or label.</p>
+
+      <h2>Why Music Distribution Matters in India</h2>
+      <p>India is now one of the fastest growing music streaming markets in the world.</p>
+      <p>Smartphone growth, cheap internet and short-form content platforms changed the entire industry.</p>
+      <p>Today:</p>
+      <ul>
+        <li>Instagram Reels create viral songs</li>
+        <li>YouTube Shorts push independent artists</li>
+        <li>Spotify algorithms discover new music</li>
+        <li>regional music dominates streaming charts</li>
+      </ul>
+      <p>Artists no longer need film industries to become popular.</p>
+      <p>Independent artists now build careers directly.</p>
+      <p>This is why professional music distribution matters more than ever.</p>
+
+      <h2>Growth of Independent Music in India</h2>
+      <p>Independent music in India is exploding.</p>
+      <p>The biggest growing categories are:</p>
+      <ul>
+        <li>Punjabi music</li>
+        <li>Haryanvi songs</li>
+        <li>Bhojpuri music</li>
+        <li>Tamil independent music</li>
+        <li>Lo-fi music</li>
+        <li>Hindi rap</li>
+        <li>devotional music</li>
+        <li>regional folk fusion</li>
+      </ul>
+      <p>Streaming platforms are investing heavily in regional content because audience demand is massive.</p>
+      <p>Even small creators are generating millions of streams.</p>
+
+      <h2>How Music Distribution Works</h2>
+      <p>The process is simple but important.</p>
+
+      <h3>Step 1 — Artist Uploads Music</h3>
+      <p>Artists upload:</p>
+      <ul>
+        <li>audio files</li>
+        <li>artwork</li>
+        <li>metadata</li>
+        <li>release date</li>
+        <li>credits</li>
       </ul>
 
-      <h2>Benefits of Music Distribution in India</h2>
-      <p>Music distribution ke bina global reach milna lagbhag impossible hai. Yahan kuch key benefits diye gaye hain:</p>
+      <h3>Step 2 — Distributor Reviews Content</h3>
+      <p>The platform checks:</p>
       <ul>
-        <li><strong>Global Reach:</strong> Aapka music sirf India mein hi nahi, balki US, UK, Australia aur poori duniya mein suna ja sakta hai.</li>
-        <li><strong>Passive Income:</strong> Ek baar song release hone ke baad, jab bhi koi use sunta hai, aapko paise milte hain.</li>
-        <li><strong>Full Artist Control:</strong> Aap kisi label ke under nahi hote, aap apne music ke khud owner ho.</li>
-        <li><strong>No Need for Labels:</strong> Independent artists bina kisi contact ke directly industry mein enter ho sakte hain.</li>
-        <li><strong>Brand Building:</strong> Verified artist profile (Blue Tick) milne se aapki face value badhti hai.</li>
-        <li><strong>Analytics Access:</strong> Aap dekh sakte ho ki aapka song kaun log sun rahe hain, unki age kya hai, aur vo kaunse city se hain.</li>
-        <li><strong>Playlist Exposure:</strong> Editorial playlists mein feature hone ke chances badhte hain agar aap regular distribution karte hain.</li>
-        <li><strong>Content Protection:</strong> Aapke music ka koi misuse nahi kar sakta kyunki vo legally registered hota hai.</li>
+        <li>copyright safety</li>
+        <li>artwork quality</li>
+        <li>metadata accuracy</li>
+        <li>audio quality</li>
       </ul>
 
-      <h2>Step-by-Step Strategy for Artists (2026)</h2>
-      <p>Independent artist career build karne ke liye sirf song dalna kaafi nahi hai. Aapko ye strategy follow karni chahiye:</p>
-      <ol>
-        <li><strong>Consistency is Key:</strong> Har 30-45 din mein ek naya single release karein. Algorithm consistent artists ko zyada promote karta hai.</li>
-        <li><strong>Social Media Promotion:</strong> Release se pehle snippets share karein. Instagram Reels aur YouTube Shorts ka bharpoor use karein.</li>
-        <li><strong>Pre-Save Campaigns:</strong> Fans se request karein ki vo song ko pre-save karein taki release day par algorithm ko boost mile.</li>
-        <li><strong>Spotify Playlist Pitching:</strong> 'Spotify for Artists' dashboard se official editors ko pitch karein.</li>
-        <li><strong>Local Networking:</strong> Doosre artists ke saath collaborate karein aur apni reach badhayein.</li>
-      </ol>
+      <h3>Step 3 — Delivery to Streaming Platforms</h3>
+      <p>The distributor sends music to platforms worldwide.</p>
 
-      <h2>Advanced Growth Strategies</h2>
-      <p>Growth karne ke liye kuch industry secrets aur hacks hain:</p>
-      <p><strong>🔥 Algorithm Hack:</strong> Streaming platforms ke algorithms "Save" aur "Repeat Listen" ko prioritize karte hain. Aise songs banayein jo log baar baar sunna chahein. Pura song sunne par platform ko signal jata hai ki content achha hai.</p>
-      <p><strong>🔥 Content Strategy:</strong> Har gaane ke saath kam se kam 15-20 Reels/Shorts plan karein. Ek video viral hone se poore career ka path change ho sakta hai.</p>
-      <p><strong>🔥 SEO Strategy:</strong> Song ka description aur title SEO optimized rakhein. Agar aapka song "Sad Romantic" hai to title mein keyword use karein.</p>
-      <p><strong>🔥 Cross-Platform Promotion:</strong> YouTube video ke link mein Spotify aur JioSaavn ka link dena na bhoolein.</p>
+      <h3>Step 4 — Song Goes Live</h3>
+      <p>The release appears publicly on music apps.</p>
 
-      <h2>Common Mistakes (Avoid These!)</h2>
+      <h3>Step 5 — Royalties Generate</h3>
+      <p>Artists earn money from:</p>
       <ul>
-        <li><strong>Low Quality Audio:</strong> 128kbps MP3 upload karna sabse badi galti hai. Hamesha Studio Quality WAV files hi dein.</li>
-        <li><strong>Poor Artwork:</strong> Graphic design mein paisa bachana mehenga pad sakta hai. First impression is the last impression.</li>
-        <li><strong>No Promotion:</strong> Song upload karke "wait" karna success nahi layega. Marketing plan pehle se ready rakhein.</li>
-        <li><strong>Inconsistent Uploads:</strong> Ek saal mein sirf ek gaana dalna career ko grow nahi kar sakega.</li>
-        <li><strong>Wrong Metadata:</strong> Artist name mein spelling mistakes ya galat language select karne se song wrong audience tak pahunch jata hai.</li>
+        <li>streams</li>
+        <li>video monetization</li>
+        <li>social media usage</li>
+        <li>caller tunes</li>
+        <li>licensing</li>
       </ul>
 
-      <h2>Pro Tips from Experts</h2>
-      <p>Hamesha release date Friday ko rakhein kyunki Friday ko "New Music Friday" playlists update hoti hain. Apne music videos mein high-quality storytelling use karein aur hamesha fan-feedback par focus karein. India mein <strong>Music Distribution India</strong> jaise platforms use karein kyunki yahan localized support milta hai jo TuneCore ya DistroKid mein nahi milta.</p>
+      <h2>Platforms Every Indian Artist Needs</h2>
+      
+      <h3>Spotify</h3>
+      <p>Spotify is one of the most powerful platforms for independent artists.</p>
+      <p>Benefits include:</p>
+      <ul>
+        <li>playlist exposure</li>
+        <li>global reach</li>
+        <li>Spotify Radio algorithm</li>
+        <li>artist analytics</li>
+        <li>profile verification</li>
+      </ul>
+      <p>Spotify helps artists build international audiences.</p>
+
+      <h3>Apple Music</h3>
+      <p>Apple Music generally pays better royalties compared to many streaming services.</p>
+      <p>It is important for premium listeners.</p>
+
+      <h3>JioSaavn</h3>
+      <p>JioSaavn is extremely important for Indian listeners.</p>
+      <p>Strong genres include:</p>
+      <ul>
+        <li>Hindi songs</li>
+        <li>Punjabi music</li>
+        <li>devotional songs</li>
+        <li>Bhojpuri music</li>
+        <li>Haryanvi tracks</li>
+      </ul>
+
+      <h3>YouTube Music</h3>
+      <p>YouTube remains the biggest music discovery platform in India.</p>
+      <p>Benefits:</p>
+      <ul>
+        <li>massive audience</li>
+        <li>music videos</li>
+        <li>Shorts integration</li>
+        <li>search traffic</li>
+        <li>monetization</li>
+      </ul>
+
+      <h3>Instagram & Facebook</h3>
+      <p>Instagram Reels changed music promotion completely.</p>
+      <p>A single viral Reel can generate:</p>
+      <ul>
+        <li>millions of plays</li>
+        <li>Spotify streams</li>
+        <li>audience growth</li>
+        <li>influencer usage</li>
+      </ul>
+
+      <h2>Features the Best Music Distribution Service Should Have</h2>
+      
+      <h3>Fast Release Approval</h3>
+      <p>Slow approvals destroy momentum.</p>
+      <p>Professional platforms approve releases within:</p>
+      <ul>
+        <li>24 hours</li>
+        <li>48 hours</li>
+        <li>maximum 72 hours</li>
+      </ul>
+      <p>Artists need fast delivery because trends move quickly.</p>
+
+      <h3>Global Distribution</h3>
+      <p>The platform must distribute music worldwide.</p>
+      <p>Many cheap distributors only focus on basic stores.</p>
+      <p>Professional distribution should include:</p>
+      <ul>
+        <li>Spotify</li>
+        <li>Apple Music</li>
+        <li>YouTube Music</li>
+        <li>Instagram</li>
+        <li>JioSaavn</li>
+        <li>Amazon Music</li>
+        <li>Tidal</li>
+        <li>Deezer</li>
+        <li>Snapchat</li>
+      </ul>
+
+      <h3>YouTube Content ID</h3>
+      <p>Content ID is critical.</p>
+      <p>It protects songs when other people upload your music on YouTube.</p>
+      <p>Benefits:</p>
+      <ul>
+        <li>copyright protection</li>
+        <li>monetization claims</li>
+        <li>Shorts revenue</li>
+        <li>piracy reduction</li>
+      </ul>
+      <p>Without Content ID, artists lose money constantly.</p>
+
+      <h3>Caller Tune Distribution</h3>
+      <p>India-specific monetization matters.</p>
+      <p>Caller tune distribution sends music to:</p>
+      <ul>
+        <li>JioTunes</li>
+        <li>Airtel Hello Tunes</li>
+        <li>Vi Caller Tunes</li>
+        <li>BSNL Tunes</li>
+      </ul>
+      <p>Regional music performs extremely well here.</p>
+
+      <h3>Royalty Transparency</h3>
+      <p>Artists must clearly see:</p>
+      <ul>
+        <li>streams</li>
+        <li>earnings</li>
+        <li>analytics</li>
+        <li>platform reports</li>
+        <li>country reports</li>
+      </ul>
+      <p>Bad distributors hide data.</p>
+      <p>Professional dashboards matter.</p>
+
+      <h3>Artist Support</h3>
+      <p>Support quality matters heavily.</p>
+      <p>Many platforms disappear after taking uploads.</p>
+      <p>Artists need:</p>
+      <ul>
+        <li>release help</li>
+        <li>copyright support</li>
+        <li>metadata fixes</li>
+        <li>payment support</li>
+        <li>analytics guidance</li>
+      </ul>
+
+      <h2>Biggest Problems Indian Artists Face</h2>
+      
+      <h3>Fake Copyright Claims</h3>
+      <p>Many artists use beats without proper rights.</p>
+      <p>That creates:</p>
+      <ul>
+        <li>takedowns</li>
+        <li>monetization conflicts</li>
+        <li>revenue freezes</li>
+      </ul>
+      <p>Always use licensed content.</p>
+
+      <h3>Metadata Mistakes</h3>
+      <p>Wrong metadata destroys releases.</p>
+      <p>Examples:</p>
+      <ul>
+        <li>spelling mistakes</li>
+        <li>duplicate artist profiles</li>
+        <li>wrong featured artists</li>
+        <li>wrong language tags</li>
+      </ul>
+      <p>This damages algorithms and royalty tracking.</p>
+
+      <h3>Fake Streams</h3>
+      <p>Never buy fake streams.</p>
+      <p>Platforms now detect artificial streaming aggressively.</p>
+      <p>Results:</p>
+      <ul>
+        <li>song removal</li>
+        <li>royalty freezes</li>
+        <li>account bans</li>
+        <li>playlist penalties</li>
+      </ul>
+      <p>Real growth matters.</p>
+
+      <h2>How Artists Earn Money Through Distribution</h2>
+      <p>Music distribution is not only about Spotify streams.</p>
+      <p>Artists earn from multiple sources.</p>
+      
+      <h3>Spotify Royalties</h3>
+      <p>Spotify pays based on:</p>
+      <ul>
+        <li>premium listeners</li>
+        <li>stream share</li>
+        <li>country</li>
+        <li>engagement</li>
+      </ul>
+
+      <h3>Apple Music Royalties</h3>
+      <p>Apple Music often pays better per stream.</p>
+
+      <h3>YouTube Content ID</h3>
+      <p>Whenever creators use your music, monetization claims generate revenue.</p>
+
+      <h3>Instagram Monetization</h3>
+      <p>Music used in Reels creates exposure and monetization opportunities.</p>
+
+      <h3>Caller Tunes</h3>
+      <p>CRBT remains powerful in India.</p>
+      <p>Especially for:</p>
+      <ul>
+        <li>regional songs</li>
+        <li>devotional tracks</li>
+        <li>viral music</li>
+      </ul>
+
+      <h2>Why Regional Music is Dominating India</h2>
+      <p>Regional music growth is massive.</p>
+      <p>Punjabi and Haryanvi music already dominate YouTube.</p>
+      <p>Bhojpuri music audiences are also exploding.</p>
+      <p>Platforms prioritize regional content because listener retention is higher.</p>
+      <p>This creates opportunities for independent artists.</p>
+
+      <h2>Best Marketing Strategies After Distribution</h2>
+      <p>Uploading music alone does nothing.</p>
+      <p>Marketing is mandatory.</p>
+
+      <h3>Instagram Reels</h3>
+      <p>Short-form content drives modern music discovery.</p>
+      <p>Artists should post:</p>
+      <ul>
+        <li>teaser clips</li>
+        <li>hook lines</li>
+        <li>behind-the-scenes videos</li>
+        <li>trending audio content</li>
+      </ul>
+
+      <h3>YouTube Shorts</h3>
+      <p>YouTube Shorts are extremely powerful for organic reach.</p>
+
+      <h3>Influencer Marketing</h3>
+      <p>Micro influencers often perform better than celebrity pages.</p>
+
+      <h3>Spotify Playlist Pitching</h3>
+      <p>Playlist placements increase streams heavily.</p>
+      <p>Artists should submit music early.</p>
+
+      <h3>Consistent Releases</h3>
+      <p>Consistency matters more than one viral song.</p>
+      <p>Algorithms reward active artists.</p>
+
+      <h2>How to Choose the Best Music Distributor in India</h2>
+      <p>Choose platforms that provide:</p>
+      <ul>
+        <li>fast approvals</li>
+        <li>transparent royalties</li>
+        <li>Content ID</li>
+        <li>caller tune delivery</li>
+        <li>global distribution</li>
+        <li>proper support</li>
+        <li>artist dashboard</li>
+        <li>label management</li>
+      </ul>
+      <p>Avoid platforms that:</p>
+      <ul>
+        <li>hide royalties</li>
+        <li>delay payments</li>
+        <li>offer fake stream packages</li>
+        <li>provide poor support</li>
+      </ul>
+
+      <h2>Future of Music Distribution in India</h2>
+      <p>India’s music industry will grow aggressively over the next few years.</p>
+      <p>Key trends include:</p>
+      <ul>
+        <li>AI marketing</li>
+        <li>regional music growth</li>
+        <li>independent labels</li>
+        <li>creator monetization</li>
+        <li>social media driven discovery</li>
+        <li>direct artist branding</li>
+      </ul>
+      <p>Artists who build audiences early will benefit the most.</p>
+
+      <h2>Conclusion</h2>
+      <p>Digital music distribution changed the Indian music industry permanently.</p>
+      <p>Independent artists now have global opportunities without depending on major labels.</p>
+      <p>A professional music distribution service helps artists:</p>
+      <ul>
+        <li>release songs worldwide</li>
+        <li>earn royalties</li>
+        <li>protect copyrights</li>
+        <li>monetize content</li>
+        <li>grow globally</li>
+      </ul>
+      <p>The artists who understand distribution, branding and audience building will dominate the next generation of Indian music.</p>
     `,
     faqs: [
-      { question: "Best music distribution India me kaunsa hai?", answer: "Music Distribution India (musicdistributionindia.online) Indian artists ke liye best hai kyunki ye JioSaavn, Gaana, aur Wynk support ke saath localized payment options (UPI) deta hai." },
-      { question: "Music distribution free hai kya?", answer: "G haan, bohot saare platforms free distribution offer karte hain, lekin paid plans mein better features aur support milta hai." },
-      { question: "Kitna time lagta hai song live hone me?", answer: "Usually 2 se 5 din lagte hain, lekin platforms recommend karte hain ki aap 10-14 din pehle upload karein." },
-      { question: "Streaming se kitne paise milte hain?", answer: "Ye streaming platforms ke rates par depend karta hai. India mein rates kam hote hain compared to US/UK." },
-      { question: "Kya main apna music delete kar sakta hoon?", answer: "Haan, aap kisi bhi waqt takedown request bhej sakte hain apne distributor ke through." },
-      { question: "Album ya Single, kya behtar hai?", answer: "New artists ke liye Singles behtar hote hain taki vo social media momentum maintain kar sakein." },
-      { question: "Copyright ka kya hota hai?", answer: "Jab aap music release karte ho to copyright aapka hi rehta hai (agar aapne documentation sahi ki hai)." }
+      { question: "Which is the best music distribution service in India?", answer: "The best music distribution service depends on release speed, royalty transparency, Content ID support, caller tune delivery and platform reach." },
+      { question: "Can independent artists upload music on Spotify?", answer: "Yes. Artists need a music distributor to deliver music officially to Spotify." },
+      { question: "How do Indian artists earn from Spotify?", answer: "Artists earn streaming royalties based on listener activity, premium subscriptions and geographic audience." },
+      { question: "What is YouTube Content ID?", answer: "YouTube Content ID identifies copyrighted music and monetizes videos using that music." },
+      { question: "What are caller tunes?", answer: "Caller tunes allow mobile users to set songs as their incoming call audio." }
     ]
   },
   "free-music-distribution-india": {
